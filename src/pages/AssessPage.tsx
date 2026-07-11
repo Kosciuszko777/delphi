@@ -43,8 +43,9 @@ export default function AssessPage() {
       name: 'Enneagram',
       description: 'Discover your core motivation pattern and wing type across all nine Enneagram positions.',
       time: '15 minutes',
-      available: false,
+      available: true,
       completed: !!wire.enneagram,
+      to: '/assess/enneagram',
     },
     {
       id: 'human-design',

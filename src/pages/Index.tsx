@@ -119,7 +119,8 @@ const Index = () => {
             letter="E"
             name="Enneagram"
             description="Nine fundamental character structures — your core motivation, your fear, and the pattern you return to under stress."
-            available={false}
+            available
+            to="/assess/enneagram"
           />
           <SystemCard
             letter="H"
