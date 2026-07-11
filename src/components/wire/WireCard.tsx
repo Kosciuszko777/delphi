@@ -2,101 +2,116 @@ import { Link } from 'react-router-dom';
 import { cn } from '@/lib/utils';
 import type { Wire } from '@/lib/wire';
 import { formatWire, isWirePopulated, TOTAL_CHAMBERS, filledChamberCount } from '@/lib/wire';
-import { Sparkles, ArrowRight } from 'lucide-react';
+import { Omphalos } from '@/components/wire/Omphalos';
+import { Check } from 'lucide-react';
 
 interface WireCardProps {
   wire: Wire;
   className?: string;
   /** If true, renders a compact inline version */
   compact?: boolean;
+  /** Display name inscribed on the tablet (optional) */
+  displayName?: string;
+  /** Short npub form shown under the name (optional) */
+  npubShort?: string;
+  /** Trait-system keys with at least one accepted peer attestation */
+  attested?: Partial<Record<'jung' | 'hd' | 'millman' | 'enneagram', boolean>>;
 }
 
 /**
- * The Wire Card — the central UI artifact.
- * An elegant card rendering the user's Wire with filled and empty "chambers".
+ * The Wire Card — Till spec v1.0.
+ * A votive tablet: engraved chambers, mono-gold Wire string,
+ * omphalos seal. Empty chambers are prepared niches, never errors.
  */
-export function WireCard({ wire, className, compact }: WireCardProps) {
+export function WireCard({ wire, className, compact, displayName, npubShort, attested }: WireCardProps) {
   const populated = isWirePopulated(wire);
   const filled = filledChamberCount(wire);
 
   if (compact && populated) {
     return (
       <div className={cn('flex items-center gap-2 text-sm', className)}>
-        <Sparkles className="size-3.5 text-oracle shrink-0" />
-        <span className="font-medium text-foreground truncate">{formatWire(wire)}</span>
+        <Omphalos className="size-3.5 text-oracle shrink-0" />
+        <span className="font-mono font-medium text-oracle truncate tracking-wide">{formatWire(wire)}</span>
       </div>
     );
   }
 
+  const issued = new Date().toLocaleDateString('en-GB', { month: '2-digit', year: '2-digit' }).replace('/', '\u00B7');
+
   return (
     <div
       className={cn(
-        'relative overflow-hidden rounded-xl border border-oracle/20 bg-gradient-to-br from-card via-card to-oracle-muted/30 p-6 sm:p-8',
-        'shadow-sm transition-shadow hover:shadow-md',
+        'engraved grain relative overflow-hidden rounded-[2px] bg-card p-6 sm:p-8',
         className
       )}
     >
-      {/* Top decorative line */}
-      <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-oracle/40 to-transparent" />
-
-      {/* Header */}
-      <div className="flex items-start justify-between mb-6">
-        <div>
-          <h3 className="font-serif text-lg sm:text-xl font-semibold text-foreground tracking-wide">
-            Your Wire
-          </h3>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {filled}/{TOTAL_CHAMBERS} chambers filled
-          </p>
-        </div>
-        <div className="flex items-center gap-1">
-          {Array.from({ length: TOTAL_CHAMBERS }).map((_, i) => (
-            <div
-              key={i}
-              className={cn(
-                'size-2 rounded-full transition-colors',
-                i < filled ? 'bg-oracle' : 'bg-border'
-              )}
-            />
-          ))}
-        </div>
+      {/* Header strip: mark left, issue label right */}
+      <div className="flex items-center justify-between mb-5">
+        <Omphalos className="size-5 text-umbra dark:text-ash" />
+        <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-umbra dark:text-ash">
+          Delphi &middot; {filled}/{TOTAL_CHAMBERS}
+        </span>
       </div>
 
-      {/* Wire signature line */}
-      {populated && (
-        <div className="mb-6 p-4 rounded-lg bg-background/60 border border-oracle/10">
-          <p className="font-serif text-lg sm:text-xl text-foreground font-medium tracking-wide text-center">
-            {formatWire(wire)}
-          </p>
+      {/* Name + npub */}
+      {(displayName || npubShort) && (
+        <div className="text-center mb-4">
+          {displayName && (
+            <h3 className="font-serif text-xl sm:text-2xl font-medium text-foreground tracking-wide">
+              {displayName}
+            </h3>
+          )}
+          {npubShort && (
+            <p className="font-mono text-xs text-ash mt-1">{npubShort}</p>
+          )}
         </div>
       )}
 
-      {/* Chambers grid */}
-      <div className="grid grid-cols-2 gap-3">
+      {/* Engraved rule */}
+      <div className="h-px bg-umbra/30 dark:bg-ash/20 mb-6" style={{ boxShadow: '0 1px 0 rgba(255,255,255,0.06)' }} />
+
+      {/* The four chambers */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
         <Chamber
-          label="Jungian Type"
+          label="Jung"
           value={wire.jung?.type}
           to="/assess/jung"
-          icon="J"
+          sealed={attested?.jung}
         />
         <Chamber
-          label="Human Design"
-          value={wire.humanDesign ? `${wire.humanDesign.type} ${wire.humanDesign.profile}` : undefined}
+          label="HD"
+          value={wire.humanDesign ? `${wire.humanDesign.type}` : undefined}
+          sub={wire.humanDesign?.profile}
           to="/assess/human-design"
-          icon="H"
+          sealed={attested?.hd}
         />
         <Chamber
-          label="Millman"
-          value={wire.millman ? wire.millman.number : undefined}
+          label="Num"
+          value={wire.millman?.number}
           to="/assess/millman"
-          icon="M"
+          sealed={attested?.millman}
         />
         <Chamber
-          label="Enneagram"
+          label="Ennea"
           value={wire.enneagram ? `${wire.enneagram.core}w${wire.enneagram.wing}` : undefined}
           to="/assess/enneagram"
-          icon="E"
+          sealed={attested?.enneagram}
         />
+      </div>
+
+      {/* THE WIRE — mono, gold, the highest-contrast element */}
+      {populated && (
+        <p className="wire-shimmer font-mono text-sm sm:text-base font-medium tracking-[0.04em] text-oracle text-center uppercase mb-6 break-words">
+          {formatWire(wire)}
+        </p>
+      )}
+
+      {/* Footer: motto left, issue date right */}
+      <div className="flex items-center justify-between">
+        <span className="font-serif text-[11px] tracking-[0.25em] text-umbra dark:text-ash select-none">
+          {'\u0393\u039D\u03A9\u0398\u0399 \u03A3\u0395\u0391\u03A5\u03A4\u039F\u039D'}
+        </span>
+        <span className="font-mono text-[11px] text-ash">issued {issued}</span>
       </div>
     </div>
   );
@@ -105,52 +120,55 @@ export function WireCard({ wire, className, compact }: WireCardProps) {
 interface ChamberProps {
   label: string;
   value?: string;
+  sub?: string;
   to: string;
-  icon: string;
+  /** Verdigris seal — at least one accepted peer attestation */
+  sealed?: boolean;
 }
 
-function Chamber({ label, value, to, icon }: ChamberProps) {
-  const filled = !!value;
+function Chamber({ label, value, sub, to, sealed }: ChamberProps) {
+  const filledChamber = !!value;
 
   return (
     <Link
       to={to}
       className={cn(
-        'group relative flex flex-col items-center justify-center rounded-lg border p-3 sm:p-4 transition-all',
-        filled
-          ? 'border-oracle/20 bg-oracle/5 hover:bg-oracle/10 hover:border-oracle/30'
-          : 'border-dashed border-border hover:border-oracle/30 hover:bg-oracle/5'
+        'engraved group relative flex flex-col items-center justify-center rounded-[2px] px-2 py-4 sm:py-5 min-h-[92px] transition-colors',
+        filledChamber
+          ? 'bg-background/40 hover:bg-oracle/5'
+          : 'bg-transparent hover:bg-oracle/5'
       )}
     >
-      {/* Icon */}
-      <div
-        className={cn(
-          'mb-2 flex items-center justify-center size-8 rounded-full text-xs font-bold',
-          filled
-            ? 'bg-oracle/15 text-oracle'
-            : 'bg-muted text-muted-foreground'
-        )}
-      >
-        {icon}
-      </div>
-
-      {/* Value or placeholder */}
-      {filled ? (
-        <span className="font-serif text-sm sm:text-base font-semibold text-foreground">
-          {value}
-        </span>
-      ) : (
-        <span className="flex items-center gap-1 text-xs text-muted-foreground group-hover:text-oracle transition-colors">
-          Begin <ArrowRight className="size-3" />
-        </span>
-      )}
-
+      {/* System label */}
       <span className={cn(
-        'text-xs mt-1',
-        filled ? 'text-muted-foreground' : 'text-muted-foreground/60'
+        'font-mono text-[10px] uppercase tracking-[0.18em] mb-2',
+        filledChamber ? 'text-umbra dark:text-ash' : 'text-ash'
       )}>
         {label}
       </span>
+
+      {filledChamber ? (
+        <span className="chamber-engrave font-serif text-lg sm:text-xl font-medium text-foreground text-center leading-tight">
+          {value}
+          {sub && <span className="block text-sm text-umbra dark:text-ash font-normal">{sub}</span>}
+        </span>
+      ) : (
+        /* The prepared niche — an invitation, never an error */
+        <span className="flex flex-col items-center gap-1.5">
+          <span className="block w-8 border-b border-dotted border-ash/70" aria-hidden="true" />
+          <span className="font-mono text-[11px] text-ash lowercase">unwritten</span>
+        </span>
+      )}
+
+      {/* Verdigris attestation seal */}
+      {sealed && (
+        <span
+          className="seal-stamp absolute top-1.5 right-1.5 flex items-center justify-center size-4 rounded-full bg-verdigris/15 text-verdigris"
+          title="Attested by peers"
+        >
+          <Check className="size-2.5" strokeWidth={3} />
+        </span>
+      )}
     </Link>
   );
 }

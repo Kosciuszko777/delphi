@@ -51,8 +51,16 @@
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-ring: var(--sidebar-ring);
 
-  --font-sans: 'Inter Variable', 'Inter', system-ui, sans-serif;
-  --font-serif: 'Cormorant Garamond Variable', 'Cormorant Garamond', 'Georgia', serif;
+  --font-sans: 'Spectral', 'Georgia', serif;
+  --font-serif: 'Fraunces Variable', 'Fraunces', 'Georgia', serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', monospace;
+
+  /* Till spec v1.0 — Basalt & Oracle raw tokens */
+  --color-bone: var(--bone);
+  --color-basalt: var(--basalt);
+  --color-umbra: var(--umbra);
+  --color-verdigris: var(--verdigris);
+  --color-ash: var(--ash);
 
   --radius-lg: var(--radius);
   --radius-md: calc(var(--radius) - 2px);
@@ -97,9 +105,16 @@
 :root {
   --radius: 0.75rem;
 
-  /* Stone / parchment base */
-  --background: hsl(40 25% 97%);
-  --foreground: hsl(30 10% 15%);
+  /* Till spec v1.0 raw tokens */
+  --bone: #EFE9DC;
+  --basalt: #191713;
+  --umbra: #4A4238;
+  --verdigris: #5E7466;
+  --ash: #B8B0A1;
+
+  /* Stone / parchment base — bone ground, basalt ink */
+  --background: var(--bone);
+  --foreground: var(--basalt);
 
   --card: hsl(40 20% 98%);
   --card-foreground: hsl(30 10% 15%);
@@ -128,9 +143,9 @@
   --input: hsl(35 15% 86%);
   --ring: hsl(45 72% 47%);
 
-  /* Oracle gold */
-  --oracle: hsl(45 72% 47%);
-  --oracle-foreground: hsl(30 10% 12%);
+  /* Oracle gold — canonical #C9A227 */
+  --oracle: #C9A227;
+  --oracle-foreground: var(--basalt);
   --oracle-muted: hsl(45 40% 88%);
 
   --chart-1: hsl(45 72% 47%);
@@ -154,8 +169,14 @@
    Deep obsidian · Oracle gold persists
    ═══════════════════════════════════════════════════════ */
 .dark {
-  --background: hsl(30 8% 8%);
-  --foreground: hsl(35 15% 88%);
+  --bone: #EFE9DC;
+  --basalt: #191713;
+  --umbra: #4A4238;
+  --verdigris: #6E8476;
+  --ash: #6B6558;
+
+  --background: var(--basalt);
+  --foreground: var(--bone);
 
   --card: hsl(30 8% 10%);
   --card-foreground: hsl(35 15% 88%);
@@ -182,8 +203,8 @@
   --input: hsl(30 6% 18%);
   --ring: hsl(45 72% 47%);
 
-  --oracle: hsl(45 72% 52%);
-  --oracle-foreground: hsl(30 8% 8%);
+  --oracle: #C9A227;
+  --oracle-foreground: var(--basalt);
   --oracle-muted: hsl(45 30% 18%);
 
   --chart-1: hsl(45 72% 52%);
@@ -217,5 +238,82 @@
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+}
+
+/* ═══════════════════════════════════════════════════════
+   Till spec v1.0 — engraved surfaces, grain, inscription
+   ═══════════════════════════════════════════════════════ */
+
+/* Engraved double-line convention: carved line + offset highlight */
+.engraved {
+  border: 1px solid color-mix(in srgb, var(--umbra) 60%, transparent);
+  box-shadow: 0 1px 0 color-mix(in srgb, #ffffff 8%, transparent);
+}
+.dark .engraved {
+  box-shadow: 0 1px 0 color-mix(in srgb, #000000 8%, transparent);
+}
+
+/* Stone grain — ~2% mono noise */
+.grain {
+  position: relative;
+}
+.grain::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.02;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Inscription moment — chamber engraves itself on completion */
+@keyframes chamber-engrave {
+  0%   { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+.chamber-engrave {
+  animation: chamber-engrave 300ms ease-out 400ms both;
+}
+
+/* Gold shimmer — single sweep across the Wire string */
+@keyframes wire-shimmer {
+  0%   { background-position: -200% center; }
+  100% { background-position: 200% center; }
+}
+.wire-shimmer {
+  background-image: linear-gradient(
+    100deg,
+    var(--oracle) 40%,
+    color-mix(in srgb, var(--oracle) 40%, #fff) 50%,
+    var(--oracle) 60%
+  );
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: wire-shimmer 600ms ease-out 700ms 1 both;
+}
+
+/* Attestation seal — verdigris tick stamps in */
+@keyframes seal-stamp {
+  0%   { opacity: 0; transform: scale(1.05); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.seal-stamp {
+  animation: seal-stamp 200ms ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .chamber-engrave, .seal-stamp {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .wire-shimmer {
+    animation: none;
+    background-image: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--oracle);
   }
 }

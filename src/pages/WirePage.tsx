@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { nip19 } from 'nostr-tools';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { WireCard } from '@/components/wire/WireCard';
+import { ShareWireCard } from '@/components/wire/ShareWireCard';
 import { PublishWireFlow } from '@/components/publish/PublishWireFlow';
 import { SelfAttestationFlow } from '@/components/publish/SelfAttestationFlow';
 import { BackupRestoreFlow } from '@/components/publish/BackupRestoreFlow';
@@ -47,6 +48,7 @@ export default function WirePage() {
           <div className="space-y-8">
             {/* Wire card */}
             <WireCard wire={wire} />
+            <ShareWireCard wire={wire} />
 
             {/* Completed chambers detail */}
             <div className="space-y-4">
