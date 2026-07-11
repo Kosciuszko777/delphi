@@ -173,6 +173,16 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
                 </Badge>
               ))}
             </div>
+            <details className="group">
+              <summary className="cursor-pointer text-xs text-muted-foreground hover:text-foreground transition-colors text-center list-none select-none">
+                <span className="underline underline-offset-2 decoration-dotted">
+                  Show the exact event that will be signed
+                </span>
+              </summary>
+              <pre className="mt-3 max-h-56 overflow-auto rounded-md border border-border bg-muted/40 p-3 text-[11px] leading-relaxed font-mono text-muted-foreground whitespace-pre-wrap break-all">
+                {JSON.stringify({ kind: WIRE_KIND, content: '', tags }, null, 2)}
+              </pre>
+            </details>
           </div>
 
           {/* What's NOT published */}

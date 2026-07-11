@@ -143,6 +143,48 @@ When you commit to living your principles rather than merely professing them, yo
     challenges: ['Integrity gaps', 'Hypocrisy fear', 'Judgmental tendencies', 'Difficulty with imperfection', 'Living in the head'],
     keywords: ['Integrity', 'Wisdom', 'Example', 'Higher purpose'],
   },
+  10: {
+    title: 'The Gifted Creator',
+    subtitle: 'Creative force amplified by inner gifts',
+    description: `Your life purpose combines the raw creative energy of the 1 with the amplifying presence of the 0 — inner gifts of sensitivity, strength, expression, and intuition that intensify everything the creative current touches. You are here to bring something into the world that was not there before, and you carry more voltage for that task than most.
+
+The central challenge of your path is insecurity around that very voltage. Creative energy of this intensity demands an outlet; when it is blocked — by self-doubt, by comparison, by the fear of being seen — it does not disappear but turns inward, often as restlessness, addictive patterns, or physical tension. The work is not to become creative; you already are. The work is to open the channel and keep it open, especially on the days you doubt the worth of what flows through it.
+
+Your inner gifts sharpen with use. The sensitivity that can feel like a burden in early life becomes, once trusted, an instrument of unusual precision — you feel what a room needs, what a work lacks, what a moment asks for. Discipline is the container this energy requires: routines, craft, completion.
+
+When you commit to creating in service of something larger than your own reassurance, the insecurity loses its grip. Your path teaches that gifts are not possessions but responsibilities — energy on loan, meant to move.`,
+    strengths: ['Intense creative drive', 'Heightened intuition', 'Expressive power', 'Magnetic energy', 'Capacity for original work'],
+    challenges: ['Insecurity about worth', 'Blocked or misdirected energy', 'Addictive escape patterns', 'Oversensitivity to judgment', 'Starting without finishing'],
+    keywords: ['Creativity', 'Inner gifts', 'Confidence', 'Channel'],
+  },
+  11: {
+    title: 'The Double Flame',
+    subtitle: 'Twin creative currents seeking cooperative ground',
+    description: `Your life purpose carries the creative energy of the 1 twice over — a double current that ultimately resolves toward the cooperative, relational energy of the 2. You are here to create, and to learn that creation at this intensity cannot be sustained alone or aimed only at yourself.
+
+The central challenge of your path is managing twin fires. Doubled creative energy means doubled insecurity when blocked: the swings can be steep — grandiosity and collapse, furious output and paralysis. Many on this path oscillate between overexpressing (scattering energy across too many projects, people, stimulations) and suppressing (numbing an energy that frightens them with its force). The work is rhythm: regular creative discharge in disciplined form, so the current powers the life instead of shaking it.
+
+Your gift, once the fires are banked and steady, is extraordinary generative capacity — the ability to produce, inspire, and energize at a level that reorganizes the rooms you walk into. The 2 beneath the doubled 1 points the way: this energy matures through cooperation, through creating with and for others rather than in isolated intensity.
+
+When you commit to steady creative work in genuine partnership — with collaborators, a community, a purpose — the double flame stops burning you and starts lighting the way. Your path teaches that great energy is mastered not by containment but by direction.`,
+    strengths: ['Exceptional generative energy', 'Inspirational intensity', 'Fast synthesis', 'Charisma in creation', 'Capacity to energize others'],
+    challenges: ['Energy swings between extremes', 'Doubled insecurity', 'Scattering across projects', 'Numbing or suppression patterns', 'Creating in isolation'],
+    keywords: ['Double creativity', 'Energy mastery', 'Cooperation', 'Rhythm'],
+  },
+  12: {
+    title: 'The Creative Collaborator',
+    subtitle: 'Original expression fulfilled through working with others',
+    description: `Your life purpose weaves the creative initiative of the 1 with the cooperative sensitivity of the 2, resolving into the expressive energy of the 3. You are here to create — and specifically to create together: your originality reaches its full form only in constructive collaboration, and your expression matures only when it serves a shared work.
+
+The central challenge of your path is the tension between the 1 and the 2 inside you. The creative current wants to lead, originate, and control; the cooperative current wants to support, harmonize, and sometimes over-give. Unbalanced, this produces a painful oscillation: resentful over-helping on one side, stubborn lone-wolfing on the other — and beneath both, the 3's shadow of self-doubt about whether your expression is worth hearing at all.
+
+Your gift is the rare ability to be genuinely original inside a team. Where pure creators struggle to share ownership and pure cooperators struggle to assert vision, you can hold both: initiating without dominating, supporting without disappearing. Groups with you in them produce work none of the members could have made alone.
+
+When you commit to honest expression within balanced collaboration — saying what you actually see, asking for what you actually need, and building things with others as a discipline rather than a compromise — the three energies align. Your path teaches that creation was never meant to be a solitary act.`,
+    strengths: ['Original thinking within teams', 'Balancing vision and support', 'Constructive expression', 'Building creative alliances', 'Elevating collective work'],
+    challenges: ['Over-giving then withdrawing', 'Control versus support tension', 'Self-doubt about expression', 'Resentment in unbalanced roles', 'Avoiding necessary confrontation'],
+    keywords: ['Creative cooperation', 'Expression', 'Balance', 'Shared work'],
+  },
 };
 
 /**

@@ -200,7 +200,7 @@ export function BackupRestoreFlow() {
                       <span className="text-sm text-foreground">{SLUG_LABELS[slug]}</span>
                     </div>
                     <div className="flex items-center gap-2">
-                      {hasLocal && rawData && (
+                      {hasLocal && rawData != null && (
                         <Badge variant="outline" className="text-xs">
                           Local
                         </Badge>

@@ -4,16 +4,22 @@
  * Method (Dan Millman's system):
  * 1. Write out the full birth date as digits: MM/DD/YYYY
  * 2. Add ALL individual digits together to get a working sum
- * 3. Then add the digits of that working sum to get the final single digit
- * 4. The result is written as "working sum / final digit", e.g. "30/3"
+ * 3. If the working sum has two digits, add its digits once more
+ * 4. The result is written as "working sum / final number", e.g. "34/7"
  *
- * Example: March 15, 1978 → 0+3+1+5+1+9+7+8 = 34 → 3+4 = 7 → "34/7"
+ * IMPORTANT — double-digit finals terminate:
+ * In Millman's published system, second-stage sums of 10, 11, or 12
+ * are complete birth numbers and are NOT reduced further.
+ *   e.g. 11/13/1976 → 29 → 2+9 = 11 → "29/11"   (never "29/11/2")
+ *        09/29/1999 → 48 → 4+8 = 12 → "48/12"   (never "48/12/3")
  *
- * If the working sum is already a single digit, there's no slash —
- * but this is extremely rare with real birth dates.
+ * This is safe by construction: the maximum possible digit sum for any
+ * valid Gregorian date (e.g. 09/29/1999) is 48, whose digit sum is 12.
+ * A second reduction can therefore never be required.
  *
- * If the digit-sum of the working sum still has two digits, sum again.
- * e.g. working sum 48 → 4+8=12 → 1+2=3 → rendered as "48/12/3"
+ * If the working sum is already a single digit (possible only for
+ * births in and after 2000, e.g. 01/01/2000 → 4), the number is
+ * rendered without a slash: "4".
  */
 
 /** Sum the digits of a number. */
@@ -30,7 +36,7 @@ function digitSum(n: number): number {
  * @param year  Full year (e.g. 1987)
  * @param month Month 1–12
  * @param day   Day 1–31
- * @returns The life-purpose string, e.g. "30/3", "34/7", "48/12/3"
+ * @returns The life-purpose string, e.g. "34/7", "29/11", "48/12", "4"
  */
 export function computeMillmanNumber(year: number, month: number, day: number): string {
   // Sum ALL individual digits of the full date
@@ -40,21 +46,19 @@ export function computeMillmanNumber(year: number, month: number, day: number): 
     workingSum += parseInt(ch, 10);
   }
 
-  // Build the chain of digit sums
-  const chain: number[] = [workingSum];
-
-  let current = workingSum;
-  while (current >= 10) {
-    current = digitSum(current);
-    chain.push(current);
+  if (workingSum < 10) {
+    return workingSum.toString();
   }
 
-  return chain.join('/');
+  // Reduce exactly once. Finals of 10, 11, 12 terminate (see header note).
+  const finalNumber = digitSum(workingSum);
+  return `${workingSum}/${finalNumber}`;
 }
 
 /**
- * Get the final single-digit purpose number from a Millman number string.
- * e.g. "34/7" → 7, "48/12/3" → 3
+ * Get the final purpose number from a Millman number string.
+ * May be 1–9 or a terminating double-digit final (10, 11, 12).
+ * e.g. "34/7" → 7, "29/11" → 11, "4" → 4
  */
 export function getFinalDigit(millmanNumber: string): number {
   const parts = millmanNumber.split('/');
@@ -63,14 +67,26 @@ export function getFinalDigit(millmanNumber: string): number {
 
 /**
  * Get the working sum (first number) from a Millman number string.
- * e.g. "34/7" → 34, "48/12/3" → 48
+ * e.g. "34/7" → 34, "4" → 4
  */
 export function getWorkingSum(millmanNumber: string): number {
   return parseInt(millmanNumber.split('/')[0], 10);
 }
 
 /**
- * Validate a date is a plausible birth date (1900–present, valid month/day).
+ * Decompose a final purpose number into its component digit energies.
+ * Double-digit finals carry composite energies in Millman's system.
+ * e.g. 11 → [1, 1], 12 → [1, 2], 7 → [7]
+ */
+export function getPurposeDigits(finalNumber: number): number[] {
+  if (finalNumber >= 10) {
+    return [Math.floor(finalNumber / 10), finalNumber % 10];
+  }
+  return [finalNumber];
+}
+
+/**
+ * Validate a birth date: real calendar date, year 1900..current.
  */
 export function isValidBirthDate(year: number, month: number, day: number): boolean {
   if (month < 1 || month > 12) return false;
