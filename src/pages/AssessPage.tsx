@@ -53,8 +53,9 @@ export default function AssessPage() {
       name: 'Human Design',
       description: 'Enter your Human Design type, profile, and authority from an external chart calculation.',
       time: '5 minutes',
-      available: false,
+      available: true,
       completed: !!wire.humanDesign,
+      to: '/assess/human-design',
     },
   ];
 

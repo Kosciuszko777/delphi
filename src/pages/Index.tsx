@@ -126,7 +126,8 @@ const Index = () => {
             letter="H"
             name="Human Design"
             description="Your energetic type, profile, and decision-making authority — how you're designed to interact with the world."
-            available={false}
+            available
+            to="/assess/human-design"
           />
         </div>
       </section>
