@@ -1,0 +1,117 @@
+import { useCallback, useRef, useState } from 'react';
+import { useLocalStorage } from '@/hooks/useLocalStorage';
+import { useShakespeare, type ChatMessage } from '@/hooks/useShakespeare';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { useWire } from '@/hooks/useWire';
+import { useAttestations } from '@/hooks/useAttestations';
+import { useIsCouncillor } from '@/hooks/useCouncil';
+import { buildOracleSystem } from '@/lib/oracle/prompt';
+import {
+  type MeterState,
+  normalize,
+  remaining,
+  canSend as meterCanSend,
+  consume,
+} from '@/lib/oracle/meter';
+
+const METER_KEY = 'delphi:oracle-meter';
+const HISTORY_WINDOW = 12; // last N turns sent as context
+
+export interface OracleTurn {
+  role: 'user' | 'assistant';
+  content: string;
+}
+
+/** Prefer a strong general model; fall back to the cheapest available. */
+function pickModel(models: { id: string; pricing: { prompt: string; completion: string } }[]): string {
+  const preferred = models.find((m) => /sonnet/i.test(m.id))
+    ?? models.find((m) => /claude/i.test(m.id));
+  if (preferred) return preferred.id;
+  const byCost = [...models].sort(
+    (a, b) =>
+      parseFloat(a.pricing.prompt) + parseFloat(a.pricing.completion)
+      - (parseFloat(b.pricing.prompt) + parseFloat(b.pricing.completion)),
+  );
+  if (!byCost[0]) throw new Error('No models available');
+  return byCost[0].id;
+}
+
+export function useOracleChat() {
+  const { user } = useCurrentUser();
+  const { wire } = useWire();
+  const { attestations } = useAttestations();
+  const { data: council } = useIsCouncillor(user?.pubkey);
+  const { sendStreamingMessage, getAvailableModels } = useShakespeare();
+
+  const [turns, setTurns] = useState<OracleTurn[]>([]);
+  const [isThinking, setIsThinking] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [meter, setMeter] = useLocalStorage<MeterState | null>(METER_KEY, null);
+  const modelRef = useRef<string | null>(null);
+
+  const isCouncillor = council?.isCouncillor ?? false;
+  const freeRemaining = remaining(normalize(meter));
+  const allowed = meterCanSend(meter, isCouncillor);
+
+  const send = useCallback(async (text: string) => {
+    const question = text.trim();
+    if (!question || isThinking) return;
+    if (!meterCanSend(meter, isCouncillor)) {
+      setError('Your free messages for this month are used. A council seat carries the Oracle for life.');
+      return;
+    }
+
+    setError(null);
+    setIsThinking(true);
+    const userTurn: OracleTurn = { role: 'user', content: question };
+    setTurns((prev) => [...prev, userTurn, { role: 'assistant', content: '' }]);
+
+    try {
+      if (!modelRef.current) {
+        const models = await getAvailableModels();
+        modelRef.current = pickModel(models.data);
+      }
+
+      const system = buildOracleSystem(wire, attestations);
+      const history: ChatMessage[] = [...turns, userTurn]
+        .slice(-HISTORY_WINDOW)
+        .map((t) => ({ role: t.role, content: t.content }));
+      const messages: ChatMessage[] = [{ role: 'system', content: system }, ...history];
+
+      let assembled = '';
+      await sendStreamingMessage(
+        messages,
+        modelRef.current,
+        (chunk) => {
+          assembled += chunk;
+          setTurns((prev) => {
+            const next = [...prev];
+            next[next.length - 1] = { role: 'assistant', content: assembled };
+            return next;
+          });
+        },
+        { temperature: 0.7, max_tokens: 1200 },
+      );
+
+      if (!assembled.trim()) throw new Error('The Oracle returned silence. Try again.');
+      if (!isCouncillor) setMeter(consume(meter));
+    } catch (err) {
+      setError(err instanceof Error ? err.message : String(err));
+      // Drop the empty assistant placeholder on failure
+      setTurns((prev) => (prev[prev.length - 1]?.content === '' ? prev.slice(0, -2) : prev));
+    } finally {
+      setIsThinking(false);
+    }
+  }, [turns, isThinking, meter, isCouncillor, wire, attestations, getAvailableModels, sendStreamingMessage, setMeter]);
+
+  return {
+    turns,
+    send,
+    isThinking,
+    error,
+    isCouncillor,
+    freeRemaining,
+    allowed,
+    isAuthenticated: !!user,
+  };
+}

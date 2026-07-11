@@ -10,6 +10,7 @@ import HumanDesignPage from "./pages/HumanDesignPage";
 import WirePage from "./pages/WirePage";
 import ExplorePage from "./pages/ExplorePage";
 import CouncilPage from "./pages/CouncilPage";
+import OraclePage from "./pages/OraclePage";
 import { NIP19Page } from "./pages/NIP19Page";
 import NotFound from "./pages/NotFound";
 
@@ -27,6 +28,7 @@ export function AppRouter() {
         <Route path="/wire" element={<WirePage />} />
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/council" element={<CouncilPage />} />
+        <Route path="/oracle" element={<OraclePage />} />
         {/* NIP-19 route for npub1, note1, naddr1, nevent1, nprofile1 */}
         <Route path="/:nip19" element={<NIP19Page />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

@@ -35,6 +35,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               <NavLink to="/" active={isHome}>Home</NavLink>
               <NavLink to="/assess" active={location.pathname.startsWith('/assess')}>Assess</NavLink>
               <NavLink to="/wire" active={location.pathname === '/wire'}>My Wire</NavLink>
+              <NavLink to="/oracle" active={location.pathname === '/oracle'}>Oracle</NavLink>
               <NavLink to="/explore" active={location.pathname === '/explore'}>Explore</NavLink>
               <NavLink to="/council" active={location.pathname === '/council'}>Council</NavLink>
             </nav>
@@ -61,6 +62,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <NavLink to="/" active={isHome} mobile>Home</NavLink>
             <NavLink to="/assess" active={location.pathname.startsWith('/assess')} mobile>Assess</NavLink>
             <NavLink to="/wire" active={location.pathname === '/wire'} mobile>Wire</NavLink>
+            <NavLink to="/oracle" active={location.pathname === '/oracle'} mobile>Oracle</NavLink>
             <NavLink to="/explore" active={location.pathname === '/explore'} mobile>Explore</NavLink>
             <NavLink to="/council" active={location.pathname === '/council'} mobile>Council</NavLink>
           </div>

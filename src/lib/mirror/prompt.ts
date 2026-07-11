@@ -1,52 +1,18 @@
 import type { Wire } from '@/lib/wire';
-import { formatWire } from '@/lib/wire';
 import type { TraitAttestation } from '@/lib/publish/traits';
 import type { ChatMessage } from '@/hooks/useShakespeare';
+import { serializeWireContext } from '@/lib/ai/wireContext';
 
 /**
  * Build the Mirror prompt from the Wire and the user's own
- * self-attestations.
- *
- * Self-attestation contract (same one the Oracle inherits in WP-3):
- * - traits the person has DENIED are excluded outright — the model is
- *   never shown them, so it cannot leak them back
- * - confirmed/partial traits carry their weights so emphasis follows
- *   the person's own verification, not the raw type description
+ * self-attestations. Serialization + the self-attestation contract
+ * live in @/lib/ai/wireContext (shared with the Oracle).
  */
 export function buildMirrorMessages(
   wire: Wire,
   selfAttestations: Record<string, TraitAttestation>,
 ): ChatMessage[] {
-  const lines: string[] = [`WIRE: ${formatWire(wire)}`];
-
-  if (wire.jung) {
-    lines.push(`JUNGIAN 16-TYPE: ${wire.jung.type} (E-I ${wire.jung.ei}, S-N ${wire.jung.sn}, T-F ${wire.jung.tf}, J-P ${wire.jung.jp}; 0 = first pole, 100 = second)`);
-  }
-  if (wire.humanDesign) {
-    lines.push(`HUMAN DESIGN: ${wire.humanDesign.type}, profile ${wire.humanDesign.profile}, authority ${wire.humanDesign.authority}`);
-  }
-  if (wire.millman) {
-    lines.push(`LIFE-PURPOSE NUMBER (Millman): ${wire.millman.number}`);
-  }
-  if (wire.enneagram) {
-    lines.push(`ENNEAGRAM: core ${wire.enneagram.core}, wing ${wire.enneagram.wing}`);
-  }
-
-  const atts = Object.values(selfAttestations);
-  const denied = atts.filter((a) => a.verb === 'deny');
-  const weighted = atts.filter((a) => a.verb !== 'deny');
-  if (weighted.length > 0) {
-    lines.push('SELF-VERIFIED TRAIT WEIGHTS (the person has weighed these themselves; let emphasis follow the weights):');
-    for (const a of weighted) {
-      lines.push(`- ${a.traitId}: ${a.verb} (${a.weight.toFixed(1)})`);
-    }
-  }
-  if (denied.length > 0) {
-    lines.push('TRAITS THE PERSON HAS DENIED (these do NOT apply to them; never assert, imply, or hedge toward them):');
-    for (const a of denied) {
-      lines.push(`- ${a.traitId}`);
-    }
-  }
+  const context = serializeWireContext(wire, selfAttestations);
 
   const system = `You are the Mirror of Delphi. You synthesize a person's results across four self-knowledge systems — a Jungian 16-type profile, Human Design, the Millman life-purpose number, and the Enneagram — into one coherent portrait, written directly to the person in the second person.
 
@@ -71,6 +37,6 @@ Respond with ONLY a JSON object, no markdown fences, no preamble, matching exact
 
   return [
     { role: 'system', content: system },
-    { role: 'user', content: lines.join('\n') },
+    { role: 'user', content: context },
   ];
 }

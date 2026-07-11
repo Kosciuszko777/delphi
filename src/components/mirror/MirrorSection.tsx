@@ -5,6 +5,7 @@ import type { MirrorReading } from '@/lib/mirror/schema';
 import { Button } from '@/components/ui/button';
 import { Omphalos } from '@/components/wire/Omphalos';
 import { Loader2, RefreshCw, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
 
 /**
  * The Mirror — "Do you recognize yourself?"
@@ -88,6 +89,16 @@ export function MirrorSection() {
           )}
 
           <Reading reading={reading} />
+
+          {/* The Mirror shows; the Oracle answers */}
+          <div className="text-center pt-2">
+            <Link
+              to="/oracle"
+              className="font-serif text-sm text-oracle hover:underline underline-offset-4"
+            >
+              Recognize yourself? Ask the Oracle what to do with it →
+            </Link>
+          </div>
 
           <div className="flex items-center justify-between pt-2">
             <p className="text-[11px] text-muted-foreground leading-relaxed max-w-md">
