@@ -1,0 +1,16 @@
+{
+  "name": "Delphi — Know Thyself",
+  "short_name": "Delphi",
+  "description": "A sovereign self-knowledge application. Build your psychometric Wire across multiple typology systems, sovereign on Nostr.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#f7f4ef",
+  "theme_color": "#C9A227",
+  "icons": [
+    {
+      "src": "/favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
