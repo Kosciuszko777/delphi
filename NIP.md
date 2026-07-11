@@ -58,7 +58,7 @@ Weight is 0.0–1.0. Verbs: `confirm`, `deny`, `partial`.
 
 NIP-44 encrypted to the user's own pubkey. Content contains encrypted JSON of raw answers and scoring. Enables cross-device restore without leaking answers.
 
-**Status:** Defined. Not yet implemented (Phase 2+).
+**Status:** Defined. Schema ready; NIP-44 encryption not yet wired (requires logged-in user with signer — targeted for Phase 5 alongside publishing).
 
 ```json
 {

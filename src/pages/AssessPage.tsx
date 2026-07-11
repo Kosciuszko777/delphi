@@ -33,8 +33,9 @@ export default function AssessPage() {
       name: '16-Type Jungian',
       description: 'A 32-item questionnaire mapping your cognitive functions and personality preferences.',
       time: '10 minutes',
-      available: false,
+      available: true,
       completed: !!wire.jung,
+      to: '/assess/jung',
     },
     {
       id: 'enneagram',

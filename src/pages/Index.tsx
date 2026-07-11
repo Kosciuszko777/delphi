@@ -112,7 +112,8 @@ const Index = () => {
             letter="J"
             name="16-Type Jungian"
             description="A cognitive-function assessment mapping how you perceive, decide, and orient your energy in the world."
-            available={false}
+            available
+            to="/assess/jung"
           />
           <SystemCard
             letter="E"
