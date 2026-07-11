@@ -6,7 +6,7 @@ This document describes the custom Nostr event kinds used by Delphi.
 
 The user's canonical public psychometric profile. One per pubkey.
 
-**Status:** Defined. Publishing not yet implemented (Phase 5).
+**Status:** Implemented (Phase 5). Publishing via `PublishWireFlow` component on the Wire page.
 
 ```json
 {
@@ -34,7 +34,7 @@ Any subset of system tags may be present — the Wire grows as the user complete
 
 The user's weighting of individual traits within their own results.
 
-**Status:** Defined. Not yet implemented (Phase 5).
+**Status:** Implemented (Phase 5). Self-attestation UI via `SelfAttestationFlow` component. Users confirm/deny/partial each trait with a 0.0–1.0 weight slider.
 
 ```json
 {
@@ -58,7 +58,7 @@ Weight is 0.0–1.0. Verbs: `confirm`, `deny`, `partial`.
 
 NIP-44 encrypted to the user's own pubkey. Content contains encrypted JSON of raw answers and scoring. Enables cross-device restore without leaking answers.
 
-**Status:** Defined. Schema ready; NIP-44 encryption not yet wired (requires logged-in user with signer — targeted for Phase 5 alongside publishing).
+**Status:** Implemented (Phase 5). NIP-44 encrypt-to-self via `BackupRestoreFlow` component. Each test slug (`raw:jung`, `raw:enneagram`, `raw:millman`, `raw:human-design`) is a separate addressable event. Restore decrypts and rehydrates local Wire + raw answers.
 
 ```json
 {

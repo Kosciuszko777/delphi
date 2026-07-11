@@ -2,6 +2,9 @@ import { useSeoMeta } from '@unhead/react';
 import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { WireCard } from '@/components/wire/WireCard';
+import { PublishWireFlow } from '@/components/publish/PublishWireFlow';
+import { SelfAttestationFlow } from '@/components/publish/SelfAttestationFlow';
+import { BackupRestoreFlow } from '@/components/publish/BackupRestoreFlow';
 import { useWire } from '@/hooks/useWire';
 import { isWirePopulated, filledChamberCount, TOTAL_CHAMBERS } from '@/lib/wire';
 import { Button } from '@/components/ui/button';
@@ -90,19 +93,14 @@ export default function WirePage() {
               </div>
             )}
 
-            {/* Publishing teaser */}
-            <Card className="border-dashed border-oracle/20">
-              <CardContent className="py-8 px-6 text-center">
-                <p className="font-serif text-lg text-foreground mb-2">
-                  Publishing is coming soon
-                </p>
-                <p className="text-sm text-muted-foreground max-w-md mx-auto">
-                  In a future update, you will be able to publish your Wire to Nostr — making it 
-                  visible to others while keeping raw data private. For now, your Wire lives 
-                  safely on this device.
-                </p>
-              </CardContent>
-            </Card>
+            {/* Publish Wire to Nostr */}
+            <PublishWireFlow wire={wire} />
+
+            {/* Self-Attestation: confirm/deny/weight individual traits */}
+            <SelfAttestationFlow wire={wire} />
+
+            {/* Encrypted backup of raw assessment data */}
+            <BackupRestoreFlow />
           </div>
         ) : (
           /* Empty state */
