@@ -10,7 +10,7 @@
 export const DELPHI_OPERATOR_PUBKEY = ''; // TODO(operator): hex pubkey of the Delphi issuing key
 
 /** Lightning address for the Lightning checkout (BTCPay LNURL or ln-address). */
-export const COUNCIL_LIGHTNING_ADDRESS = ''; // TODO(operator): e.g. council@pay.delphi.example
+export const COUNCIL_LIGHTNING_ADDRESS = 'dangerouscrocus6076@cake.cash';
 
 /** Stripe Payment Link for the card checkout. */
 export const COUNCIL_STRIPE_LINK = ''; // TODO(operator): https://buy.stripe.com/...

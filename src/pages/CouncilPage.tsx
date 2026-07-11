@@ -14,7 +14,9 @@ import {
   COUNCIL_PRICE_USD,
   COUNCIL_SEATS,
 } from '@/lib/council/config';
-import { Zap, CreditCard, Copy, Check, ScrollText } from 'lucide-react';
+import { Zap, CreditCard, Copy, Check, ScrollText, Bitcoin } from 'lucide-react';
+import { BitcoinOnchainPanel } from '@/components/payments/BitcoinOnchainPanel';
+import { BITCOIN_ONCHAIN_ADDRESS } from '@/lib/support/config';
 import { toast } from '@/hooks/useToast';
 
 /**
@@ -28,6 +30,7 @@ export default function CouncilPage() {
   const { data: councilStatus } = useIsCouncillor(user?.pubkey);
   const [copied, setCopied] = useState(false);
   const [showLightning, setShowLightning] = useState(false);
+  const [showOnchain, setShowOnchain] = useState(false);
 
   useSeoMeta({
     title: 'The Council of the Temple — Delphi',
@@ -134,16 +137,26 @@ export default function CouncilPage() {
           </p>
         </div>
 
-        {(lnurl || stripeHref) ? (
+        {(lnurl || stripeHref || BITCOIN_ONCHAIN_ADDRESS) ? (
           <div className="space-y-4 mb-12">
             <div className="flex flex-wrap items-center justify-center gap-3">
               {lnurl && (
                 <Button
-                  onClick={() => setShowLightning((s) => !s)}
+                  onClick={() => { setShowLightning((s) => !s); setShowOnchain(false); }}
                   className="rounded-full gap-1.5 bg-oracle text-oracle-foreground hover:bg-oracle/90 px-6"
                 >
                   <Zap className="size-4" />
                   Take a seat with Lightning
+                </Button>
+              )}
+              {BITCOIN_ONCHAIN_ADDRESS && (
+                <Button
+                  onClick={() => { setShowOnchain((s) => !s); setShowLightning(false); }}
+                  variant="outline"
+                  className="rounded-full gap-1.5 px-6"
+                >
+                  <Bitcoin className="size-4" />
+                  On-chain
                 </Button>
               )}
               {stripeHref && (
@@ -155,6 +168,12 @@ export default function CouncilPage() {
                 </Button>
               )}
             </div>
+
+            {showOnchain && (
+              <BitcoinOnchainPanel
+                note={`Send the equivalent of $${COUNCIL_PRICE_USD}. On-chain carries no message field — keep your transaction ID and send it together with your npub${npub ? ` (${npub.slice(0, 12)}…)` : ''} through the contact on this site to claim your seat.`}
+              />
+            )}
 
             {showLightning && lnurl && (
               <div className="engraved rounded-[2px] bg-card p-6 max-w-sm mx-auto text-center space-y-4">

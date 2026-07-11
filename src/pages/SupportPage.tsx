@@ -10,6 +10,7 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useBuildersCredit } from '@/hooks/useBuildersCredit';
 import { useCouncilStele, useIsCouncillor } from '@/hooks/useCouncil';
 import {
+  BITCOIN_ONCHAIN_ADDRESS,
   SUPPORT_LIGHTNING_ADDRESS,
   SUPPORT_STRIPE_LINK,
   PLAN_INITIATE_STRIPE,
@@ -23,7 +24,8 @@ import {
   PLAN_TEAM_YEARLY_CHF,
 } from '@/lib/support/config';
 import { COUNCIL_PRICE_USD, COUNCIL_SEATS } from '@/lib/council/config';
-import { Heart, Zap, CreditCard, Copy, Check, Share2 } from 'lucide-react';
+import { Heart, Zap, CreditCard, Copy, Check, Share2, Bitcoin } from 'lucide-react';
+import { BitcoinOnchainPanel } from '@/components/payments/BitcoinOnchainPanel';
 import { toast } from '@/hooks/useToast';
 
 export default function SupportPage() {
@@ -34,6 +36,7 @@ export default function SupportPage() {
   const { data: council } = useIsCouncillor(user?.pubkey);
   const [copied, setCopied] = useState<string | null>(null);
   const [showDonateLn, setShowDonateLn] = useState(false);
+  const [showDonateBtc, setShowDonateBtc] = useState(false);
 
   useSeoMeta({
     title: 'Support — Delphi',
@@ -89,16 +92,26 @@ export default function SupportPage() {
                 Every sat and every franc keeps the temple lights on. Donations fund the
                 free tier — the tests, the Wire, and the Mirror stay free for everyone.
               </p>
-              {(SUPPORT_LIGHTNING_ADDRESS || SUPPORT_STRIPE_LINK) ? (
+              {(SUPPORT_LIGHTNING_ADDRESS || SUPPORT_STRIPE_LINK || BITCOIN_ONCHAIN_ADDRESS) ? (
                 <div className="space-y-4">
                   <div className="flex flex-wrap gap-2">
                     {SUPPORT_LIGHTNING_ADDRESS && (
                       <Button
-                        onClick={() => setShowDonateLn((s) => !s)}
+                        onClick={() => { setShowDonateLn((s) => !s); setShowDonateBtc(false); }}
                         size="sm"
                         className="rounded-full gap-1.5 bg-oracle text-oracle-foreground hover:bg-oracle/90"
                       >
                         <Zap className="size-3.5" /> Lightning
+                      </Button>
+                    )}
+                    {BITCOIN_ONCHAIN_ADDRESS && (
+                      <Button
+                        onClick={() => { setShowDonateBtc((s) => !s); setShowDonateLn(false); }}
+                        size="sm"
+                        variant="outline"
+                        className="rounded-full gap-1.5"
+                      >
+                        <Bitcoin className="size-3.5" /> On-chain
                       </Button>
                     )}
                     {SUPPORT_STRIPE_LINK && (
@@ -109,6 +122,7 @@ export default function SupportPage() {
                       </Button>
                     )}
                   </div>
+                  {showDonateBtc && <BitcoinOnchainPanel />}
                   {showDonateLn && SUPPORT_LIGHTNING_ADDRESS && (
                     <div className="engraved rounded-[2px] bg-background/40 p-5 max-w-xs text-center space-y-3">
                       <QRCodeCanvas value={`lightning:${SUPPORT_LIGHTNING_ADDRESS}`} size={176} className="mx-auto rounded-sm" />

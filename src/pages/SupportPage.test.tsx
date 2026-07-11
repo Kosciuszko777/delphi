@@ -42,9 +42,9 @@ describe('SupportPage — the Hearth', () => {
     expect(
       await screen.findByText(/Donations are gifts, not purchases/i),
     ).toBeInTheDocument();
-    expect(
-      await screen.findByText(/the donation rails open shortly/i),
-    ).toBeInTheDocument();
+    // Lightning + on-chain donation rails are armed
+    expect(await screen.findByText('Lightning')).toBeInTheDocument();
+    expect(await screen.findByText('On-chain')).toBeInTheDocument();
     // Signed out: referral identity nudge
     expect(
       await screen.findByText(/your key is your referral identity/i),

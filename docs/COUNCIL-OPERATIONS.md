@@ -162,3 +162,29 @@ disappears.
 No operator action required — the ledger is the network (kind 31400 `ref`
 tags). When Refstr reward tiers activate, compute payouts FROM the public
 ledger; never from a private list.
+
+---
+
+# Armed rails — current live configuration (2026-07-11)
+
+- **Lightning (council seats + donations):** `dangerouscrocus6076@cake.cash`
+  — Cake Wallet lightning address. INTERIM: verify whether cake.cash
+  relays LNURL payment comments; if comments are dropped, buyer npubs
+  will not arrive with the payment and fulfillment must match by
+  amount + timestamp against inbound claims. Replace with a BTCPay
+  LNURL address for automatic invoicing and reliable comments before
+  meaningful volume.
+- **On-chain BTC (council seats + donations):**
+  `bc1q0yr9zv76nj6kywtsrye34pxy2qdrtqvzchc6w0` — single static address.
+  On-chain has no message field: seat buyers are instructed in-UI to
+  keep their txid and submit it with their npub through the site
+  contact. NOTE: a single reused address links all payers publicly
+  on-chain; acceptable for donations, consider fresh addresses (xpub
+  rotation via BTCPay) for seat sales, both for payer privacy and for
+  clean payment matching.
+- **Stripe:** still unarmed (business verification pending) — card
+  buttons remain hidden until the links land in config.
+
+Fulfillment addition for on-chain: verify txid on any block explorer
+(amount ≥ seat price at time of payment, ≥ 1 confirmation), then award
+the seal and inscribe the stele exactly as with Lightning.

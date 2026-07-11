@@ -5,8 +5,11 @@
  */
 
 /** Donation rails (gifts — no benefits attach). */
-export const SUPPORT_LIGHTNING_ADDRESS = ''; // TODO(operator)
+export const SUPPORT_LIGHTNING_ADDRESS = 'dangerouscrocus6076@cake.cash';
 export const SUPPORT_STRIPE_LINK = '';       // TODO(operator): pay-what-you-want link
+
+/** On-chain Bitcoin — donations and seat payments alike. */
+export const BITCOIN_ONCHAIN_ADDRESS = 'bc1q0yr9zv76nj6kywtsrye34pxy2qdrtqvzchc6w0';
 
 /** Plan checkout (sales — entitlements attach via NIP-58 seals). */
 export const PLAN_INITIATE_STRIPE = '';      // TODO(operator): CHF 9/month subscription link
