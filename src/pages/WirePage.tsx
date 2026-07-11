@@ -1,18 +1,24 @@
 import { useSeoMeta } from '@unhead/react';
 import { Link } from 'react-router-dom';
+import { nip19 } from 'nostr-tools';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { WireCard } from '@/components/wire/WireCard';
 import { PublishWireFlow } from '@/components/publish/PublishWireFlow';
 import { SelfAttestationFlow } from '@/components/publish/SelfAttestationFlow';
 import { BackupRestoreFlow } from '@/components/publish/BackupRestoreFlow';
 import { useWire } from '@/hooks/useWire';
+import { useCurrentUser } from '@/hooks/useCurrentUser';
+import { usePublishedWire } from '@/hooks/usePublishedWire';
 import { isWirePopulated, filledChamberCount, TOTAL_CHAMBERS } from '@/lib/wire';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
-import { ArrowRight } from 'lucide-react';
+import { ArrowRight, ExternalLink, Copy, Check } from 'lucide-react';
+import { useState, useCallback } from 'react';
 
 export default function WirePage() {
   const { wire } = useWire();
+  const { user } = useCurrentUser();
+  const { data: publishedEvent } = usePublishedWire(user?.pubkey);
   const hasWire = isWirePopulated(wire);
   const filled = filledChamberCount(wire);
 
@@ -96,6 +102,11 @@ export default function WirePage() {
             {/* Publish Wire to Nostr */}
             <PublishWireFlow wire={wire} />
 
+            {/* Shareable Wire link — only show when published & logged in */}
+            {user && publishedEvent && (
+              <ShareableWireLink pubkey={user.pubkey} />
+            )}
+
             {/* Self-Attestation: confirm/deny/weight individual traits */}
             <SelfAttestationFlow wire={wire} />
 
@@ -131,6 +142,43 @@ export default function WirePage() {
         )}
       </div>
     </AppLayout>
+  );
+}
+
+function ShareableWireLink({ pubkey }: { pubkey: string }) {
+  const [copied, setCopied] = useState(false);
+  const npub = nip19.npubEncode(pubkey);
+  const profilePath = `/${npub}`;
+
+  const handleCopy = useCallback(() => {
+    const fullUrl = `${window.location.origin}${profilePath}`;
+    navigator.clipboard.writeText(fullUrl).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }, [profilePath]);
+
+  return (
+    <div className="flex flex-col sm:flex-row items-center justify-between gap-3 rounded-xl border border-border bg-card px-4 py-3">
+      <div className="flex items-center gap-2 min-w-0">
+        <ExternalLink className="size-4 text-oracle shrink-0" />
+        <p className="text-sm text-muted-foreground truncate">
+          Your public Wire is visible at{' '}
+          <Link to={profilePath} className="text-oracle hover:underline font-medium">
+            /{npub.slice(0, 16)}…
+          </Link>
+        </p>
+      </div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={handleCopy}
+        className="rounded-full px-4 gap-1.5 shrink-0"
+      >
+        {copied ? <Check className="size-3.5" /> : <Copy className="size-3.5" />}
+        {copied ? 'Copied' : 'Copy Link'}
+      </Button>
+    </div>
   );
 }
 

@@ -35,6 +35,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               <NavLink to="/" active={isHome}>Home</NavLink>
               <NavLink to="/assess" active={location.pathname.startsWith('/assess')}>Assess</NavLink>
               <NavLink to="/wire" active={location.pathname === '/wire'}>My Wire</NavLink>
+              <NavLink to="/explore" active={location.pathname === '/explore'}>Explore</NavLink>
             </nav>
 
             {/* Right side */}
@@ -58,7 +59,8 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div className="mx-auto max-w-4xl px-4 flex gap-1 py-1">
             <NavLink to="/" active={isHome} mobile>Home</NavLink>
             <NavLink to="/assess" active={location.pathname.startsWith('/assess')} mobile>Assess</NavLink>
-            <NavLink to="/wire" active={location.pathname === '/wire'} mobile>My Wire</NavLink>
+            <NavLink to="/wire" active={location.pathname === '/wire'} mobile>Wire</NavLink>
+            <NavLink to="/explore" active={location.pathname === '/explore'} mobile>Explore</NavLink>
           </div>
         </div>
       </header>

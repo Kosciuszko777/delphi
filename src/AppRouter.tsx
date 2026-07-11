@@ -8,6 +8,7 @@ import JungPage from "./pages/JungPage";
 import EnneagramPage from "./pages/EnneagramPage";
 import HumanDesignPage from "./pages/HumanDesignPage";
 import WirePage from "./pages/WirePage";
+import ExplorePage from "./pages/ExplorePage";
 import { NIP19Page } from "./pages/NIP19Page";
 import NotFound from "./pages/NotFound";
 
@@ -23,6 +24,7 @@ export function AppRouter() {
         <Route path="/assess/enneagram" element={<EnneagramPage />} />
         <Route path="/assess/human-design" element={<HumanDesignPage />} />
         <Route path="/wire" element={<WirePage />} />
+        <Route path="/explore" element={<ExplorePage />} />
         {/* NIP-19 route for npub1, note1, naddr1, nevent1, nprofile1 */}
         <Route path="/:nip19" element={<NIP19Page />} />
         {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
