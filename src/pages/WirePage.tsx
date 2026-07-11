@@ -4,6 +4,7 @@ import { nip19 } from 'nostr-tools';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { WireCard } from '@/components/wire/WireCard';
 import { ShareWireCard } from '@/components/wire/ShareWireCard';
+import { MirrorSection } from '@/components/mirror/MirrorSection';
 import { PublishWireFlow } from '@/components/publish/PublishWireFlow';
 import { SelfAttestationFlow } from '@/components/publish/SelfAttestationFlow';
 import { BackupRestoreFlow } from '@/components/publish/BackupRestoreFlow';
@@ -49,6 +50,9 @@ export default function WirePage() {
             {/* Wire card */}
             <WireCard wire={wire} />
             <ShareWireCard wire={wire} />
+
+            {/* The Mirror — four-chamber synthesis */}
+            <MirrorSection />
 
             {/* Completed chambers detail */}
             <div className="space-y-4">

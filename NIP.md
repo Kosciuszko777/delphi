@@ -98,3 +98,52 @@ Standard NIP-32 labels for peer attestations of traits. Interoperable with any N
 Comments on Wires use NIP-22 (kind 1111) with root `a` = the Wire address.
 
 Type rooms use `t` tags on kind 1 notes: `["t", "delphi-intj"]`, `["t", "delphi-enneagram8"]`, etc.
+
+## Kind 31403 — Council Stele (addressable, d-tag: `"council-stele"`)
+
+The public roster of the Council of the Temple, authored by the Delphi
+operator key. One event, replaced as seats are inscribed. Pseudonymous
+by default; a name appears only if the councillor requests inscription.
+
+**Status:** Implemented (WP-2.5). Read via `useCouncilStele`; written
+operator-side per `docs/COUNCIL-OPERATIONS.md`.
+
+```json
+{
+  "kind": 31403,
+  "pubkey": "<operator pubkey>",
+  "tags": [
+    ["d", "council-stele"],
+    ["seats", "777"],
+    ["member", "<pubkey>", "1"],
+    ["member", "<pubkey>", "2", "Eleanor of the North"],
+    ["alt", "Delphi Council Stele: the Council of the Temple roster"],
+    ["client", "delphi"]
+  ],
+  "content": ""
+}
+```
+
+## Council Seal — NIP-58 (kinds 30009 / 8)
+
+A seat on the council is a portable Nostr credential, not a database
+row. The operator publishes one badge definition (kind 30009, d-tag
+`delphi-council`) and one award (kind 8) per councillor:
+
+```json
+{
+  "kind": 8,
+  "pubkey": "<operator pubkey>",
+  "tags": [
+    ["a", "30009:<operator pubkey>:delphi-council"],
+    ["p", "<councillor pubkey>"],
+    ["seat", "42"]
+  ],
+  "content": ""
+}
+```
+
+Clients verify a seat by querying kind 8 from the operator with `#p` =
+the member and `#a` = the badge address (`useIsCouncillor`). Any NIP-58
+client can display the seal — the seat survives every platform,
+including this one.
