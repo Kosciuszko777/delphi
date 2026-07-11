@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useSeoMeta } from '@unhead/react';
 import { nip19 } from 'nostr-tools';
+import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Omphalos } from '@/components/wire/Omphalos';
 import { QRCodeCanvas } from '@/components/ui/qrcode';
@@ -66,6 +67,11 @@ export default function CouncilPage() {
             The temple at Delphi had its keepers. This one has a council: {COUNCIL_SEATS} seats,
             taken once, held for life. A seat is a signed Nostr credential — a numbered seal
             no platform can revoke, including this one.
+          </p>
+          <p className="mt-3 text-xs">
+            <Link to="/support" className="text-muted-foreground hover:text-foreground underline underline-offset-2 decoration-dotted">
+              Looking for monthly plans instead? → Support &amp; Plans
+            </Link>
           </p>
           {taken > 0 && (
             <p className="mt-4 font-mono text-sm text-oracle">

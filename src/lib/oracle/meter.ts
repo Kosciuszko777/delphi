@@ -12,6 +12,15 @@
  */
 
 export const FREE_MONTHLY_LIMIT = 10;
+export const INITIATE_MONTHLY_LIMIT = 100;
+
+export type Entitlement = 'free' | 'initiate' | 'council';
+
+export function limitFor(entitlement: Entitlement): number {
+  if (entitlement === 'council') return Number.POSITIVE_INFINITY;
+  if (entitlement === 'initiate') return INITIATE_MONTHLY_LIMIT;
+  return FREE_MONTHLY_LIMIT;
+}
 
 export interface MeterState {
   month: string;
@@ -32,18 +41,27 @@ export function normalize(state: MeterState | null, month: string = currentMonth
   return state;
 }
 
-export function remaining(state: MeterState | null, month: string = currentMonth()): number {
+export function remaining(
+  state: MeterState | null,
+  month: string = currentMonth(),
+  limit: number = FREE_MONTHLY_LIMIT,
+): number {
   const s = normalize(state, month);
-  return Math.max(0, FREE_MONTHLY_LIMIT - s.used);
+  if (!Number.isFinite(limit)) return Number.POSITIVE_INFINITY;
+  return Math.max(0, limit - s.used);
 }
 
 export function canSend(
   state: MeterState | null,
-  isCouncillor: boolean,
+  entitlement: Entitlement | boolean,
   month: string = currentMonth(),
 ): boolean {
-  if (isCouncillor) return true;
-  return remaining(state, month) > 0;
+  // boolean form kept for backward compatibility: true == council
+  const ent: Entitlement = typeof entitlement === 'boolean'
+    ? (entitlement ? 'council' : 'free')
+    : entitlement;
+  if (ent === 'council') return true;
+  return remaining(state, month, limitFor(ent)) > 0;
 }
 
 export function consume(state: MeterState | null, month: string = currentMonth()): MeterState {

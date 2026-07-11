@@ -82,3 +82,32 @@ export function useIsCouncillor(pubkey: string | undefined) {
     },
   });
 }
+
+/**
+ * Generic seal check: has the operator awarded this pubkey the NIP-58
+ * badge with the given d-tag? Used for subscriber seals
+ * (delphi-initiate) alongside the council seal.
+ */
+export function useHasSeal(pubkey: string | undefined, badgeDTag: string) {
+  const { nostr } = useNostr();
+
+  return useQuery<boolean>({
+    queryKey: ['delphi', 'seal', badgeDTag, pubkey ?? ''],
+    enabled: !!pubkey && DELPHI_OPERATOR_PUBKEY.length === 64,
+    staleTime: 5 * 60_000,
+    queryFn: async (c) => {
+      const badgeAddress = `${BADGE_DEFINITION_KIND}:${DELPHI_OPERATOR_PUBKEY}:${badgeDTag}`;
+      const events = await nostr.query(
+        [{
+          kinds: [BADGE_AWARD_KIND],
+          authors: [DELPHI_OPERATOR_PUBKEY],
+          '#p': [pubkey!],
+          '#a': [badgeAddress],
+          limit: 1,
+        }],
+        { signal: c.signal },
+      );
+      return events.length > 0;
+    },
+  });
+}

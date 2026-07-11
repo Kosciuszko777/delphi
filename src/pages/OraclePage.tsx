@@ -9,7 +9,6 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useWire } from '@/hooks/useWire';
 import { useOracleChat } from '@/hooks/useOracleChat';
 import { ORACLE_PRESETS } from '@/lib/oracle/prompt';
-import { FREE_MONTHLY_LIMIT } from '@/lib/oracle/meter';
 import { isWirePopulated } from '@/lib/wire';
 import { ArrowUp, Loader2 } from 'lucide-react';
 
@@ -19,7 +18,7 @@ export default function OraclePage() {
   const { wire } = useWire();
   const {
     turns, send, isThinking, error,
-    isCouncillor, freeRemaining, allowed, isAuthenticated,
+    entitlement, isCouncillor, monthlyLimit, freeRemaining, allowed, isAuthenticated,
   } = useOracleChat();
   const [accepted, setAccepted] = useLocalStorage<boolean>(DISCLAIMER_KEY, false);
   const [input, setInput] = useState('');
@@ -178,7 +177,7 @@ export default function OraclePage() {
             ) : (
               <div className="engraved rounded-[2px] bg-oracle/5 p-5 text-center space-y-3">
                 <p className="font-serif text-foreground">
-                  Your {FREE_MONTHLY_LIMIT} free questions this month are spent.
+                  Your {monthlyLimit} questions this month are spent.
                 </p>
                 <p className="text-xs text-muted-foreground">
                   They return with the new month — or a seat on the council carries
@@ -187,6 +186,11 @@ export default function OraclePage() {
                 <Button asChild variant="outline" className="rounded-full">
                   <Link to="/council">The Council of the Temple</Link>
                 </Button>
+                <p className="text-[11px]">
+                  <Link to="/support" className="text-muted-foreground hover:text-foreground underline underline-offset-2 decoration-dotted">
+                    or see all ways to support
+                  </Link>
+                </p>
               </div>
             )}
 
@@ -194,7 +198,9 @@ export default function OraclePage() {
             <p className="text-center font-mono text-[11px] text-ash">
               {isCouncillor
                 ? 'council seat · the Oracle is yours for life'
-                : `${freeRemaining} of ${FREE_MONTHLY_LIMIT} free questions remain this month`}
+                : entitlement === 'initiate'
+                  ? `initiate · ${freeRemaining} of ${monthlyLimit} questions remain this month`
+                  : `${freeRemaining} of ${monthlyLimit} free questions remain this month`}
             </p>
           </div>
         )}

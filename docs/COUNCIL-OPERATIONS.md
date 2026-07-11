@@ -120,3 +120,45 @@ Name the seat, never the progress: "seat № 042 of the 777 was taken
 today" — never "5% of seats sold". 777 is the shape of the council,
 not a sales target. The number does its own work in this audience:
 it is exact, it is small, and it means something.
+
+---
+
+# Subscriptions (The Hearth — Support & Plans)
+
+## Rails
+- **Initiate** CHF 9/month: Stripe subscription Payment Link → `PLAN_INITIATE_STRIPE`.
+  Lightning: yearly prepay CHF 90 (two months free) to the support/council
+  BTCPay store, npub in comment.
+- **Temple Team** CHF 29/month (founding team rate, up to 20 seats):
+  `PLAN_TEAM_STRIPE`; Lightning yearly CHF 290. Team lead's npub is the
+  anchor; members are invited by npub (v1: lead sends the list, operator
+  awards seals to each member).
+- **Enterprise** CHF 1,900/month: no self-serve — `ENTERPRISE_CONTACT`
+  opens the conversation. Invoice via Philalethes Sagl.
+- **Donations** (`SUPPORT_LIGHTNING_ADDRESS` / `SUPPORT_STRIPE_LINK`):
+  gifts, no benefits attach, separate bookkeeping line from all sales.
+
+## Entitlement = seal (same pattern as the council)
+Award on payment, in the daily ritual:
+
+```bash
+nak event -k 8 \
+  -t a="30009:<OPERATOR_PUBKEY>:delphi-initiate" \
+  -t p=<SUBSCRIBER_HEX_PUBKEY> \
+  --sec <OPERATOR_SECRET> <relays>
+```
+
+(Publish the `delphi-initiate` kind 30009 definition once, alongside the
+council definition.) Team members receive the same initiate seal; keep the
+team roster in the book-of-record CSV with the lead's npub as group key.
+
+## Churn sweep (1st of the month)
+Stripe: export cancelled/failed subscriptions → for each, NIP-09 the kind 8
+award. Lightning yearly: calendar reminder at prepay expiry; one grace
+week, then revoke. The Oracle meter downgrades automatically when the seal
+disappears.
+
+## Builders' Credit
+No operator action required — the ledger is the network (kind 31400 `ref`
+tags). When Refstr reward tiers activate, compute payouts FROM the public
+ledger; never from a private list.

@@ -14,7 +14,7 @@ export const ATTESTATION_KIND = 31401;
 /**
  * Build the tags array for a kind 31400 Wire event.
  */
-export function buildWireTags(wire: Wire): string[][] {
+export function buildWireTags(wire: Wire, referrerPubkey?: string | null): string[][] {
   const tags: string[][] = [
     ['d', 'wire'],
   ];
@@ -41,6 +41,12 @@ export function buildWireTags(wire: Wire): string[][] {
   const wireStr = formatWire(wire);
   if (wireStr) {
     tags.push(['wire', wireStr]);
+  }
+
+  // Builders' Credit: the referrer who brought this person, publicly
+  // verifiable on the Wire itself (shown in the consent preview).
+  if (referrerPubkey) {
+    tags.push(['ref', referrerPubkey]);
   }
 
   tags.push(['published_at', Math.floor(Date.now() / 1000).toString()]);

@@ -4,7 +4,7 @@ import { useShakespeare, type ChatMessage } from '@/hooks/useShakespeare';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useWire } from '@/hooks/useWire';
 import { useAttestations } from '@/hooks/useAttestations';
-import { useIsCouncillor } from '@/hooks/useCouncil';
+import { useOracleEntitlement } from '@/hooks/useOracleEntitlement';
 import { buildOracleSystem } from '@/lib/oracle/prompt';
 import {
   type MeterState,
@@ -12,6 +12,7 @@ import {
   remaining,
   canSend as meterCanSend,
   consume,
+  limitFor,
 } from '@/lib/oracle/meter';
 
 const METER_KEY = 'delphi:oracle-meter';
@@ -40,7 +41,7 @@ export function useOracleChat() {
   const { user } = useCurrentUser();
   const { wire } = useWire();
   const { attestations } = useAttestations();
-  const { data: council } = useIsCouncillor(user?.pubkey);
+  const { entitlement } = useOracleEntitlement();
   const { sendStreamingMessage, getAvailableModels } = useShakespeare();
 
   const [turns, setTurns] = useState<OracleTurn[]>([]);
@@ -49,14 +50,15 @@ export function useOracleChat() {
   const [meter, setMeter] = useLocalStorage<MeterState | null>(METER_KEY, null);
   const modelRef = useRef<string | null>(null);
 
-  const isCouncillor = council?.isCouncillor ?? false;
-  const freeRemaining = remaining(normalize(meter));
-  const allowed = meterCanSend(meter, isCouncillor);
+  const isCouncillor = entitlement === 'council';
+  const monthlyLimit = limitFor(entitlement);
+  const freeRemaining = remaining(normalize(meter), undefined, monthlyLimit);
+  const allowed = meterCanSend(meter, entitlement);
 
   const send = useCallback(async (text: string) => {
     const question = text.trim();
     if (!question || isThinking) return;
-    if (!meterCanSend(meter, isCouncillor)) {
+    if (!meterCanSend(meter, entitlement)) {
       setError('Your free messages for this month are used. A council seat carries the Oracle for life.');
       return;
     }
@@ -102,14 +104,16 @@ export function useOracleChat() {
     } finally {
       setIsThinking(false);
     }
-  }, [turns, isThinking, meter, isCouncillor, wire, attestations, getAvailableModels, sendStreamingMessage, setMeter]);
+  }, [turns, isThinking, meter, entitlement, isCouncillor, wire, attestations, getAvailableModels, sendStreamingMessage, setMeter]);
 
   return {
     turns,
     send,
     isThinking,
     error,
+    entitlement,
     isCouncillor,
+    monthlyLimit,
     freeRemaining,
     allowed,
     isAuthenticated: !!user,

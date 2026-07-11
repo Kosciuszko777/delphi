@@ -2,7 +2,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { useTheme } from '@/hooks/useTheme';
 import { Button } from '@/components/ui/button';
-import { Moon, Sun } from 'lucide-react';
+import { Moon, Sun, Heart } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AppLayoutProps {
@@ -43,6 +43,17 @@ export function AppLayout({ children }: AppLayoutProps) {
             {/* Right side */}
             <div className="flex items-center gap-2">
               <Button
+                asChild
+                variant="ghost"
+                size="icon"
+                aria-label="Support Delphi"
+                className={location.pathname === '/support' ? 'text-oracle' : 'text-muted-foreground'}
+              >
+                <Link to="/support">
+                  <Heart className="size-4" fill={location.pathname === '/support' ? 'currentColor' : 'none'} />
+                </Link>
+              </Button>
+              <Button
                 variant="ghost"
                 size="icon"
                 onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
@@ -77,6 +88,9 @@ export function AppLayout({ children }: AppLayoutProps) {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
           <p className="font-serif italic">γνῶθι σεαυτόν — Know Thyself</p>
           <div className="flex items-center gap-4">
+            <Link to="/support" className="transition-colors hover:text-foreground inline-flex items-center gap-1">
+              <Heart className="size-3" /> Support
+            </Link>
             <a
               href="https://shakespeare.diy"
               target="_blank"

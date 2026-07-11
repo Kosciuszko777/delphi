@@ -11,6 +11,7 @@ import { toast } from '@/hooks/useToast';
 import type { Wire } from '@/lib/wire';
 import { formatWire } from '@/lib/wire';
 import { buildWireTags, buildWireDeletionTags, buildAttestationDeletionTags, WIRE_KIND } from '@/lib/publish/wireEvent';
+import { getStoredReferrer } from '@/lib/support/referral';
 import { Globe, Shield, AlertTriangle, Check, Loader2, Trash2 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
@@ -47,7 +48,7 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
   }
 
   const wireString = formatWire(wire);
-  const tags = buildWireTags(wire);
+  const tags = buildWireTags(wire, getStoredReferrer());
 
   const handlePublish = async () => {
     try {
