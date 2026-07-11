@@ -167,7 +167,7 @@ ledger; never from a private list.
 
 # Armed rails — current live configuration (2026-07-11)
 
-- **Lightning (council seats + donations):** `dangerouscrocus6076@cake.cash`
+- **Lightning (council seats + donations):** `delphi@cake.cash`
   — Cake Wallet lightning address. INTERIM: verify whether cake.cash
   relays LNURL payment comments; if comments are dropped, buyer npubs
   will not arrive with the payment and fulfillment must match by

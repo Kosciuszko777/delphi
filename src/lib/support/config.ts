@@ -5,7 +5,7 @@
  */
 
 /** Donation rails (gifts — no benefits attach). */
-export const SUPPORT_LIGHTNING_ADDRESS = 'dangerouscrocus6076@cake.cash';
+export const SUPPORT_LIGHTNING_ADDRESS = 'delphi@cake.cash';
 export const SUPPORT_STRIPE_LINK = '';       // TODO(operator): pay-what-you-want link
 
 /** On-chain Bitcoin — donations and seat payments alike. */
