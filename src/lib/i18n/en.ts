@@ -3,6 +3,7 @@ import type { TranslationDict } from './types';
 const en: TranslationDict = {
   // ─── Nav ───
   'nav.home': 'Home',
+  'nav.howItWorks': 'How it works',
   'nav.assess': 'Assess',
   'nav.wire': 'My Wire',
   'nav.oracle': 'Oracle',
@@ -14,7 +15,27 @@ const en: TranslationDict = {
   'footer.motto': 'γνῶθι σεαυτόν — Know Thyself',
   'footer.vibed': 'Vibed with Shakespeare',
 
-  // ─── Index / Home ───
+  // ─── Landing Page ───
+  'landing.inscription': 'γνῶθι σεαυτόν',
+  'landing.title': 'Know thyself — instead of letting others know you',
+  'landing.subtitle': 'The self-sovereign app for human development and better mutual understanding. Join the temple and discover your uniqueness. Built on Nostr.',
+  'landing.cta': 'Enter the Temple',
+  'landing.promise.noTrackers': 'No trackers',
+  'landing.promise.noCookies': 'No cookies',
+  'landing.promise.private': 'Only visible to you',
+  'landing.promise.nostr': 'Built on Nostr',
+  'landing.temple.title': 'Enter the Temple',
+  'landing.temple.subtitle': 'Four personality systems. One sovereign fingerprint. Your path to self-knowledge.',
+  'landing.temple.step1.title': 'Discover',
+  'landing.temple.step1.desc': 'Complete four personality assessments — from Millman Life-Purpose to the Enneagram. Each fills a chamber in your Wire.',
+  'landing.temple.step2.title': 'Recognize',
+  'landing.temple.step2.desc': 'The Mirror reads your four systems as one and reveals a full picture — strengths, shadows, and the frictions between them.',
+  'landing.temple.step3.title': 'Share — or don\'t',
+  'landing.temple.step3.desc': 'Your Wire belongs to you. Publish it on Nostr, keep it private, or share only what you choose. Your keys, your call.',
+  'landing.unique.title': 'Discover your uniqueness',
+  'landing.unique.desc': 'The world knows you through data. Delphi helps you know yourself — through systems thousands of years old, on technology no one controls.',
+
+  // ─── How It Works (old home) ───
   'home.inscription': 'γνῶθι σεαυτόν',
   'home.title': 'Know Thyself',
   'home.subtitle': 'Build your psychometric fingerprint across four ancient and modern typology systems. Your identity, your data, sovereign on Nostr.',

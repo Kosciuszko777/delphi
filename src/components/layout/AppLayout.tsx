@@ -41,7 +41,7 @@ export function AppLayout({ children }: AppLayoutProps) {
 
             {/* Nav */}
             <nav className="hidden sm:flex items-center gap-1">
-              <NavLink to="/" active={isHome}>{t('nav.home')}</NavLink>
+              <NavLink to="/how-it-works" active={location.pathname === '/how-it-works'}>{t('nav.howItWorks')}</NavLink>
               <NavLink to="/assess" active={location.pathname.startsWith('/assess')}>{t('nav.assess')}</NavLink>
               <NavLink to="/wire" active={location.pathname === '/wire'}>{t('nav.wire')}</NavLink>
               <NavLink to="/oracle" active={location.pathname === '/oracle'}>{t('nav.oracle')}</NavLink>
@@ -108,8 +108,8 @@ export function AppLayout({ children }: AppLayoutProps) {
 
         {/* Mobile nav */}
         <div className="sm:hidden border-t border-border/30">
-          <div className="mx-auto max-w-4xl px-4 flex gap-1 py-1">
-            <NavLink to="/" active={isHome} mobile>{t('nav.home')}</NavLink>
+          <div className="mx-auto max-w-4xl px-4 flex gap-1 py-1 overflow-x-auto">
+            <NavLink to="/how-it-works" active={location.pathname === '/how-it-works'} mobile>{t('nav.howItWorks')}</NavLink>
             <NavLink to="/assess" active={location.pathname.startsWith('/assess')} mobile>{t('nav.assess')}</NavLink>
             <NavLink to="/wire" active={location.pathname === '/wire'} mobile>Wire</NavLink>
             <NavLink to="/oracle" active={location.pathname === '/oracle'} mobile>{t('nav.oracle')}</NavLink>

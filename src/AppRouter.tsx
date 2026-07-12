@@ -3,6 +3,7 @@ import { ScrollToTop } from "./components/ScrollToTop";
 import { ReferralCapture } from "./components/ReferralCapture";
 
 import Index from "./pages/Index";
+import HowItWorksPage from "./pages/HowItWorksPage";
 import AssessPage from "./pages/AssessPage";
 import MillmanPage from "./pages/MillmanPage";
 import JungPage from "./pages/JungPage";
@@ -23,6 +24,7 @@ export function AppRouter() {
       <ReferralCapture />
       <Routes>
         <Route path="/" element={<Index />} />
+        <Route path="/how-it-works" element={<HowItWorksPage />} />
         <Route path="/assess" element={<AssessPage />} />
         <Route path="/assess/millman" element={<MillmanPage />} />
         <Route path="/assess/jung" element={<JungPage />} />

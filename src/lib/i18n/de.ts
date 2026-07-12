@@ -3,6 +3,7 @@ import type { TranslationDict } from './types';
 const de: TranslationDict = {
   // ─── Nav ───
   'nav.home': 'Start',
+  'nav.howItWorks': 'So funktioniert es',
   'nav.assess': 'Tests',
   'nav.wire': 'Mein Wire',
   'nav.oracle': 'Orakel',
@@ -14,7 +15,27 @@ const de: TranslationDict = {
   'footer.motto': 'γνῶθι σεαυτόν — Erkenne dich selbst',
   'footer.vibed': 'Erstellt mit Shakespeare',
 
-  // ─── Index / Home ───
+  // ─── Landing Page ───
+  'landing.inscription': 'γνῶθι σεαυτόν',
+  'landing.title': 'Erkenne dich selbst — statt dich erkennen zu lassen',
+  'landing.subtitle': 'Die selbstsouveräne App für menschliche Entwicklung und besseres gegenseitiges Verständnis. Tritt ein in den Tempel und entdecke deine Einzigartigkeit. Gebaut auf Nostr.',
+  'landing.cta': 'Tempel betreten',
+  'landing.promise.noTrackers': 'Keine Tracker',
+  'landing.promise.noCookies': 'Keine Cookies',
+  'landing.promise.private': 'Alles bleibt bei dir',
+  'landing.promise.nostr': 'Gebaut auf Nostr',
+  'landing.temple.title': 'Betritt den Tempel',
+  'landing.temple.subtitle': 'Vier Persönlichkeitssysteme. Ein souveräner Fingerabdruck. Dein Weg zur Selbsterkenntnis.',
+  'landing.temple.step1.title': 'Entdecke',
+  'landing.temple.step1.desc': 'Bearbeite vier Persönlichkeitstests — von der Millman-Lebensaufgabe bis zum Enneagramm. Jeder füllt eine Kammer deines Wire.',
+  'landing.temple.step2.title': 'Erkenne',
+  'landing.temple.step2.desc': 'Der Spiegel liest deine vier Systeme als Einheit und zeigt ein Gesamtbild — Stärken, Schatten und die Reibungen dazwischen.',
+  'landing.temple.step3.title': 'Teile — oder nicht',
+  'landing.temple.step3.desc': 'Dein Wire gehört dir. Veröffentliche ihn auf Nostr, behalte ihn privat oder teile nur, was du willst. Deine Schlüssel, deine Wahl.',
+  'landing.unique.title': 'Entdecke deine Einzigartigkeit',
+  'landing.unique.desc': 'Die Welt kennt dich durch Daten. Delphi hilft dir, dich selbst zu kennen — durch Systeme, die Jahrtausende alt sind, in einer Technologie, die niemand kontrolliert.',
+
+  // ─── How It Works (old home) ───
   'home.inscription': 'γνῶθι σεαυτόν',
   'home.title': 'Erkenne dich selbst',
   'home.subtitle': 'Erstelle deinen psychometrischen Fingerabdruck über vier antike und moderne Typologiesysteme. Deine Identität, deine Daten, souverän auf Nostr.',
