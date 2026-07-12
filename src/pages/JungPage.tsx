@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useWire } from '@/hooks/useWire';
 import { useJungAnswers } from '@/hooks/useJungAnswers';
+import { useTranslation } from '@/hooks/useTranslation';
 import { scoreJung, isComplete, answeredCount } from '@/lib/jung/scoring';
 import type { DimensionScore } from '@/lib/jung/scoring';
 import type { Pole } from '@/lib/jung/items';
@@ -20,6 +21,7 @@ type Phase = 'intro' | 'quiz' | 'results';
 export default function JungPage() {
   const { wire, updateWire } = useWire();
   const { answers, setAnswer, clearAnswers } = useJungAnswers();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const hasExistingResult = !!wire.jung;
@@ -98,7 +100,7 @@ export default function JungPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Assessments
+          {t('common.backToAssessments')}
         </Link>
 
         {/* Header */}
@@ -108,13 +110,13 @@ export default function JungPage() {
               J
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-              16-Type Jungian Profile
+              {t('jung.title')}
             </h1>
           </div>
           <p className="text-muted-foreground leading-relaxed max-w-xl">
             {phase === 'results'
-              ? 'Your cognitive function profile across four Jungian dimensions.'
-              : 'A 32-item questionnaire exploring how you perceive, decide, and orient your energy. Takes about 10 minutes.'
+              ? t('jung.subtitle.results')
+              : t('jung.subtitle.quiz')
             }
           </p>
         </div>
@@ -125,33 +127,31 @@ export default function JungPage() {
             <CardContent className="pt-6 space-y-6">
               <div className="space-y-4">
                 <h2 className="font-serif text-lg font-semibold text-foreground">
-                  How It Works
+                  {t('jung.howItWorks')}
                 </h2>
                 <ul className="space-y-3 text-sm text-foreground/80">
                   <li className="flex gap-3">
                     <span className="flex items-center justify-center size-6 rounded-full bg-oracle/10 text-oracle text-xs font-bold shrink-0">1</span>
-                    <span>You'll see 32 statements about how you think, feel, and act.</span>
+                    <span>{t('jung.step1')}</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex items-center justify-center size-6 rounded-full bg-oracle/10 text-oracle text-xs font-bold shrink-0">2</span>
-                    <span>Rate each one from "Strongly disagree" to "Strongly agree" — go with your first instinct.</span>
+                    <span>{t('jung.step2')}</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex items-center justify-center size-6 rounded-full bg-oracle/10 text-oracle text-xs font-bold shrink-0">3</span>
-                    <span>Your answers are scored across four dimensions: Energy (E–I), Perception (S–N), Decision-making (T–F), and Lifestyle (J–P).</span>
+                    <span>{t('jung.step3')}</span>
                   </li>
                   <li className="flex gap-3">
                     <span className="flex items-center justify-center size-6 rounded-full bg-oracle/10 text-oracle text-xs font-bold shrink-0">4</span>
-                    <span>You'll receive your four-letter type with percentage breakdowns and an in-depth interpretation.</span>
+                    <span>{t('jung.step4')}</span>
                   </li>
                 </ul>
               </div>
 
               <div className="rounded-lg border border-border/60 bg-muted/30 p-4">
                 <p className="text-xs text-muted-foreground leading-relaxed">
-                  <strong>Privacy:</strong> Your answers are stored locally on this device only. 
-                  They are never sent to any server. Only the derived four-letter type code will 
-                  be added to your Wire — raw answers remain private.
+                  {t('jung.privacy')}
                 </p>
               </div>
 
@@ -160,7 +160,7 @@ export default function JungPage() {
                   onClick={handleStartQuiz}
                   className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8"
                 >
-                  Begin Assessment
+                  {t('jung.beginAssessment')}
                 </Button>
                 {hasProgress && (
                   <Button
@@ -168,7 +168,7 @@ export default function JungPage() {
                     onClick={() => setPhase('quiz')}
                     className="rounded-full"
                   >
-                    Resume ({answeredCount(answers)}/{TOTAL_ITEMS} answered)
+                    {t('jung.resume')} ({answeredCount(answers)}/{TOTAL_ITEMS} {t('jung.answered')})
                   </Button>
                 )}
               </div>
@@ -195,7 +195,7 @@ export default function JungPage() {
                 onClick={() => navigate('/wire')}
                 className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-6"
               >
-                View My Wire
+                {t('common.viewMyWire')}
               </Button>
               <Button
                 variant="outline"
@@ -203,7 +203,7 @@ export default function JungPage() {
                 className="rounded-full gap-1.5"
               >
                 <RotateCcw className="size-3.5" />
-                Retake Assessment
+                {t('jung.retake')}
               </Button>
             </div>
           </div>
@@ -215,8 +215,6 @@ export default function JungPage() {
 
 /**
  * Reconstruct DimensionScore array from stored wire data for display.
- * This is used when viewing results without raw answers (e.g., coming
- * back to the page after closing).
  */
 function buildDimensionsFromWire(jung: JungResult): DimensionScore[] {
   const dims: Array<{

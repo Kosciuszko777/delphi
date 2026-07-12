@@ -4,6 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import { NostrLoginProvider } from '@nostrify/react/login';
 import NostrProvider from '@/components/NostrProvider';
 import { AppProvider } from '@/components/AppProvider';
+import { LocaleProvider } from '@/components/LocaleProvider';
 import { AppConfig } from '@/contexts/AppContext';
 
 interface TestAppProps {
@@ -22,6 +23,7 @@ export function TestApp({ children }: TestAppProps) {
 
   const defaultConfig: AppConfig = {
     theme: 'light',
+    locale: 'de',
     relayMetadata: {
       relays: [
         { url: 'wss://relay.primal.net', read: true, write: true },
@@ -38,15 +40,17 @@ export function TestApp({ children }: TestAppProps) {
   return (
     <UnheadProvider head={head}>
       <AppProvider storageKey='test-app-config' defaultConfig={defaultConfig}>
-        <QueryClientProvider client={queryClient}>
-          <NostrLoginProvider storageKey='test-login'>
-            <NostrProvider>
-              <BrowserRouter>
-                {children}
-              </BrowserRouter>
-            </NostrProvider>
-          </NostrLoginProvider>
-        </QueryClientProvider>
+        <LocaleProvider>
+          <QueryClientProvider client={queryClient}>
+            <NostrLoginProvider storageKey='test-login'>
+              <NostrProvider>
+                <BrowserRouter>
+                  {children}
+                </BrowserRouter>
+              </NostrProvider>
+            </NostrLoginProvider>
+          </QueryClientProvider>
+        </LocaleProvider>
       </AppProvider>
     </UnheadProvider>
   );

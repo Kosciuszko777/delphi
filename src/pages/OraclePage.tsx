@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useWire } from '@/hooks/useWire';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useOracleChat } from '@/hooks/useOracleChat';
 import { ORACLE_PRESETS } from '@/lib/oracle/prompt';
 import { isWirePopulated } from '@/lib/wire';
@@ -16,6 +17,7 @@ const DISCLAIMER_KEY = 'delphi:oracle-disclaimer-accepted';
 
 export default function OraclePage() {
   const { wire } = useWire();
+  const { t } = useTranslation();
   const {
     turns, send, isThinking, error,
     entitlement, isCouncillor, monthlyLimit, freeRemaining, allowed, isAuthenticated,
@@ -49,54 +51,42 @@ export default function OraclePage() {
         <div className="text-center mb-8">
           <Omphalos className="size-8 text-oracle mx-auto mb-4" />
           <h1 className="font-serif text-3xl sm:text-4xl font-medium text-foreground">
-            The Oracle
+            {t('oracle.title')}
           </h1>
           <p className="mt-3 text-muted-foreground max-w-md mx-auto text-sm leading-relaxed">
-            Counsel grounded in your Wire — teams, relationships, work, and the
-            frictions between your systems.
+            {t('oracle.subtitle')}
           </p>
         </div>
 
         {/* Gates */}
         {!populated ? (
           <div className="engraved grain rounded-[2px] bg-card p-8 text-center space-y-3">
-            <p className="font-serif text-foreground">The Oracle reads your Wire — and yours is unwritten.</p>
+            <p className="font-serif text-foreground">{t('oracle.unwritten')}</p>
             <Button asChild variant="outline" className="rounded-full">
-              <Link to="/assess">Begin an assessment</Link>
+              <Link to="/assess">{t('oracle.beginAssessment')}</Link>
             </Button>
           </div>
         ) : !isAuthenticated ? (
           <div className="engraved grain rounded-[2px] bg-card p-8 text-center">
-            <p className="font-serif text-foreground">Sign in to consult the Oracle.</p>
-            <p className="text-xs text-muted-foreground mt-2">Your key is the credential — no account, no API key.</p>
+            <p className="font-serif text-foreground">{t('oracle.signIn')}</p>
+            <p className="text-xs text-muted-foreground mt-2">{t('oracle.signInNote')}</p>
           </div>
         ) : !accepted ? (
           /* Disclaimer — shown once, before the first message */
           <div className="engraved grain rounded-[2px] bg-card p-6 sm:p-8 space-y-5">
             <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-umbra dark:text-ash">
-              Before you ask
+              {t('oracle.disclaimer.title')}
             </h2>
             <div className="space-y-3 text-sm leading-relaxed text-foreground">
-              <p>
-                The Oracle is a reflective instrument grounded in your typology results.
-                It is not psychotherapy, not medical or legal advice, and not a diagnosis
-                of anything. It reads your systems; only you read your life.
-              </p>
-              <p>
-                For mental-health crises or acute distress, the Oracle will step aside —
-                those belong with professionals and people who know you.
-              </p>
-              <p className="text-muted-foreground text-xs">
-                Your questions are processed by an AI inference service authenticated with
-                your Nostr key. Your Wire profile is included as context; your raw
-                questionnaire answers are not.
-              </p>
+              <p>{t('oracle.disclaimer.p1')}</p>
+              <p>{t('oracle.disclaimer.p2')}</p>
+              <p className="text-muted-foreground text-xs">{t('oracle.disclaimer.p3')}</p>
             </div>
             <Button
               onClick={() => setAccepted(true)}
               className="rounded-full bg-oracle text-oracle-foreground hover:bg-oracle/90 px-6"
             >
-              I understand — open the Oracle
+              {t('oracle.disclaimer.accept')}
             </Button>
           </div>
         ) : (
@@ -106,7 +96,7 @@ export default function OraclePage() {
             {turns.length === 0 ? (
               <div className="engraved grain rounded-[2px] bg-card p-6 space-y-4">
                 <p className="text-sm text-muted-foreground text-center">
-                  Ask in your own words, or begin with one of these:
+                  {t('oracle.askPrompt')}
                 </p>
                 <div className="flex flex-wrap justify-center gap-2">
                   {ORACLE_PRESETS.map((preset) => (
@@ -159,7 +149,7 @@ export default function OraclePage() {
                       submit();
                     }
                   }}
-                  placeholder="Ask the Oracle…"
+                  placeholder={t('oracle.placeholder')}
                   rows={2}
                   className="resize-none border-0 bg-transparent focus-visible:ring-0 text-sm"
                   disabled={isThinking}
@@ -177,18 +167,17 @@ export default function OraclePage() {
             ) : (
               <div className="engraved rounded-[2px] bg-oracle/5 p-5 text-center space-y-3">
                 <p className="font-serif text-foreground">
-                  Your {monthlyLimit} questions this month are spent.
+                  {t('oracle.exhausted', { limit: String(monthlyLimit) })}
                 </p>
                 <p className="text-xs text-muted-foreground">
-                  They return with the new month — or a seat on the council carries
-                  the Oracle for life.
+                  {t('oracle.exhausted.note')}
                 </p>
                 <Button asChild variant="outline" className="rounded-full">
                   <Link to="/council">The Council of the Temple</Link>
                 </Button>
                 <p className="text-[11px]">
                   <Link to="/support" className="text-muted-foreground hover:text-foreground underline underline-offset-2 decoration-dotted">
-                    or see all ways to support
+                    {t('oracle.exhausted.support')}
                   </Link>
                 </p>
               </div>
@@ -197,10 +186,10 @@ export default function OraclePage() {
             {/* Meter line */}
             <p className="text-center font-mono text-[11px] text-ash">
               {isCouncillor
-                ? 'council seat · the Oracle is yours for life'
+                ? t('oracle.meter.council')
                 : entitlement === 'initiate'
-                  ? `initiate · ${freeRemaining} of ${monthlyLimit} questions remain this month`
-                  : `${freeRemaining} of ${monthlyLimit} free questions remain this month`}
+                  ? t('oracle.meter.initiate', { remaining: String(freeRemaining), limit: String(monthlyLimit) })
+                  : t('oracle.meter.free', { remaining: String(freeRemaining), limit: String(monthlyLimit) })}
             </p>
           </div>
         )}

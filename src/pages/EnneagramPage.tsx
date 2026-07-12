@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useWire } from '@/hooks/useWire';
 import { useEnneagramAnswers } from '@/hooks/useEnneagramAnswers';
+import { useTranslation } from '@/hooks/useTranslation';
 import { scoreEnneagram, isComplete, answeredCount, TYPE_NAMES } from '@/lib/enneagram/scoring';
 import type { EnneagramScoreResult, TypeScore } from '@/lib/enneagram/scoring';
 import { TOTAL_ITEMS } from '@/lib/enneagram/items';
@@ -18,6 +19,7 @@ type Phase = 'intro' | 'quiz' | 'results';
 export default function EnneagramPage() {
   const { wire, updateWire } = useWire();
   const { answers, setAnswer, clearAnswers } = useEnneagramAnswers();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const hasExistingResult = !!wire.enneagram;
@@ -80,7 +82,7 @@ export default function EnneagramPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Assessments
+          {t('common.backToAssessments')}
         </Link>
 
         {/* Header */}
@@ -90,13 +92,13 @@ export default function EnneagramPage() {
               E
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-              Enneagram
+              {t('enneagram.title')}
             </h1>
           </div>
           <p className="text-muted-foreground leading-relaxed max-w-xl">
             {phase === 'results'
-              ? 'Your Enneagram profile — core type, wing, and the full nine-type landscape.'
-              : 'A 36-item questionnaire exploring your core motivations, fears, and character patterns. Takes about 15 minutes.'
+              ? t('enneagram.subtitle.results')
+              : t('enneagram.subtitle.quiz')
             }
           </p>
         </div>
@@ -141,7 +143,7 @@ export default function EnneagramPage() {
                   onClick={() => setPhase('quiz')}
                   className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8"
                 >
-                  Begin Assessment
+                  {t('enneagram.beginAssessment')}
                 </Button>
                 {hasProgress && (
                   <Button
@@ -149,7 +151,7 @@ export default function EnneagramPage() {
                     onClick={() => setPhase('quiz')}
                     className="rounded-full"
                   >
-                    Resume ({answeredCount(answers)}/{TOTAL_ITEMS} answered)
+                    {t('jung.resume')} ({answeredCount(answers)}/{TOTAL_ITEMS} {t('jung.answered')})
                   </Button>
                 )}
               </div>
@@ -176,7 +178,7 @@ export default function EnneagramPage() {
                 onClick={() => navigate('/wire')}
                 className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-6"
               >
-                View My Wire
+                {t('common.viewMyWire')}
               </Button>
               <Button
                 variant="outline"
@@ -184,7 +186,7 @@ export default function EnneagramPage() {
                 className="rounded-full gap-1.5"
               >
                 <RotateCcw className="size-3.5" />
-                Retake Assessment
+                {t('enneagram.retake')}
               </Button>
             </div>
           </div>

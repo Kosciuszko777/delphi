@@ -24,11 +24,13 @@ import {
   PLAN_TEAM_YEARLY_CHF,
 } from '@/lib/support/config';
 import { COUNCIL_PRICE_USD, COUNCIL_SEATS } from '@/lib/council/config';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Heart, Zap, CreditCard, Copy, Check, Share2, Bitcoin } from 'lucide-react';
 import { BitcoinOnchainPanel } from '@/components/payments/BitcoinOnchainPanel';
 import { toast } from '@/hooks/useToast';
 
 export default function SupportPage() {
+  const { t: tr } = useTranslation();
   const { user } = useCurrentUser();
   const npub = user ? nip19.npubEncode(user.pubkey) : undefined;
   const { data: credit } = useBuildersCredit(user?.pubkey);
@@ -48,7 +50,7 @@ export default function SupportPage() {
   const copy = async (value: string, key: string) => {
     await navigator.clipboard.writeText(value);
     setCopied(key);
-    toast({ title: 'Copied' });
+    toast({ title: tr('common.copied') });
     setTimeout(() => setCopied(null), 1500);
   };
 
@@ -70,27 +72,25 @@ export default function SupportPage() {
         <div className="text-center">
           <Heart className="size-8 text-oracle mx-auto mb-5" fill="currentColor" strokeWidth={1.5} />
           <h1 className="font-serif text-3xl sm:text-4xl font-medium text-foreground">
-            Do you like what you just experienced?
+            {tr('support.title')}
           </h1>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            Delphi exists so that people can know themselves — without being known.
-            Here is how you can carry it further.
+            {tr('support.subtitle')}
           </p>
         </div>
 
         {/* ─── Tier 1 — Support the mission ─── */}
         <section>
           <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-umbra dark:text-ash text-center mb-5">
-            Support our mission for better understanding
+            {tr('support.mission')}
           </h2>
           <div className="engraved grain rounded-[2px] bg-card p-6 sm:p-8 space-y-8">
 
             {/* Donate */}
             <div className="space-y-4">
-              <h3 className="font-serif text-lg text-foreground">Donate</h3>
+              <h3 className="font-serif text-lg text-foreground">{tr('support.donate')}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Every sat and every franc keeps the temple lights on. Donations fund the
-                free tier — the tests, the Wire, and the Mirror stay free for everyone.
+                {tr('support.donate.desc')}
               </p>
               {(SUPPORT_LIGHTNING_ADDRESS || SUPPORT_STRIPE_LINK || BITCOIN_ONCHAIN_ADDRESS) ? (
                 <div className="space-y-4">
@@ -137,10 +137,10 @@ export default function SupportPage() {
                   )}
                 </div>
               ) : (
-                <p className="text-xs text-ash font-mono">— the donation rails open shortly —</p>
+                <p className="text-xs text-ash font-mono">{tr('support.donate.unarmed')}</p>
               )}
               <p className="text-[11px] text-muted-foreground">
-                Donations are gifts, not purchases — no benefits attach.
+                {tr('support.donate.giftsNote')}
               </p>
             </div>
 
@@ -148,10 +148,9 @@ export default function SupportPage() {
 
             {/* Spread the message */}
             <div className="space-y-4">
-              <h3 className="font-serif text-lg text-foreground">Help spread the message</h3>
+              <h3 className="font-serif text-lg text-foreground">{tr('support.spread')}</h3>
               <p className="text-sm text-muted-foreground leading-relaxed">
-                Delphi is free to use. The most valuable thing you can give costs nothing:
-                bring one person who should know themselves.
+                {tr('support.spread.desc')}
               </p>
 
               {referralLink ? (
@@ -196,7 +195,7 @@ export default function SupportPage() {
                 </div>
               ) : (
                 <p className="text-xs text-muted-foreground">
-                  Sign in to receive your referral link — your key is your referral identity.
+                  {tr('support.spread.signIn')}
                 </p>
               )}
             </div>
@@ -206,48 +205,48 @@ export default function SupportPage() {
         {/* ─── Tier 2 — Plans ─── */}
         <section>
           <h2 className="font-mono text-[11px] uppercase tracking-[0.25em] text-umbra dark:text-ash text-center mb-5">
-            Plans
+            {tr('support.plans')}
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
 
             <PlanCard
-              name="Initiate"
+              name={tr('support.plan.initiate')}
               price={`CHF ${PLAN_INITIATE_CHF} / month`}
               lines={[
-                'The Oracle — 100 questions a month',
-                'Unlimited Mirror regenerations',
-                'Priority relay set',
-                'Supporter seal (NIP-58)',
+                tr('support.plan.initiate.oracle'),
+                tr('support.plan.initiate.mirror'),
+                tr('support.plan.initiate.relays'),
+                tr('support.plan.initiate.seal'),
               ]}
               stripe={PLAN_INITIATE_STRIPE}
               lightningNote={`or CHF ${PLAN_INITIATE_YEARLY_CHF} / year in lightning — two months free`}
             />
 
             <PlanCard
-              name="Temple Team"
+              name={tr('support.plan.team')}
               price={`CHF ${PLAN_TEAM_CHF} / month`}
-              priceNote="founding team rate"
+              priceNote={tr('support.plan.foundingRate')}
               lines={[
-                `Everything in Initiate, for up to ${PLAN_TEAM_SEATS} people`,
-                'Invite members by npub',
-                'A shared team room',
-                'Team Wire overview',
+                tr('support.plan.team.all', { seats: String(PLAN_TEAM_SEATS) }),
+                tr('support.plan.team.invite'),
+                tr('support.plan.team.room'),
+                tr('support.plan.team.overview'),
               ]}
               stripe={PLAN_TEAM_STRIPE}
               lightningNote={`or CHF ${PLAN_TEAM_YEARLY_CHF} / year in lightning`}
             />
 
             <PlanCard
-              name="Enterprise"
+              name={tr('support.plan.enterprise')}
               price={`CHF ${PLAN_ENTERPRISE_CHF.toLocaleString('de-CH')} / month`}
               lines={[
-                'Extended AI and team-fit analyses',
-                'Unlimited people',
-                'The Dashboard app',
-                'Onboarding by conversation',
+                tr('support.plan.enterprise.ai'),
+                tr('support.plan.enterprise.people'),
+                tr('support.plan.enterprise.dashboard'),
+                tr('support.plan.enterprise.onboarding'),
               ]}
               contact={ENTERPRISE_CONTACT}
-              footnote="Employee Wires remain employee-owned. The organization sees only what each person publishes. This is the point."
+              footnote={tr('support.plan.enterprise.sovereignty')}
             />
           </div>
         </section>
@@ -256,20 +255,17 @@ export default function SupportPage() {
         <section>
           <div className="engraved rounded-[2px] bg-basalt p-8 sm:p-10 text-center relative overflow-hidden grain">
             <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-ash mb-3">
-              For early backers
+              {tr('support.club.earlyBackers')}
             </p>
             <Omphalos className="size-8 mx-auto mb-4 text-oracle" />
             <h2 className="font-serif text-2xl sm:text-3xl font-medium" style={{ color: '#EFE9DC' }}>
-              The 777 Club
+              {tr('support.club.title')}
             </h2>
             <p className="mt-4 text-sm leading-relaxed max-w-lg mx-auto" style={{ color: '#B8B0A1' }}>
-              Before there were plans, there was the council. {COUNCIL_SEATS} seats on the
-              Council of the Temple — taken once, held for life. Everything above, forever:
-              the Oracle without meter, first access to every venture we ship, a numbered
-              seal, and a chair when canon is decided.
+              {tr('support.club.desc', { seats: String(COUNCIL_SEATS) })}
             </p>
             <p className="mt-5 font-mono text-sm" style={{ color: '#C9A227' }}>
-              USD {COUNCIL_PRICE_USD} · once · or the equivalent in lightning
+              {tr('support.club.price', { price: String(COUNCIL_PRICE_USD) })}
             </p>
             {stele && stele.count > 0 && (
               <p className="mt-2 font-mono text-xs" style={{ color: '#6B6558' }}>
@@ -278,10 +274,10 @@ export default function SupportPage() {
             )}
             <div className="mt-6">
               {council?.isCouncillor ? (
-                <p className="font-serif" style={{ color: '#5E7466' }}>Your seat is held.</p>
+                <p className="font-serif" style={{ color: '#5E7466' }}>{tr('support.club.seated')}</p>
               ) : (
                 <Button asChild className="rounded-full bg-oracle text-oracle-foreground hover:bg-oracle/90 px-8">
-                  <Link to="/council">Enter the Council</Link>
+                  <Link to="/council">{tr('support.club.enter')}</Link>
                 </Button>
               )}
             </div>

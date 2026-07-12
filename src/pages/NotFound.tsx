@@ -4,9 +4,11 @@ import { useEffect } from "react";
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { ArrowLeft } from 'lucide-react';
+import { useTranslation } from '@/hooks/useTranslation';
 
 const NotFound = () => {
   const location = useLocation();
+  const { t } = useTranslation();
 
   useSeoMeta({
     title: "404 — Delphi",
@@ -26,14 +28,14 @@ const NotFound = () => {
         <p className="font-serif italic text-oracle text-sm tracking-widest mb-4">
           οὐδὲν ἄγαν
         </p>
-        <h1 className="font-serif text-5xl sm:text-6xl font-bold text-foreground mb-4">404</h1>
+        <h1 className="font-serif text-5xl sm:text-6xl font-bold text-foreground mb-4">{t('notFound.title')}</h1>
         <p className="text-lg text-muted-foreground mb-8 max-w-sm">
-          The oracle has no answer for this path. Perhaps it was never meant to be found.
+          {t('notFound.message')}
         </p>
         <Button asChild variant="outline" className="rounded-full">
           <Link to="/">
             <ArrowLeft className="size-4 mr-1" />
-            Return Home
+            {t('notFound.returnHome')}
           </Link>
         </Button>
       </div>

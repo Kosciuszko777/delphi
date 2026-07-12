@@ -14,6 +14,7 @@ import {
   COUNCIL_PRICE_USD,
   COUNCIL_SEATS,
 } from '@/lib/council/config';
+import { useTranslation } from '@/hooks/useTranslation';
 import { Zap, CreditCard, Copy, Check, ScrollText, Bitcoin } from 'lucide-react';
 import { BitcoinOnchainPanel } from '@/components/payments/BitcoinOnchainPanel';
 import { BITCOIN_ONCHAIN_ADDRESS } from '@/lib/support/config';
@@ -25,6 +26,7 @@ import { toast } from '@/hooks/useToast';
  * the count. 777 is the shape of the council, not a sales target.
  */
 export default function CouncilPage() {
+  const { t } = useTranslation();
   const { user } = useCurrentUser();
   const { data: stele } = useCouncilStele();
   const { data: councilStatus } = useIsCouncillor(user?.pubkey);
@@ -49,7 +51,7 @@ export default function CouncilPage() {
   const copyAddress = async () => {
     await navigator.clipboard.writeText(lnurl);
     setCopied(true);
-    toast({ title: 'Lightning address copied' });
+    toast({ title: t('common.lightningCopied') });
     setTimeout(() => setCopied(false), 1500);
   };
 
@@ -61,24 +63,22 @@ export default function CouncilPage() {
         <div className="text-center mb-12">
           <Omphalos className="size-9 text-oracle mx-auto mb-5" />
           <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-umbra dark:text-ash mb-3">
-            The Council of the Temple
+            {t('council.header')}
           </p>
           <h1 className="font-serif text-3xl sm:text-4xl font-medium text-foreground">
-            Seven hundred seventy-seven seats.
+            {t('council.title')}
           </h1>
           <p className="mt-4 text-muted-foreground max-w-xl mx-auto leading-relaxed">
-            The temple at Delphi had its keepers. This one has a council: {COUNCIL_SEATS} seats,
-            taken once, held for life. A seat is a signed Nostr credential — a numbered seal
-            no platform can revoke, including this one.
+            {t('council.subtitle', { seats: String(COUNCIL_SEATS) })}
           </p>
           <p className="mt-3 text-xs">
             <Link to="/support" className="text-muted-foreground hover:text-foreground underline underline-offset-2 decoration-dotted">
-              Looking for monthly plans instead? → Support &amp; Plans
+              {t('council.plansLink')}
             </Link>
           </p>
           {taken > 0 && (
             <p className="mt-4 font-mono text-sm text-oracle">
-              seat № {String(taken).padStart(3, '0')} was the last inscribed · {COUNCIL_SEATS} chairs in the council
+              {t('council.lastInscribed', { seat: String(taken).padStart(3, '0'), seats: String(COUNCIL_SEATS) })}
             </p>
           )}
         </div>
@@ -87,10 +87,10 @@ export default function CouncilPage() {
         {isCouncillor && (
           <div className="engraved rounded-[2px] bg-verdigris/10 p-5 text-center mb-10">
             <p className="font-serif text-lg text-foreground">
-              Your seat is held. Welcome to the council.
+              {t('council.seated')}
             </p>
             <p className="text-sm text-muted-foreground mt-1">
-              Beta invitations arrive by Nostr DM to this key.
+              {t('council.seated.note')}
             </p>
           </div>
         )}
@@ -98,42 +98,35 @@ export default function CouncilPage() {
         {/* ─── What a seat carries ─── */}
         <div className="engraved grain rounded-[2px] bg-card p-6 sm:p-8 mb-10">
           <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-umbra dark:text-ash mb-5">
-            What a seat carries
+            {t('council.whatCarries')}
           </h2>
           <ul className="space-y-4 text-sm sm:text-[15px] leading-relaxed text-foreground">
             <li>
-              <strong className="font-medium">First access, portfolio-wide.</strong>{' '}
-              The council enters every beta shipped by the venture lab behind Delphi
-              before anyone else — publishing, messaging, and identity tools built
-              on the same principles.
+              <strong className="font-medium">{t('council.carry.access')}</strong>{' '}
+              {t('council.carry.access.desc')}
             </li>
             <li>
-              <strong className="font-medium">The Oracle, for life.</strong>{' '}
-              Unlimited access to Delphi&rsquo;s Oracle tier under fair personal use,
-              from the day it opens.
+              <strong className="font-medium">{t('council.carry.oracle')}</strong>{' '}
+              {t('council.carry.oracle.desc')}
             </li>
             <li>
-              <strong className="font-medium">A numbered seal.</strong>{' '}
-              A council seal (NIP-58) signed to your key, and — if you wish —
-              your name inscribed on the public Council Stele. Pseudonymous by default.
+              <strong className="font-medium">{t('council.carry.seal')}</strong>{' '}
+              {t('council.carry.seal.desc')}
             </li>
             <li>
-              <strong className="font-medium">A chair at the table.</strong>{' '}
-              The council chamber with the builders, and a vote when product canon
-              is decided. Seven hundred seventy-seven voices, no more.
+              <strong className="font-medium">{t('council.carry.chair')}</strong>{' '}
+              {t('council.carry.chair.desc')}
             </li>
           </ul>
           <p className="mt-6 text-xs text-muted-foreground leading-relaxed">
-            A seat is access and standing — not an investment, not a revenue share,
-            and not a tradable instrument. One seat per person.
-            Refundable on request within 14 days of purchase.
+            {t('council.terms')}
           </p>
         </div>
 
         {/* ─── Checkout ─── */}
         <div className="text-center mb-4">
           <p className="font-serif text-2xl text-foreground">
-            ${COUNCIL_PRICE_USD} <span className="text-base text-muted-foreground">· once · or the equivalent in lightning</span>
+            ${COUNCIL_PRICE_USD} <span className="text-base text-muted-foreground">{t('council.price')}</span>
           </p>
         </div>
 
@@ -146,7 +139,7 @@ export default function CouncilPage() {
                   className="rounded-full gap-1.5 bg-oracle text-oracle-foreground hover:bg-oracle/90 px-6"
                 >
                   <Zap className="size-4" />
-                  Take a seat with Lightning
+                  {t('council.lightning')}
                 </Button>
               )}
               {BITCOIN_ONCHAIN_ADDRESS && (
@@ -156,14 +149,14 @@ export default function CouncilPage() {
                   className="rounded-full gap-1.5 px-6"
                 >
                   <Bitcoin className="size-4" />
-                  On-chain
+                   {t('council.onchain')}
                 </Button>
               )}
               {stripeHref && (
                 <Button asChild variant="outline" className="rounded-full gap-1.5 px-6">
                   <a href={stripeHref} target="_blank" rel="noopener noreferrer">
                     <CreditCard className="size-4" />
-                    Pay by card
+                    {t('council.card')}
                   </a>
                 </Button>
               )}
@@ -206,7 +199,7 @@ export default function CouncilPage() {
           </div>
         ) : (
           <p className="text-center text-sm text-muted-foreground mb-12">
-            The council convenes shortly. The stele is being carved.
+            {t('council.convening')}
           </p>
         )}
 
@@ -214,7 +207,7 @@ export default function CouncilPage() {
         <div className="mb-4 flex items-center gap-2 justify-center">
           <ScrollText className="size-4 text-umbra dark:text-ash" />
           <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-umbra dark:text-ash">
-            The Council Stele
+            {t('council.stele')}
           </h2>
         </div>
         {stele && stele.members.length > 0 ? (
@@ -233,7 +226,7 @@ export default function CouncilPage() {
             </ol>
           </div>
         ) : (
-          <p className="text-center text-sm text-ash font-mono">— the first seat is not yet carved —</p>
+          <p className="text-center text-sm text-ash font-mono">{t('council.uncarved')}</p>
         )}
       </div>
     </AppLayout>

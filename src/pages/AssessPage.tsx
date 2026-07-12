@@ -2,6 +2,7 @@ import { useSeoMeta } from '@unhead/react';
 import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useWire } from '@/hooks/useWire';
+import { useTranslation } from '@/hooks/useTranslation';
 import { WireCard } from '@/components/wire/WireCard';
 import { isWirePopulated } from '@/lib/wire';
 import { ArrowRight, Check } from 'lucide-react';
@@ -10,6 +11,7 @@ import { cn } from '@/lib/utils';
 export default function AssessPage() {
   const { wire } = useWire();
   const hasWire = isWirePopulated(wire);
+  const { t } = useTranslation();
 
   useSeoMeta({
     title: 'Assessments — Delphi',
@@ -20,9 +22,9 @@ export default function AssessPage() {
     {
       id: 'millman',
       letter: 'M',
-      name: 'Millman Life-Purpose',
-      description: 'Enter your birth date to discover your life-purpose number — the core themes and lessons encoded in your path.',
-      time: '1 minute',
+      name: t('assess.millman.name'),
+      description: t('assess.millman.desc'),
+      time: t('assess.millman.time'),
       available: true,
       completed: !!wire.millman,
       to: '/assess/millman',
@@ -30,9 +32,9 @@ export default function AssessPage() {
     {
       id: 'jung',
       letter: 'J',
-      name: '16-Type Jungian',
-      description: 'A 32-item questionnaire mapping your cognitive functions and personality preferences.',
-      time: '10 minutes',
+      name: t('assess.jung.name'),
+      description: t('assess.jung.desc'),
+      time: t('assess.jung.time'),
       available: true,
       completed: !!wire.jung,
       to: '/assess/jung',
@@ -40,9 +42,9 @@ export default function AssessPage() {
     {
       id: 'enneagram',
       letter: 'E',
-      name: 'Enneagram',
-      description: 'Discover your core motivation pattern and wing type across all nine Enneagram positions.',
-      time: '15 minutes',
+      name: t('assess.enneagram.name'),
+      description: t('assess.enneagram.desc'),
+      time: t('assess.enneagram.time'),
       available: true,
       completed: !!wire.enneagram,
       to: '/assess/enneagram',
@@ -50,9 +52,9 @@ export default function AssessPage() {
     {
       id: 'human-design',
       letter: 'H',
-      name: 'Human Design',
-      description: 'Enter your Human Design type, profile, and authority from an external chart calculation.',
-      time: '5 minutes',
+      name: t('assess.hd.name'),
+      description: t('assess.hd.desc'),
+      time: t('assess.hd.time'),
       available: true,
       completed: !!wire.humanDesign,
       to: '/assess/human-design',
@@ -65,10 +67,10 @@ export default function AssessPage() {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">
-            Assessments
+            {t('assess.title')}
           </h1>
           <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
-            Each assessment fills a chamber in your Wire. Complete them in any order.
+            {t('assess.subtitle')}
           </p>
         </div>
 
@@ -101,6 +103,7 @@ interface AssessmentRowProps {
 }
 
 function AssessmentRow({ letter, name, description, time, available, completed, to }: AssessmentRowProps) {
+  const { t } = useTranslation();
   const inner = (
     <div
       className={cn(
@@ -127,14 +130,14 @@ function AssessmentRow({ letter, name, description, time, available, completed, 
         <div className="flex items-center gap-2 flex-wrap">
           <h3 className="font-serif font-semibold text-foreground">{name}</h3>
           {completed && (
-            <span className="text-xs text-oracle bg-oracle/10 px-2 py-0.5 rounded-full font-medium">Completed</span>
+            <span className="text-xs text-oracle bg-oracle/10 px-2 py-0.5 rounded-full font-medium">{t('assess.completed')}</span>
           )}
           {!available && (
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">Coming soon</span>
+            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{t('home.comingSoon')}</span>
           )}
         </div>
         <p className="text-sm text-muted-foreground mt-0.5 leading-relaxed line-clamp-2">{description}</p>
-        <p className="text-xs text-muted-foreground/70 mt-1">≈ {time}</p>
+        <p className="text-xs text-muted-foreground/70 mt-1">&asymp; {time}</p>
       </div>
 
       {/* Arrow */}

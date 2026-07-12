@@ -5,6 +5,7 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { useWire } from '@/hooks/useWire';
+import { useTranslation } from '@/hooks/useTranslation';
 import { computeMillmanNumber, isValidBirthDate } from '@/lib/millman';
 import { MillmanResult } from '@/components/millman/MillmanResult';
 import { ArrowLeft } from 'lucide-react';
@@ -12,6 +13,7 @@ import { Link } from 'react-router-dom';
 
 export default function MillmanPage() {
   const { wire, updateWire } = useWire();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [year, setYear] = useState('');
   const [month, setMonth] = useState('');
@@ -33,12 +35,12 @@ export default function MillmanPage() {
     const d = parseInt(day, 10);
 
     if (!year || !month || !day || isNaN(y) || isNaN(m) || isNaN(d)) {
-      setError('Please enter a complete birth date.');
+      setError(t('millman.errorComplete'));
       return;
     }
 
     if (!isValidBirthDate(y, m, d)) {
-      setError('Please enter a valid birth date.');
+      setError(t('millman.errorValid'));
       return;
     }
 
@@ -77,7 +79,7 @@ export default function MillmanPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Assessments
+          {t('common.backToAssessments')}
         </Link>
 
         {/* Header */}
@@ -87,12 +89,11 @@ export default function MillmanPage() {
               M
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-              Millman Life-Purpose
+              {t('millman.title')}
             </h1>
           </div>
           <p className="text-muted-foreground leading-relaxed max-w-xl">
-            Your birth date encodes a life-purpose number — a map of the core themes, 
-            strengths, and challenges your path is oriented around.
+            {t('millman.subtitle')}
           </p>
         </div>
 
@@ -101,13 +102,13 @@ export default function MillmanPage() {
           <Card className="border-border">
             <CardContent className="pt-6">
               <h2 className="font-serif text-lg font-semibold text-foreground mb-4">
-                Enter Your Birth Date
+                {t('millman.enterBirthDate')}
               </h2>
 
               <div className="grid grid-cols-3 gap-3 max-w-sm">
                 <div>
                   <label htmlFor="birth-month" className="block text-xs text-muted-foreground mb-1.5 font-medium">
-                    Month
+                    {t('millman.month')}
                   </label>
                   <input
                     id="birth-month"
@@ -126,7 +127,7 @@ export default function MillmanPage() {
                 </div>
                 <div>
                   <label htmlFor="birth-day" className="block text-xs text-muted-foreground mb-1.5 font-medium">
-                    Day
+                    {t('millman.day')}
                   </label>
                   <input
                     id="birth-day"
@@ -145,7 +146,7 @@ export default function MillmanPage() {
                 </div>
                 <div>
                   <label htmlFor="birth-year" className="block text-xs text-muted-foreground mb-1.5 font-medium">
-                    Year
+                    {t('millman.year')}
                   </label>
                   <input
                     id="birth-year"
@@ -173,12 +174,12 @@ export default function MillmanPage() {
                   onClick={handleCalculate}
                   className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8"
                 >
-                  Calculate
+                  {t('millman.calculate')}
                 </Button>
               </div>
 
               <p className="mt-4 text-xs text-muted-foreground/70">
-                Your birth date is stored locally on this device only. It is never published or sent to any server.
+                {t('millman.privacy')}
               </p>
             </CardContent>
           </Card>
@@ -194,14 +195,14 @@ export default function MillmanPage() {
                 onClick={() => navigate('/wire')}
                 className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-6"
               >
-                View My Wire
+                {t('common.viewMyWire')}
               </Button>
               <Button
                 variant="outline"
                 onClick={handleReset}
                 className="rounded-full"
               >
-                Recalculate
+                {t('millman.recalculate')}
               </Button>
             </div>
           </div>

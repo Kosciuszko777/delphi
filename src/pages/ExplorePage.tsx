@@ -5,6 +5,7 @@ import { useNostr } from '@nostrify/react';
 import { useQuery } from '@tanstack/react-query';
 import type { NostrEvent } from '@nostrify/nostrify';
 import { AppLayout } from '@/components/layout/AppLayout';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useAuthor } from '@/hooks/useAuthor';
 import { parseWireEvent, type ParsedWireEvent } from '@/hooks/usePublishedWire';
 import { WIRE_KIND } from '@/lib/publish/wireEvent';
@@ -16,6 +17,7 @@ import { Sparkles, User, ArrowRight } from 'lucide-react';
 
 export default function ExplorePage() {
   const { nostr } = useNostr();
+  const { t } = useTranslation();
 
   useSeoMeta({
     title: 'Explore Wires — Delphi',
@@ -51,10 +53,10 @@ export default function ExplorePage() {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">
-            Explore
+            {t('explore.title')}
           </h1>
           <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
-            Published Wires from the Nostr network. Click any Wire to view the full profile.
+            {t('explore.subtitle')}
           </p>
         </div>
 
@@ -76,8 +78,7 @@ export default function ExplorePage() {
             <CardContent className="py-12 px-8 text-center">
               <Sparkles className="size-8 text-muted-foreground mx-auto mb-3" />
               <p className="text-muted-foreground max-w-sm mx-auto">
-                No published Wires found yet. Be the first — complete your assessments 
-                and publish your Wire to appear here.
+                {t('explore.empty')}
               </p>
             </CardContent>
           </Card>

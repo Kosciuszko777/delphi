@@ -1,5 +1,6 @@
 import { useWire } from '@/hooks/useWire';
 import { useMirror } from '@/hooks/useMirror';
+import { useTranslation } from '@/hooks/useTranslation';
 import { filledChamberCount, TOTAL_CHAMBERS } from '@/lib/wire';
 import type { MirrorReading } from '@/lib/mirror/schema';
 import { Button } from '@/components/ui/button';
@@ -15,6 +16,7 @@ import { Link } from 'react-router-dom';
  */
 export function MirrorSection() {
   const { wire } = useWire();
+  const { t } = useTranslation();
   const { reading, isStale, isGenerating, error, generate, isAuthenticated } = useMirror();
 
   const filled = filledChamberCount(wire);
@@ -25,10 +27,10 @@ export function MirrorSection() {
       {/* Header */}
       <div className="text-center mb-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.25em] text-umbra dark:text-ash mb-2">
-          The Mirror
+          {t('mirror.title')}
         </p>
         <h2 className="font-serif text-2xl sm:text-3xl font-medium text-foreground">
-          Do you recognize yourself?
+          {t('mirror.subtitle')}
         </h2>
       </div>
 
@@ -36,10 +38,10 @@ export function MirrorSection() {
       {!complete && (
         <div className="engraved grain rounded-[2px] bg-card p-6 text-center">
           <p className="font-serif text-foreground">
-            The mirror is ground from all four chambers.
+            {t('mirror.locked')}
           </p>
           <p className="font-mono text-xs text-ash mt-2">
-            {TOTAL_CHAMBERS - filled} of {TOTAL_CHAMBERS} remain unwritten
+            {t('mirror.remaining', { count: String(TOTAL_CHAMBERS - filled), total: String(TOTAL_CHAMBERS) })}
           </p>
         </div>
       )}
@@ -48,11 +50,10 @@ export function MirrorSection() {
       {complete && !reading && (
         <div className="engraved grain rounded-[2px] bg-card p-8 text-center space-y-4">
           <p className="text-muted-foreground max-w-md mx-auto leading-relaxed text-sm">
-            All four chambers are inscribed. The Mirror reads them as one —
-            where they agree, and where they pull against each other.
+            {t('mirror.ready')}
           </p>
           {!isAuthenticated ? (
-            <p className="text-xs text-muted-foreground">Sign in to consult the Mirror.</p>
+            <p className="text-xs text-muted-foreground">{t('mirror.signIn')}</p>
           ) : (
             <Button
               onClick={generate}
@@ -60,7 +61,7 @@ export function MirrorSection() {
               className="rounded-full gap-1.5 bg-oracle text-oracle-foreground hover:bg-oracle/90 px-6"
             >
               {isGenerating ? <Loader2 className="size-4 animate-spin" /> : <Sparkles className="size-4" />}
-              {isGenerating ? 'The mirror is being polished…' : 'Consult the Mirror'}
+              {isGenerating ? t('mirror.polishing') : t('mirror.consult')}
             </Button>
           )}
           {error && <p className="text-xs text-destructive">{error}</p>}
@@ -73,7 +74,7 @@ export function MirrorSection() {
           {isStale && (
             <div className="engraved rounded-[2px] bg-oracle/5 px-4 py-3 flex items-center justify-between gap-3">
               <p className="text-xs text-muted-foreground">
-                Your Wire has changed since this reading. The mirror can be reground.
+                {t('mirror.stale')}
               </p>
               <Button
                 variant="outline"
@@ -83,7 +84,7 @@ export function MirrorSection() {
                 className="rounded-full gap-1.5 shrink-0"
               >
                 {isGenerating ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-                Regenerate
+                {t('mirror.regenerate')}
               </Button>
             </div>
           )}
@@ -96,14 +97,13 @@ export function MirrorSection() {
               to="/oracle"
               className="font-serif text-sm text-oracle hover:underline underline-offset-4"
             >
-              Recognize yourself? Ask the Oracle what to do with it →
+              {t('mirror.oracleLink')}
             </Link>
           </div>
 
           <div className="flex items-center justify-between pt-2">
             <p className="text-[11px] text-muted-foreground leading-relaxed max-w-md">
-              The Mirror is a reflective instrument, not psychotherapy, diagnosis,
-              or advice. It reads your systems; only you read your life.
+              {t('mirror.disclaimer')}
             </p>
             {!isStale && (
               <Button
@@ -114,7 +114,7 @@ export function MirrorSection() {
                 className="rounded-full gap-1.5 text-muted-foreground shrink-0"
               >
                 {isGenerating ? <Loader2 className="size-3.5 animate-spin" /> : <RefreshCw className="size-3.5" />}
-                Regenerate
+                {t('mirror.regenerate')}
               </Button>
             )}
           </div>
@@ -126,21 +126,23 @@ export function MirrorSection() {
 }
 
 function Reading({ reading }: { reading: MirrorReading }) {
+  const { t } = useTranslation();
+
   const prose: Array<{ title: string; text: string }> = [
-    { title: 'Purpose', text: reading.purpose },
-    { title: 'Happiness', text: reading.happiness },
-    { title: 'Work', text: reading.work },
-    { title: 'Relationships', text: reading.relationships },
-    { title: 'In a team', text: reading.team },
-    { title: 'What you enjoy', text: reading.enjoys },
-    { title: 'What you hate', text: reading.hates },
+    { title: t('mirror.purpose'), text: reading.purpose },
+    { title: t('mirror.happiness'), text: reading.happiness },
+    { title: t('mirror.work'), text: reading.work },
+    { title: t('mirror.relationships'), text: reading.relationships },
+    { title: t('mirror.team'), text: reading.team },
+    { title: t('mirror.enjoys'), text: reading.enjoys },
+    { title: t('mirror.hates'), text: reading.hates },
   ];
 
   const lists: Array<{ title: string; items: string[]; tone?: 'gold' | 'shadow' | 'verdigris' }> = [
-    { title: 'Your five brightest traits', items: reading.positiveTraits, tone: 'gold' },
-    { title: 'Your shadows', items: reading.negativeTraits, tone: 'shadow' },
-    { title: 'Your five superpowers', items: reading.superpowers, tone: 'gold' },
-    { title: 'Five grounds for growth', items: reading.improvements, tone: 'verdigris' },
+    { title: t('mirror.positiveTraits'), items: reading.positiveTraits, tone: 'gold' },
+    { title: t('mirror.negativeTraits'), items: reading.negativeTraits, tone: 'shadow' },
+    { title: t('mirror.superpowers'), items: reading.superpowers, tone: 'gold' },
+    { title: t('mirror.improvements'), items: reading.improvements, tone: 'verdigris' },
   ];
 
   return (

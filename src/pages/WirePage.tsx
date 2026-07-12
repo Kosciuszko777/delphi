@@ -9,6 +9,7 @@ import { PublishWireFlow } from '@/components/publish/PublishWireFlow';
 import { SelfAttestationFlow } from '@/components/publish/SelfAttestationFlow';
 import { BackupRestoreFlow } from '@/components/publish/BackupRestoreFlow';
 import { useWire } from '@/hooks/useWire';
+import { useTranslation } from '@/hooks/useTranslation';
 import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { usePublishedWire } from '@/hooks/usePublishedWire';
 import { isWirePopulated, filledChamberCount, TOTAL_CHAMBERS } from '@/lib/wire';
@@ -19,6 +20,7 @@ import { useState, useCallback } from 'react';
 
 export default function WirePage() {
   const { wire } = useWire();
+  const { t } = useTranslation();
   const { user } = useCurrentUser();
   const { data: publishedEvent } = usePublishedWire(user?.pubkey);
   const hasWire = isWirePopulated(wire);
@@ -35,12 +37,12 @@ export default function WirePage() {
         {/* Header */}
         <div className="text-center mb-8 sm:mb-12">
           <h1 className="font-serif text-3xl sm:text-4xl font-bold text-foreground">
-            My Wire
+            {t('wire.title')}
           </h1>
           <p className="mt-3 text-muted-foreground max-w-lg mx-auto">
             {hasWire
-              ? `Your psychometric fingerprint — ${filled} of ${TOTAL_CHAMBERS} chambers filled.`
-              : 'Complete assessments to build your Wire — your sovereign identity signature.'
+              ? t('wire.subtitle.hasWire', { filled: String(filled), total: String(TOTAL_CHAMBERS) })
+              : t('wire.subtitle.empty')
             }
           </p>
         </div>
@@ -94,11 +96,11 @@ export default function WirePage() {
             {filled < TOTAL_CHAMBERS && (
               <div className="text-center pt-4">
                 <p className="text-sm text-muted-foreground mb-4">
-                  {TOTAL_CHAMBERS - filled} chamber{TOTAL_CHAMBERS - filled > 1 ? 's' : ''} remaining
+                  {t('wire.chambersRemaining', { count: String(TOTAL_CHAMBERS - filled) })}
                 </p>
                 <Button asChild variant="outline" className="rounded-full">
                   <Link to="/assess">
-                    Continue Assessments
+                    {t('wire.continueAssessments')}
                     <ArrowRight className="size-4 ml-1" />
                   </Link>
                 </Button>
@@ -131,15 +133,14 @@ export default function WirePage() {
                 </div>
               </div>
               <h2 className="font-serif text-xl font-semibold text-foreground mb-2">
-                No chambers filled yet
+                {t('wire.noChambers')}
               </h2>
               <p className="text-muted-foreground max-w-sm mx-auto mb-6">
-                Complete your first assessment to begin building your Wire — your sovereign 
-                psychometric fingerprint.
+                {t('wire.noChambers.desc')}
               </p>
               <Button asChild className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8">
                 <Link to="/assess">
-                  Begin Assessment
+                  {t('wire.beginAssessment')}
                   <ArrowRight className="size-4 ml-1" />
                 </Link>
               </Button>

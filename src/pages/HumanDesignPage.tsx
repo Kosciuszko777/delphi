@@ -9,6 +9,7 @@ import { useWire } from '@/hooks/useWire';
 import { useHDBirthData } from '@/hooks/useHDBirthData';
 import { HD_TYPES, HD_PROFILES, HD_AUTHORITIES, EXTERNAL_CALCULATORS } from '@/lib/humandesign/data';
 import { HDResultSummary } from '@/components/humandesign/HDResultSummary';
+import { useTranslation } from '@/hooks/useTranslation';
 import { ArrowLeft, ExternalLink, RotateCcw, Shield } from 'lucide-react';
 
 type Phase = 'intro' | 'entry' | 'results';
@@ -16,6 +17,7 @@ type Phase = 'intro' | 'entry' | 'results';
 export default function HumanDesignPage() {
   const { wire, updateWire } = useWire();
   const { birthData, updateBirthData, clearBirthData } = useHDBirthData();
+  const { t } = useTranslation();
   const navigate = useNavigate();
 
   const hasExistingResult = !!wire.humanDesign;
@@ -93,7 +95,7 @@ export default function HumanDesignPage() {
           className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6"
         >
           <ArrowLeft className="size-3.5" />
-          Back to Assessments
+          {t('common.backToAssessments')}
         </Link>
 
         {/* Header */}
@@ -103,14 +105,11 @@ export default function HumanDesignPage() {
               H
             </div>
             <h1 className="font-serif text-2xl sm:text-3xl font-bold text-foreground">
-              Human Design
+              {t('hd.title')}
             </h1>
           </div>
           <p className="text-muted-foreground leading-relaxed max-w-xl">
-            {phase === 'results'
-              ? 'Your Human Design configuration — type, profile, and authority.'
-              : 'Enter your Human Design parameters from an external chart. This version uses manual entry — automated chart calculation is a future goal.'
-            }
+            {t('hd.subtitle')}
           </p>
         </div>
 
@@ -331,7 +330,7 @@ export default function HumanDesignPage() {
                 onClick={() => navigate('/wire')}
                 className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-6"
               >
-                View My Wire
+                {t('common.viewMyWire')}
               </Button>
               <Button
                 variant="outline"

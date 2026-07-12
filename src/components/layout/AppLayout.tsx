@@ -1,8 +1,16 @@
 import { Link, useLocation } from 'react-router-dom';
 import { LoginArea } from '@/components/auth/LoginArea';
 import { useTheme } from '@/hooks/useTheme';
+import { useTranslation } from '@/hooks/useTranslation';
+import { LOCALES, type Locale } from '@/lib/i18n';
 import { Button } from '@/components/ui/button';
-import { Moon, Sun, Heart } from 'lucide-react';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
+import { Moon, Sun, Heart, Globe } from 'lucide-react';
 import { cn } from '@/lib/utils';
 
 interface AppLayoutProps {
@@ -12,6 +20,7 @@ interface AppLayoutProps {
 export function AppLayout({ children }: AppLayoutProps) {
   const location = useLocation();
   const { theme, setTheme } = useTheme();
+  const { t, locale, setLocale } = useTranslation();
   const isHome = location.pathname === '/';
 
   return (
@@ -32,12 +41,12 @@ export function AppLayout({ children }: AppLayoutProps) {
 
             {/* Nav */}
             <nav className="hidden sm:flex items-center gap-1">
-              <NavLink to="/" active={isHome}>Home</NavLink>
-              <NavLink to="/assess" active={location.pathname.startsWith('/assess')}>Assess</NavLink>
-              <NavLink to="/wire" active={location.pathname === '/wire'}>My Wire</NavLink>
-              <NavLink to="/oracle" active={location.pathname === '/oracle'}>Oracle</NavLink>
-              <NavLink to="/explore" active={location.pathname === '/explore'}>Explore</NavLink>
-              <NavLink to="/council" active={location.pathname === '/council'}>Council</NavLink>
+              <NavLink to="/" active={isHome}>{t('nav.home')}</NavLink>
+              <NavLink to="/assess" active={location.pathname.startsWith('/assess')}>{t('nav.assess')}</NavLink>
+              <NavLink to="/wire" active={location.pathname === '/wire'}>{t('nav.wire')}</NavLink>
+              <NavLink to="/oracle" active={location.pathname === '/oracle'}>{t('nav.oracle')}</NavLink>
+              <NavLink to="/explore" active={location.pathname === '/explore'}>{t('nav.explore')}</NavLink>
+              <NavLink to="/council" active={location.pathname === '/council'}>{t('nav.council')}</NavLink>
             </nav>
 
             {/* Right side */}
@@ -46,13 +55,43 @@ export function AppLayout({ children }: AppLayoutProps) {
                 asChild
                 variant="ghost"
                 size="icon"
-                aria-label="Support Delphi"
+                aria-label={t('nav.support')}
                 className={location.pathname === '/support' ? 'text-oracle' : 'text-muted-foreground'}
               >
                 <Link to="/support">
                   <Heart className="size-4" fill={location.pathname === '/support' ? 'currentColor' : 'none'} />
                 </Link>
               </Button>
+
+              {/* Language Switcher */}
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    aria-label="Language"
+                    className="text-muted-foreground"
+                  >
+                    <Globe className="size-4" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end" className="min-w-[140px]">
+                  {LOCALES.map((loc) => (
+                    <DropdownMenuItem
+                      key={loc.code}
+                      onClick={() => setLocale(loc.code as Locale)}
+                      className={cn(
+                        'cursor-pointer',
+                        locale === loc.code && 'font-semibold text-oracle',
+                      )}
+                    >
+                      <span className="mr-2">{loc.flag}</span>
+                      {loc.label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuContent>
+              </DropdownMenu>
+
               <Button
                 variant="ghost"
                 size="icon"
@@ -70,12 +109,12 @@ export function AppLayout({ children }: AppLayoutProps) {
         {/* Mobile nav */}
         <div className="sm:hidden border-t border-border/30">
           <div className="mx-auto max-w-4xl px-4 flex gap-1 py-1">
-            <NavLink to="/" active={isHome} mobile>Home</NavLink>
-            <NavLink to="/assess" active={location.pathname.startsWith('/assess')} mobile>Assess</NavLink>
+            <NavLink to="/" active={isHome} mobile>{t('nav.home')}</NavLink>
+            <NavLink to="/assess" active={location.pathname.startsWith('/assess')} mobile>{t('nav.assess')}</NavLink>
             <NavLink to="/wire" active={location.pathname === '/wire'} mobile>Wire</NavLink>
-            <NavLink to="/oracle" active={location.pathname === '/oracle'} mobile>Oracle</NavLink>
-            <NavLink to="/explore" active={location.pathname === '/explore'} mobile>Explore</NavLink>
-            <NavLink to="/council" active={location.pathname === '/council'} mobile>Council</NavLink>
+            <NavLink to="/oracle" active={location.pathname === '/oracle'} mobile>{t('nav.oracle')}</NavLink>
+            <NavLink to="/explore" active={location.pathname === '/explore'} mobile>{t('nav.explore')}</NavLink>
+            <NavLink to="/council" active={location.pathname === '/council'} mobile>{t('nav.council')}</NavLink>
           </div>
         </div>
       </header>
@@ -86,10 +125,10 @@ export function AppLayout({ children }: AppLayoutProps) {
 
       <footer className="border-t border-border/40 py-8 mt-16">
         <div className="mx-auto max-w-4xl px-4 sm:px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-          <p className="font-serif italic">γνῶθι σεαυτόν — Know Thyself</p>
+          <p className="font-serif italic">{t('footer.motto')}</p>
           <div className="flex items-center gap-4">
             <Link to="/support" className="transition-colors hover:text-foreground inline-flex items-center gap-1">
-              <Heart className="size-3" /> Support
+              <Heart className="size-3" /> {t('nav.support')}
             </Link>
             <a
               href="https://shakespeare.diy"
@@ -97,7 +136,7 @@ export function AppLayout({ children }: AppLayoutProps) {
               rel="noopener noreferrer"
               className="transition-colors hover:text-foreground"
             >
-              Vibed with Shakespeare
+              {t('footer.vibed')}
             </a>
           </div>
         </div>

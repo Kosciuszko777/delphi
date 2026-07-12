@@ -30,6 +30,7 @@ const BlossomServerMetadataSchema = z.object({
 // Zod schema for AppConfig validation
 const AppConfigSchema = z.object({
   theme: z.enum(['dark', 'light', 'system']),
+  locale: z.enum(['de', 'en', 'es', 'fr', 'zh', 'ru', 'el']),
   relayMetadata: RelayMetadataSchema,
   blossomServerMetadata: BlossomServerMetadataSchema,
   useAppBlossomServers: z.boolean(),

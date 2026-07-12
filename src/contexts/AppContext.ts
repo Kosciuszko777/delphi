@@ -1,4 +1,5 @@
 import { createContext } from "react";
+import type { Locale } from '@/lib/i18n';
 
 export type Theme = "dark" | "light" | "system";
 
@@ -20,6 +21,8 @@ export interface BlossomServerMetadata {
 export interface AppConfig {
   /** Current theme */
   theme: Theme;
+  /** Active UI locale (default: 'de') */
+  locale: Locale;
   /** NIP-65 relay list metadata */
   relayMetadata: RelayMetadata;
   /** User's kind 10063 Blossom server list. */

@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { WireCard } from '@/components/wire/WireCard';
 import { useWire } from '@/hooks/useWire';
+import { useTranslation } from '@/hooks/useTranslation';
 import { isWirePopulated } from '@/lib/wire';
 import { Button } from '@/components/ui/button';
 import { ArrowRight, Eye, Shield, Fingerprint } from 'lucide-react';
@@ -10,6 +11,7 @@ import { ArrowRight, Eye, Shield, Fingerprint } from 'lucide-react';
 const Index = () => {
   const { wire } = useWire();
   const hasWire = isWirePopulated(wire);
+  const { t } = useTranslation();
 
   useSeoMeta({
     title: 'Delphi — Know Thyself',
@@ -26,16 +28,15 @@ const Index = () => {
         <div className="mx-auto max-w-4xl px-4 sm:px-6 pt-16 sm:pt-24 pb-12 sm:pb-16 text-center">
           {/* Greek inscription */}
           <p className="font-serif italic text-oracle text-sm sm:text-base tracking-widest mb-6 motion-safe:animate-in motion-safe:fade-in motion-safe:duration-700">
-            γνῶθι σεαυτόν
+            {t('home.inscription')}
           </p>
 
           <h1 className="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold text-foreground tracking-tight leading-tight">
-            Know Thyself
+            {t('home.title')}
           </h1>
 
           <p className="mt-6 text-lg sm:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-            Build your psychometric fingerprint across four ancient and modern typology systems. 
-            Your identity, your data, sovereign on Nostr.
+            {t('home.subtitle')}
           </p>
 
           <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
@@ -43,18 +44,18 @@ const Index = () => {
               <>
                 <Button asChild size="lg" className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8">
                   <Link to="/wire">
-                    View My Wire
+                    {t('home.viewWire')}
                     <ArrowRight className="size-4 ml-1" />
                   </Link>
                 </Button>
                 <Button asChild variant="outline" size="lg" className="rounded-full px-8">
-                  <Link to="/assess">Continue Assessments</Link>
+                  <Link to="/assess">{t('home.continueAssessments')}</Link>
                 </Button>
               </>
             ) : (
               <Button asChild size="lg" className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8">
                 <Link to="/assess">
-                  Begin Your Assessment
+                  {t('home.beginAssessment')}
                   <ArrowRight className="size-4 ml-1" />
                 </Link>
               </Button>
@@ -75,18 +76,18 @@ const Index = () => {
         <div className="grid sm:grid-cols-3 gap-8">
           <PrincipleCard
             icon={<Shield className="size-5" />}
-            title="Sovereign"
-            description="Your data stays on your device until you choose to publish. Raw answers never leave unencrypted. You control what the world sees."
+            title={t('home.principle.sovereign')}
+            description={t('home.principle.sovereign.desc')}
           />
           <PrincipleCard
             icon={<Fingerprint className="size-5" />}
-            title="Pseudonymous"
-            description="No names, no email, no accounts. Only your Nostr key. Your Wire is a psychometric fingerprint attached to a cryptographic identity."
+            title={t('home.principle.pseudonymous')}
+            description={t('home.principle.pseudonymous.desc')}
           />
           <PrincipleCard
             icon={<Eye className="size-5" />}
-            title="Self-Attested"
-            description="You confirm, deny, or weight every trait in your profile. The Wire reflects how you see yourself — not how a test scores you."
+            title={t('home.principle.selfAttested')}
+            description={t('home.principle.selfAttested.desc')}
           />
         </div>
       </section>
@@ -94,38 +95,38 @@ const Index = () => {
       {/* Systems overview */}
       <section className="mx-auto max-w-4xl px-4 sm:px-6 py-12 sm:py-16">
         <h2 className="font-serif text-2xl sm:text-3xl font-bold text-foreground text-center mb-4">
-          Four Systems, One Wire
+          {t('home.systems.title')}
         </h2>
         <p className="text-center text-muted-foreground max-w-xl mx-auto mb-12">
-          Each assessment fills a chamber in your Wire — building a multi-dimensional map of who you are.
+          {t('home.systems.subtitle')}
         </p>
 
         <div className="grid sm:grid-cols-2 gap-4">
           <SystemCard
             letter="M"
-            name="Millman Life-Purpose"
-            description="Your birth date reveals a life-purpose number — the core themes and lessons your path is oriented around."
+            name={t('home.systems.millman')}
+            description={t('home.systems.millman.desc')}
             available
             to="/assess/millman"
           />
           <SystemCard
             letter="J"
-            name="16-Type Jungian"
-            description="A cognitive-function assessment mapping how you perceive, decide, and orient your energy in the world."
+            name={t('home.systems.jung')}
+            description={t('home.systems.jung.desc')}
             available
             to="/assess/jung"
           />
           <SystemCard
             letter="E"
-            name="Enneagram"
-            description="Nine fundamental character structures — your core motivation, your fear, and the pattern you return to under stress."
+            name={t('home.systems.enneagram')}
+            description={t('home.systems.enneagram.desc')}
             available
             to="/assess/enneagram"
           />
           <SystemCard
             letter="H"
-            name="Human Design"
-            description="Your energetic type, profile, and decision-making authority — how you're designed to interact with the world."
+            name={t('home.systems.hd')}
+            description={t('home.systems.hd.desc')}
             available
             to="/assess/human-design"
           />
@@ -154,6 +155,7 @@ function SystemCard({ letter, name, description, available, to }: {
   available: boolean;
   to?: string;
 }) {
+  const { t } = useTranslation();
   const content = (
     <div className={`flex gap-4 p-4 sm:p-5 rounded-xl border transition-all ${
       available
@@ -169,7 +171,7 @@ function SystemCard({ letter, name, description, available, to }: {
         <div className="flex items-center gap-2">
           <h3 className="font-serif font-semibold text-foreground">{name}</h3>
           {!available && (
-            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">Coming soon</span>
+            <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">{t('home.comingSoon')}</span>
           )}
         </div>
         <p className="text-sm text-muted-foreground mt-1 leading-relaxed">{description}</p>
