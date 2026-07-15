@@ -17,8 +17,8 @@ const de: TranslationDict = {
 
   // ─── Landing Page ───
   'landing.inscription': 'γνῶθι σεαυτόν',
-  'landing.title': 'Erkenne dich selbst — statt dich erkennen zu lassen',
-  'landing.subtitle': 'Die selbstsouveräne App für menschliche Entwicklung und besseres gegenseitiges Verständnis. Tritt ein in den Tempel und entdecke deine Einzigartigkeit. Gebaut auf Nostr.',
+  'landing.title': 'Erkenne dich selbst — ohne dass dich jemand sieht',
+  'landing.subtitle': 'Die datenschutzfreundliche App für menschliche Entwicklung und besseres gegenseitiges Verständnis. Tritt ein in den Tempel und entdecke deine Einzigartigkeit. Gebaut auf Nostr.',
   'landing.cta': 'Tempel betreten',
   'landing.promise.noTrackers': 'Keine Tracker',
   'landing.promise.noCookies': 'Keine Cookies',
