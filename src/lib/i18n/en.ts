@@ -278,6 +278,12 @@ const en: TranslationDict = {
   'publish.title': 'Publish Your Wire',
   'publish.loginPrompt': 'Log in with your Nostr identity to publish your Wire.',
 
+  // ─── Credits ───
+  'credits.exhausted.title': 'Credits needed',
+  'credits.exhausted.desc': 'The Oracle and the Mirror run on Shakespeare AI. Your credits are spent — add more in Shakespeare to continue.',
+  'credits.exhausted.addCredits': 'Add credits in Shakespeare',
+  'credits.exhausted.note': 'Shakespeare AI powers the Oracle and Mirror. Credits are tied to your Nostr key and shared across all Shakespeare apps.',
+
   // ─── Self-Attestation ───
   'attestation.title': 'Self-Attestation',
 };

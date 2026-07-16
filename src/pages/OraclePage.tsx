@@ -11,6 +11,7 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useOracleChat } from '@/hooks/useOracleChat';
 import { ORACLE_PRESETS } from '@/lib/oracle/prompt';
 import { isWirePopulated } from '@/lib/wire';
+import { CreditsError, isCreditsError } from '@/components/CreditsError';
 import { ArrowUp, Loader2 } from 'lucide-react';
 
 const DISCLAIMER_KEY = 'delphi:oracle-disclaimer-accepted';
@@ -135,7 +136,11 @@ export default function OraclePage() {
               </div>
             )}
 
-            {error && <p className="text-xs text-destructive text-center">{error}</p>}
+            {error && (
+              isCreditsError(error)
+                ? <CreditsError />
+                : <p className="text-xs text-destructive text-center">{error}</p>
+            )}
 
             {/* Composer or exhausted state */}
             {allowed ? (

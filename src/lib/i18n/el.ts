@@ -37,6 +37,7 @@ const el: TranslationDict = {
   'common.backToAssessments': 'Πίσω στις αξιολογήσεις', 'common.viewMyWire': 'Δες το Wire μου', 'common.copied': 'Αντιγράφηκε', 'common.lightningCopied': 'Διεύθυνση Lightning αντιγράφηκε', 'common.bitcoinCopied': 'Διεύθυνση Bitcoin αντιγράφηκε', 'common.onchainBitcoin': 'On-chain Bitcoin',
   'publish.title': 'Δημοσίευσε το Wire', 'publish.loginPrompt': 'Συνδέσου με την ταυτότητα Nostr σου για να δημοσιεύσεις το Wire.',
   'attestation.title': 'Αυτοπιστοποίηση',
+  'credits.exhausted.title': 'Απαιτούνται πιστωτικές μονάδες', 'credits.exhausted.desc': 'Το Μαντείο και ο Καθρέφτης λειτουργούν με Shakespeare AI. Οι μονάδες σου εξαντλήθηκαν — πρόσθεσε περισσότερες στο Shakespeare.', 'credits.exhausted.addCredits': 'Πρόσθεσε μονάδες στο Shakespeare', 'credits.exhausted.note': 'Το Shakespeare AI τροφοδοτεί το Μαντείο και τον Καθρέφτη. Οι μονάδες συνδέονται με το κλειδί Nostr σου.',
 };
 
 export default el;

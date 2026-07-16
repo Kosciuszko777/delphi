@@ -58,6 +58,11 @@ export interface ModelsResponse {
   data: Model[];
 }
 
+export interface CreditsResponse {
+  object: string;
+  amount: number;
+}
+
 // Configuration
 const SHAKESPEARE_API_URL = 'https://ai.shakespeare.diy/v1';
 
@@ -362,6 +367,38 @@ export function useShakespeare() {
     }
   }, [user]);
 
+  // Get credit balance
+  const getCreditBalance = useCallback(async (): Promise<CreditsResponse> => {
+    if (!user) {
+      throw new Error('User must be logged in to check credits');
+    }
+
+    try {
+      const token = await createNIP98Token(
+        'GET',
+        `${SHAKESPEARE_API_URL}/credits`,
+        undefined,
+        user
+      );
+
+      const response = await fetch(`${SHAKESPEARE_API_URL}/credits`, {
+        method: 'GET',
+        headers: {
+          'Authorization': `Nostr ${token}`,
+        },
+      });
+
+      await handleAPIError(response);
+      return await response.json();
+    } catch (err) {
+      let errorMessage = 'An unexpected error occurred';
+      if (err instanceof Error) {
+        errorMessage = err.message;
+      }
+      throw new Error(errorMessage, { cause: err });
+    }
+  }, [user]);
+
   return {
     // State
     isLoading,
@@ -372,6 +409,7 @@ export function useShakespeare() {
     sendChatMessage,
     sendStreamingMessage,
     getAvailableModels,
+    getCreditBalance,
     clearError,
   };
 }

@@ -28,7 +28,7 @@ function inputHash(input: unknown): string {
 }
 
 /** The cheapest model on Shakespeare AI — used for free-tier to conserve credits. */
-const CHEAP_MODEL = 'glm-4.5';
+const CHEAP_MODEL = 'glm-4.6';
 
 /** Pick a model based on entitlement: free users get the cheapest model, paid users get premium. */
 function pickModel(
