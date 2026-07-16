@@ -107,7 +107,7 @@ async function handleAPIError(response: Response) {
   if (response.status === 401) {
     throw new Error('Authentication failed. Please make sure you are logged in with a Nostr account.');
   } else if (response.status === 402) {
-    throw new Error('Insufficient credits. Please add credits to your account to use premium models, or use the free "tybalt" model.');
+    throw new Error('Insufficient credits. Please add credits to your account to continue using the Oracle and Mirror.');
   } else if (response.status === 400) {
     try {
       const error = await response.json();
