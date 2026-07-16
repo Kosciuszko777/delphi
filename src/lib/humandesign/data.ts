@@ -108,7 +108,7 @@ export interface ExternalCalculator {
 export const EXTERNAL_CALCULATORS: ExternalCalculator[] = [
   {
     name: 'Genetic Matrix',
-    url: 'https://www.geneticmatrix.com/free-human-design-chart/',
+    url: 'https://www.geneticmatrix.com/',
     description: 'Detailed free chart with type, profile, authority, defined centers, and channel information.',
   },
   {
