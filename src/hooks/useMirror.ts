@@ -3,8 +3,10 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useShakespeare } from '@/hooks/useShakespeare';
 import { useWire } from '@/hooks/useWire';
 import { useAttestations } from '@/hooks/useAttestations';
+import { useOracleEntitlement } from '@/hooks/useOracleEntitlement';
 import { buildMirrorMessages } from '@/lib/mirror/prompt';
 import { parseMirror, type MirrorReading } from '@/lib/mirror/schema';
+import type { Entitlement } from '@/lib/oracle/meter';
 
 const STORAGE_KEY = 'delphi:mirror';
 
@@ -25,8 +27,14 @@ function inputHash(input: unknown): string {
   return h.toString(16);
 }
 
-/** Prefer a strong general model; fall back to the cheapest available. */
-function pickModel(models: { id: string; pricing: { prompt: string; completion: string } }[]): string {
+const FREE_MODEL = 'shakespeare/tybalt';
+
+/** Pick a model based on entitlement: free users get tybalt, paid users get the best available. */
+function pickModel(
+  models: { id: string; pricing: { prompt: string; completion: string } }[],
+  entitlement: Entitlement,
+): string {
+  if (entitlement === 'free') return FREE_MODEL;
   const preferred = models.find((m) => /sonnet/i.test(m.id))
     ?? models.find((m) => /claude/i.test(m.id));
   if (preferred) return preferred.id;
@@ -47,6 +55,7 @@ function pickModel(models: { id: string; pricing: { prompt: string; completion: 
 export function useMirror() {
   const { wire } = useWire();
   const { attestations } = useAttestations();
+  const { entitlement } = useOracleEntitlement();
   const { sendChatMessage, getAvailableModels, isAuthenticated } = useShakespeare();
   const [stored, setStored] = useLocalStorage<StoredMirror | null>(STORAGE_KEY, null);
   const [isGenerating, setIsGenerating] = useState(false);
@@ -60,8 +69,13 @@ export function useMirror() {
     setIsGenerating(true);
     setError(null);
     try {
-      const models = await getAvailableModels();
-      const model = pickModel(models.data);
+      let model: string;
+      if (entitlement === 'free') {
+        model = FREE_MODEL;
+      } else {
+        const models = await getAvailableModels();
+        model = pickModel(models.data, entitlement);
+      }
       const messages = buildMirrorMessages(wire, attestations);
       const response = await sendChatMessage(messages, model, {
         temperature: 0.7,
@@ -76,7 +90,7 @@ export function useMirror() {
     } finally {
       setIsGenerating(false);
     }
-  }, [wire, attestations, hash, getAvailableModels, sendChatMessage, setStored]);
+  }, [wire, attestations, hash, entitlement, getAvailableModels, sendChatMessage, setStored]);
 
   return { reading, isStale, isGenerating, error, generate, isAuthenticated };
 }

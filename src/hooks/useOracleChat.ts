@@ -8,6 +8,7 @@ import { useOracleEntitlement } from '@/hooks/useOracleEntitlement';
 import { buildOracleSystem } from '@/lib/oracle/prompt';
 import {
   type MeterState,
+  type Entitlement,
   normalize,
   remaining,
   canSend as meterCanSend,
@@ -23,8 +24,14 @@ export interface OracleTurn {
   content: string;
 }
 
-/** Prefer a strong general model; fall back to the cheapest available. */
-function pickModel(models: { id: string; pricing: { prompt: string; completion: string } }[]): string {
+const FREE_MODEL = 'shakespeare/tybalt';
+
+/** Pick a model based on entitlement: free users get tybalt, paid users get the best available. */
+function pickModel(
+  models: { id: string; pricing: { prompt: string; completion: string } }[],
+  entitlement: Entitlement,
+): string {
+  if (entitlement === 'free') return FREE_MODEL;
   const preferred = models.find((m) => /sonnet/i.test(m.id))
     ?? models.find((m) => /claude/i.test(m.id));
   if (preferred) return preferred.id;
@@ -70,8 +77,12 @@ export function useOracleChat() {
 
     try {
       if (!modelRef.current) {
-        const models = await getAvailableModels();
-        modelRef.current = pickModel(models.data);
+        if (entitlement === 'free') {
+          modelRef.current = FREE_MODEL;
+        } else {
+          const models = await getAvailableModels();
+          modelRef.current = pickModel(models.data, entitlement);
+        }
       }
 
       const system = buildOracleSystem(wire, attestations);
