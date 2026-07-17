@@ -37,7 +37,6 @@ const zh: TranslationDict = {
   'common.backToAssessments': '返回测评', 'common.viewMyWire': '查看我的Wire', 'common.copied': '已复制', 'common.lightningCopied': '闪电地址已复制', 'common.bitcoinCopied': '比特币地址已复制', 'common.onchainBitcoin': '链上比特币',
   'publish.title': '发布Wire', 'publish.loginPrompt': '使用Nostr身份登录以发布你的Wire。',
   'attestation.title': '自我证明',
-  'credits.exhausted.title': '需要积分', 'credits.exhausted.desc': '神谕和镜子由 Shakespeare AI 驱动。你的积分已用完——请在 Shakespeare 中充值。', 'credits.exhausted.addCredits': '在 Shakespeare 中充值', 'credits.exhausted.note': 'Shakespeare AI 为神谕和镜子提供动力。积分与你的 Nostr 密钥绑定，在所有 Shakespeare 应用中通用。',
 };
 
 export default zh;

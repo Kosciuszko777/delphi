@@ -37,7 +37,6 @@ const fr: TranslationDict = {
   'common.backToAssessments': 'Retour aux évaluations', 'common.viewMyWire': 'Voir mon Wire', 'common.copied': 'Copié', 'common.lightningCopied': 'Adresse Lightning copiée', 'common.bitcoinCopied': 'Adresse Bitcoin copiée', 'common.onchainBitcoin': 'Bitcoin On-chain',
   'publish.title': 'Publier le Wire', 'publish.loginPrompt': 'Connecte-toi avec ton identité Nostr pour publier ton Wire.',
   'attestation.title': 'Auto-attestation',
-  'credits.exhausted.title': 'Crédits nécessaires', 'credits.exhausted.desc': 'L\'Oracle et le Miroir fonctionnent avec Shakespeare AI. Tes crédits sont épuisés — ajoute-en dans Shakespeare.', 'credits.exhausted.addCredits': 'Ajouter des crédits dans Shakespeare', 'credits.exhausted.note': 'Shakespeare AI alimente l\'Oracle et le Miroir. Les crédits sont liés à ta clé Nostr et partagés entre toutes les apps Shakespeare.',
 };
 
 export default fr;

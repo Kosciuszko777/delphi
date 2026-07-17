@@ -5,7 +5,6 @@ import { filledChamberCount, TOTAL_CHAMBERS } from '@/lib/wire';
 import type { MirrorReading } from '@/lib/mirror/schema';
 import { Button } from '@/components/ui/button';
 import { Omphalos } from '@/components/wire/Omphalos';
-import { CreditsError, isCreditsError } from '@/components/CreditsError';
 import { Loader2, RefreshCw, Sparkles } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
@@ -65,11 +64,7 @@ export function MirrorSection() {
               {isGenerating ? t('mirror.polishing') : t('mirror.consult')}
             </Button>
           )}
-          {error && (
-            isCreditsError(error)
-              ? <CreditsError />
-              : <p className="text-xs text-destructive">{error}</p>
-          )}
+          {error && <p className="text-xs text-destructive">{error}</p>}
         </div>
       )}
 
@@ -123,11 +118,7 @@ export function MirrorSection() {
               </Button>
             )}
           </div>
-          {error && (
-            isCreditsError(error)
-              ? <CreditsError />
-              : <p className="text-xs text-destructive">{error}</p>
-          )}
+          {error && <p className="text-xs text-destructive">{error}</p>}
         </div>
       )}
     </section>

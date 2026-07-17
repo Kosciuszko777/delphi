@@ -37,7 +37,6 @@ const ru: TranslationDict = {
   'common.backToAssessments': 'К тестам', 'common.viewMyWire': 'Мой Wire', 'common.copied': 'Скопировано', 'common.lightningCopied': 'Lightning-адрес скопирован', 'common.bitcoinCopied': 'Bitcoin-адрес скопирован', 'common.onchainBitcoin': 'On-chain Bitcoin',
   'publish.title': 'Опубликовать Wire', 'publish.loginPrompt': 'Войди с Nostr-идентичностью для публикации Wire.',
   'attestation.title': 'Самоподтверждение',
-  'credits.exhausted.title': 'Нужны кредиты', 'credits.exhausted.desc': 'Оракул и Зеркало работают на Shakespeare AI. Ваши кредиты закончились — пополните их в Shakespeare.', 'credits.exhausted.addCredits': 'Пополнить кредиты в Shakespeare', 'credits.exhausted.note': 'Shakespeare AI питает Оракул и Зеркало. Кредиты привязаны к вашему ключу Nostr и общие для всех приложений Shakespeare.',
 };
 
 export default ru;

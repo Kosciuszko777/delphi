@@ -37,7 +37,6 @@ const es: TranslationDict = {
   'common.backToAssessments': 'Volver a evaluaciones', 'common.viewMyWire': 'Ver mi Wire', 'common.copied': 'Copiado', 'common.lightningCopied': 'Dirección Lightning copiada', 'common.bitcoinCopied': 'Dirección Bitcoin copiada', 'common.onchainBitcoin': 'Bitcoin On-chain',
   'publish.title': 'Publicar Wire', 'publish.loginPrompt': 'Inicia sesión con tu identidad Nostr para publicar tu Wire.',
   'attestation.title': 'Auto-atestiguación',
-  'credits.exhausted.title': 'Se necesitan créditos', 'credits.exhausted.desc': 'El Oráculo y el Espejo funcionan con Shakespeare AI. Tus créditos se agotaron — añade más en Shakespeare.', 'credits.exhausted.addCredits': 'Añadir créditos en Shakespeare', 'credits.exhausted.note': 'Shakespeare AI alimenta el Oráculo y el Espejo. Los créditos están vinculados a tu clave Nostr y se comparten entre todas las apps de Shakespeare.',
 };
 
 export default es;

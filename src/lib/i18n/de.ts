@@ -278,12 +278,6 @@ const de: TranslationDict = {
   'publish.title': 'Wire veröffentlichen',
   'publish.loginPrompt': 'Melde dich mit deiner Nostr-Identität an, um deinen Wire zu veröffentlichen.',
 
-  // ─── Credits ───
-  'credits.exhausted.title': 'Guthaben erforderlich',
-  'credits.exhausted.desc': 'Das Orakel und der Spiegel nutzen Shakespeare AI. Dein Guthaben ist aufgebraucht — lade in Shakespeare nach.',
-  'credits.exhausted.addCredits': 'Guthaben in Shakespeare aufladen',
-  'credits.exhausted.note': 'Shakespeare AI betreibt das Orakel und den Spiegel. Guthaben ist mit deinem Nostr-Schlüssel verknüpft und gilt für alle Shakespeare-Apps.',
-
   // ─── Self-Attestation ───
   'attestation.title': 'Selbstbestätigung',
 };
