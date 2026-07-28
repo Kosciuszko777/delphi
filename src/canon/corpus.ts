@@ -6,11 +6,23 @@
 import type { CanonFragment } from './types';
 import { TEAM_FRAGMENTS } from './fragments-team';
 import { WORK_FRAGMENTS } from './fragments-work';
+import { PURPOSE_FRAGMENTS } from './fragments-purpose';
+import { HAPPINESS_FRAGMENTS } from './fragments-happiness';
+import { RELATIONSHIPS_FRAGMENTS } from './fragments-relationships';
+import { CONFLICT_FRAGMENTS } from './fragments-conflict';
+import { ENERGY_FRAGMENTS } from './fragments-energy';
+import { GROWTH_FRAGMENTS } from './fragments-growth';
 
 /** All fragments, combined. */
 const ALL_FRAGMENTS: CanonFragment[] = [
   ...TEAM_FRAGMENTS,
   ...WORK_FRAGMENTS,
+  ...PURPOSE_FRAGMENTS,
+  ...HAPPINESS_FRAGMENTS,
+  ...RELATIONSHIPS_FRAGMENTS,
+  ...CONFLICT_FRAGMENTS,
+  ...ENERGY_FRAGMENTS,
+  ...GROWTH_FRAGMENTS,
 ];
 
 /** Index: "system:key:domain" → fragment. */
