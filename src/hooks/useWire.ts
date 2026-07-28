@@ -1,18 +1,24 @@
 import { useLocalStorage } from '@/hooks/useLocalStorage';
-import type { Wire } from '@/lib/wire';
+import type { Soulgraph } from '@/lib/wire';
 
 const WIRE_STORAGE_KEY = 'delphi:wire';
 
 /**
- * Hook to manage the user's Wire (local-only in Phase 1).
+ * Hook to manage the user's Soulgraph (local-only in Phase 1).
  * Persists to localStorage. No relay publishing.
  */
-export function useWire() {
-  const [wire, setWire] = useLocalStorage<Wire>(WIRE_STORAGE_KEY, {});
+export function useSoulgraph() {
+  const [soulgraph, setSoulgraph] = useLocalStorage<Soulgraph>(WIRE_STORAGE_KEY, {});
 
-  const updateWire = (updater: (current: Wire) => Wire) => {
-    setWire(updater);
+  const updateSoulgraph = (updater: (current: Soulgraph) => Soulgraph) => {
+    setSoulgraph(updater);
   };
 
-  return { wire, updateWire };
+  return { soulgraph, updateSoulgraph };
+}
+
+/** @deprecated Use useSoulgraph instead. */
+export function useWire() {
+  const { soulgraph, updateSoulgraph } = useSoulgraph();
+  return { wire: soulgraph, updateWire: updateSoulgraph };
 }

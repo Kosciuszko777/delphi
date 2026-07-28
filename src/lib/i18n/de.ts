@@ -5,7 +5,7 @@ const de: TranslationDict = {
   'nav.home': 'Start',
   'nav.howItWorks': 'So funktioniert es',
   'nav.assess': 'Tests',
-  'nav.wire': 'Mein Wire',
+  'nav.soulgraph': 'Soulgraph',
   'nav.oracle': 'Orakel',
   'nav.explore': 'Entdecken',
   'nav.council': 'Rat',
@@ -27,11 +27,11 @@ const de: TranslationDict = {
   'landing.temple.title': 'Betritt den Tempel',
   'landing.temple.subtitle': 'Vier Persönlichkeitssysteme. Ein souveräner Fingerabdruck. Dein Weg zur Selbsterkenntnis.',
   'landing.temple.step1.title': 'Entdecke',
-  'landing.temple.step1.desc': 'Bearbeite vier Persönlichkeitstests — von der Millman-Lebensaufgabe bis zum Enneagramm. Jeder füllt eine Kammer deines Wire.',
+  'landing.temple.step1.desc': 'Bearbeite vier Persönlichkeitstests — von der Millman-Lebensaufgabe bis zum Enneagramm. Jeder füllt eine Kammer deines Soulgraph.',
   'landing.temple.step2.title': 'Erkenne',
   'landing.temple.step2.desc': 'Der Spiegel liest deine vier Systeme als Einheit und zeigt ein Gesamtbild — Stärken, Schatten und die Reibungen dazwischen.',
   'landing.temple.step3.title': 'Teile — oder nicht',
-  'landing.temple.step3.desc': 'Dein Wire gehört dir. Veröffentliche ihn auf Nostr, behalte ihn privat oder teile nur, was du willst. Deine Schlüssel, deine Wahl.',
+  'landing.temple.step3.desc': 'Dein Soulgraph gehört dir. Veröffentliche ihn auf Nostr, behalte ihn privat oder teile nur, was du willst. Deine Schlüssel, deine Wahl.',
   'landing.unique.title': 'Entdecke deine Einzigartigkeit',
   'landing.unique.desc': 'Die Welt kennt dich durch Daten. Delphi hilft dir, dich selbst zu kennen — durch Systeme, die Jahrtausende alt sind, in einer Technologie, die niemand kontrolliert.',
 
@@ -39,7 +39,7 @@ const de: TranslationDict = {
   'home.inscription': 'γνῶθι σεαυτόν',
   'home.title': 'Erkenne dich selbst',
   'home.subtitle': 'Erstelle deinen psychometrischen Fingerabdruck über vier antike und moderne Typologiesysteme. Deine Identität, deine Daten, souverän auf Nostr.',
-  'home.viewWire': 'Mein Wire ansehen',
+  'home.viewSoulgraph': 'Mein Soulgraph ansehen',
   'home.continueAssessments': 'Tests fortsetzen',
   'home.beginAssessment': 'Test starten',
   'home.principle.sovereign': 'Souverän',
@@ -48,8 +48,8 @@ const de: TranslationDict = {
   'home.principle.pseudonymous.desc': 'Kein Name, keine E-Mail, kein Konto. Nur dein Nostr-Schlüssel. Dein Wire ist ein psychometrischer Fingerabdruck an einer kryptographischen Identität.',
   'home.principle.selfAttested': 'Selbstbestätigt',
   'home.principle.selfAttested.desc': 'Du bestätigst, verneinst oder gewichtest jede Eigenschaft in deinem Profil. Der Wire spiegelt, wie du dich selbst siehst — nicht wie ein Test dich bewertet.',
-  'home.systems.title': 'Vier Systeme, ein Wire',
-  'home.systems.subtitle': 'Jeder Test füllt eine Kammer in deinem Wire — und baut eine mehrdimensionale Karte deiner Persönlichkeit.',
+  'home.systems.title': 'Vier Systeme, ein Soulgraph',
+  'home.systems.subtitle': 'Jeder Test füllt eine Kammer in deinem Soulgraph — und baut eine mehrdimensionale Karte deiner Persönlichkeit.',
   'home.systems.millman': 'Millman Lebensaufgabe',
   'home.systems.millman.desc': 'Dein Geburtsdatum offenbart eine Lebensaufgabenzahl — die Kernthemen und Lektionen, auf die dein Weg ausgerichtet ist.',
   'home.systems.jung': '16-Typen nach Jung',
@@ -62,7 +62,7 @@ const de: TranslationDict = {
 
   // ─── Assess Page ───
   'assess.title': 'Tests',
-  'assess.subtitle': 'Jeder Test füllt eine Kammer deines Wire. Bearbeite sie in beliebiger Reihenfolge.',
+  'assess.subtitle': 'Jeder Test füllt eine Kammer deines Soulgraph. Bearbeite sie in beliebiger Reihenfolge.',
   'assess.millman.name': 'Millman Lebensaufgabe',
   'assess.millman.desc': 'Gib dein Geburtsdatum ein, um deine Lebensaufgabenzahl zu entdecken — die Kernthemen und Lektionen deines Weges.',
   'assess.millman.time': '1 Minute',
@@ -116,17 +116,17 @@ const de: TranslationDict = {
   'hd.title': 'Human Design',
   'hd.subtitle': 'Gib deinen Human-Design-Typ, dein Profil und deine Entscheidungsautorität ein.',
 
-  // ─── Wire Page ───
-  'wire.title': 'Mein Wire',
-  'wire.subtitle.hasWire': 'Dein psychometrischer Fingerabdruck — {filled} von {total} Kammern gefüllt.',
-  'wire.subtitle.empty': 'Bearbeite Tests, um deinen Wire aufzubauen — deine souveräne Identitätssignatur.',
-  'wire.noChambers': 'Noch keine Kammern gefüllt',
-  'wire.noChambers.desc': 'Bearbeite deinen ersten Test, um deinen Wire aufzubauen — deinen souveränen psychometrischen Fingerabdruck.',
-  'wire.beginAssessment': 'Test starten',
-  'wire.continueAssessments': 'Tests fortsetzen',
-  'wire.chambersRemaining': '{count} Kammer(n) verbleibend',
-  'wire.publishWire': 'Wire veröffentlichen',
-  'wire.viewMyWire': 'Mein Wire ansehen',
+  // ─── Soulgraph Page ───
+  'soulgraph.title': 'Mein Soulgraph',
+  'soulgraph.subtitle.has': 'Dein psychometrischer Fingerabdruck — {filled} von {total} Kammern gefüllt.',
+  'soulgraph.subtitle.empty': 'Bearbeite Tests, um deinen Soulgraph aufzubauen — deine souveräne Identitätssignatur.',
+  'soulgraph.noChambers': 'Noch keine Kammern gefüllt',
+  'soulgraph.noChambers.desc': 'Bearbeite deinen ersten Test, um deinen Soulgraph aufzubauen — deinen souveränen psychometrischen Fingerabdruck.',
+  'soulgraph.beginAssessment': 'Test starten',
+  'soulgraph.continueAssessments': 'Tests fortsetzen',
+  'soulgraph.chambersRemaining': '{count} Kammer(n) verbleibend',
+  'soulgraph.publish': 'Soulgraph veröffentlichen',
+  'soulgraph.viewMy': 'Mein Soulgraph ansehen',
 
   // ─── Mirror ───
   'mirror.title': 'Der Spiegel',
@@ -165,8 +165,8 @@ const de: TranslationDict = {
 
   // ─── Oracle ───
   'oracle.title': 'Das Orakel',
-  'oracle.subtitle': 'Beratung, die auf deinem Wire gründet — Teams, Beziehungen, Arbeit und die Reibungen zwischen deinen Systemen.',
-  'oracle.unwritten': 'Das Orakel liest deinen Wire — und deiner ist noch ungeschrieben.',
+  'oracle.subtitle': 'Beratung, die auf deinem Soulgraph gründet — Teams, Beziehungen, Arbeit und die Reibungen zwischen deinen Systemen.',
+  'oracle.unwritten': 'Das Orakel liest deinen Soulgraph — und deiner ist noch ungeschrieben.',
   'oracle.beginAssessment': 'Test starten',
   'oracle.signIn': 'Melde dich an, um das Orakel zu befragen.',
   'oracle.signInNote': 'Dein Schlüssel ist die Berechtigung — kein Konto, kein API-Key.',
@@ -268,8 +268,8 @@ const de: TranslationDict = {
 
   // ─── Explore ───
   'explore.title': 'Entdecken',
-  'explore.subtitle': 'Veröffentlichte Wires aus dem Nostr-Netzwerk. Klicke auf einen Wire, um das vollständige Profil anzuzeigen.',
-  'explore.empty': 'Noch keine veröffentlichten Wires gefunden. Sei der Erste — schliesse deine Tests ab und veröffentliche deinen Wire, um hier zu erscheinen.',
+  'explore.subtitle': 'Veröffentlichte Soulgraphs aus dem Nostr-Netzwerk. Klicke auf ein Profil, um den vollständigen Soulgraph anzuzeigen.',
+  'explore.empty': 'Noch keine veröffentlichten Soulgraphs gefunden. Sei der Erste — schliesse deine Tests ab und veröffentliche deinen Soulgraph, um hier zu erscheinen.',
 
   // ─── 404 ───
   'notFound.title': '404',
@@ -278,15 +278,15 @@ const de: TranslationDict = {
 
   // ─── Common ───
   'common.backToAssessments': 'Zurück zu den Tests',
-  'common.viewMyWire': 'Mein Wire ansehen',
+  'common.viewMySoulgraph': 'Mein Soulgraph ansehen',
   'common.copied': 'Kopiert',
   'common.lightningCopied': 'Lightning-Adresse kopiert',
   'common.bitcoinCopied': 'Bitcoin-Adresse kopiert',
   'common.onchainBitcoin': 'On-chain Bitcoin',
 
   // ─── Publish Flow ───
-  'publish.title': 'Wire veröffentlichen',
-  'publish.loginPrompt': 'Melde dich mit deiner Nostr-Identität an, um deinen Wire zu veröffentlichen.',
+  'publish.title': 'Soulgraph veröffentlichen',
+  'publish.loginPrompt': 'Melde dich mit deiner Nostr-Identität an, um deinen Soulgraph zu veröffentlichen.',
 
   // ─── Self-Attestation ───
   'attestation.title': 'Selbstbestätigung',

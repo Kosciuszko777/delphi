@@ -83,7 +83,7 @@ export function ShareWireCard({ wire }: ShareWireCardProps) {
         kind: 20,
         content: `${wireStr}\n\n\u0393\u039D\u03A9\u0398\u0399 \u03A3\u0395\u0391\u03A5\u03A4\u039F\u039D \u2014 know thyself.`,
         tags: [
-          ['title', 'My Delphi Wire'],
+          ['title', 'My Delphi Soulgraph'],
           imeta,
           ['t', 'delphi'],
           ['t', 'wire'],
@@ -93,7 +93,7 @@ export function ShareWireCard({ wire }: ShareWireCardProps) {
       });
 
       toast({
-        title: 'Wire card posted',
+        title: 'Soulgraph posted',
         description: 'Published as a picture event \u2014 visible in image-first Nostr clients.',
       });
     } catch (err) {

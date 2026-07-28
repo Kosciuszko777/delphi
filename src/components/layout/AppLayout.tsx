@@ -43,7 +43,7 @@ export function AppLayout({ children }: AppLayoutProps) {
             <nav className="hidden sm:flex items-center gap-1">
               <NavLink to="/how-it-works" active={location.pathname === '/how-it-works'}>{t('nav.howItWorks')}</NavLink>
               <NavLink to="/assess" active={location.pathname.startsWith('/assess')}>{t('nav.assess')}</NavLink>
-              <NavLink to="/wire" active={location.pathname === '/wire'}>{t('nav.wire')}</NavLink>
+              <NavLink to="/soulgraph" active={location.pathname === '/soulgraph'}>{t('nav.soulgraph')}</NavLink>
               <NavLink to="/oracle" active={location.pathname === '/oracle'}>{t('nav.oracle')}</NavLink>
               <NavLink to="/explore" active={location.pathname === '/explore'}>{t('nav.explore')}</NavLink>
               <NavLink to="/council" active={location.pathname === '/council'}>{t('nav.council')}</NavLink>
@@ -111,7 +111,7 @@ export function AppLayout({ children }: AppLayoutProps) {
           <div className="mx-auto max-w-4xl px-4 flex gap-1 py-1 overflow-x-auto">
             <NavLink to="/how-it-works" active={location.pathname === '/how-it-works'} mobile>{t('nav.howItWorks')}</NavLink>
             <NavLink to="/assess" active={location.pathname.startsWith('/assess')} mobile>{t('nav.assess')}</NavLink>
-            <NavLink to="/wire" active={location.pathname === '/wire'} mobile>Wire</NavLink>
+            <NavLink to="/soulgraph" active={location.pathname === '/soulgraph'} mobile>{t('nav.soulgraph')}</NavLink>
             <NavLink to="/oracle" active={location.pathname === '/oracle'} mobile>{t('nav.oracle')}</NavLink>
             <NavLink to="/explore" active={location.pathname === '/explore'} mobile>{t('nav.explore')}</NavLink>
             <NavLink to="/council" active={location.pathname === '/council'} mobile>{t('nav.council')}</NavLink>

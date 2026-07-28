@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useWire } from '@/hooks/useWire';
 import { useTranslation } from '@/hooks/useTranslation';
-import { WireCard } from '@/components/wire/WireCard';
+import { SoulgraphCard } from '@/components/wire/SoulgraphCard';
 import { isWirePopulated } from '@/lib/wire';
 import { ArrowRight, Check } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -77,7 +77,7 @@ export default function AssessPage() {
         {/* Wire preview */}
         {hasWire && (
           <div className="mb-8">
-            <WireCard wire={wire} />
+            <SoulgraphCard wire={wire} />
           </div>
         )}
 

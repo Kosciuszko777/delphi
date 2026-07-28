@@ -1,7 +1,7 @@
 import { useSeoMeta } from '@unhead/react';
 import { Link } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
-import { WireCard } from '@/components/wire/WireCard';
+import { SoulgraphCard } from '@/components/wire/SoulgraphCard';
 import { useWire } from '@/hooks/useWire';
 import { useTranslation } from '@/hooks/useTranslation';
 import { isWirePopulated } from '@/lib/wire';
@@ -43,8 +43,8 @@ const HowItWorksPage = () => {
             {hasWire ? (
               <>
                 <Button asChild size="lg" className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8">
-                  <Link to="/wire">
-                    {t('home.viewWire')}
+                  <Link to="/soulgraph">
+                    {t('home.viewSoulgraph')}
                     <ArrowRight className="size-4 ml-1" />
                   </Link>
                 </Button>
@@ -67,7 +67,7 @@ const HowItWorksPage = () => {
       {/* Wire card (if any results exist) */}
       {hasWire && (
         <section className="mx-auto max-w-4xl px-4 sm:px-6 pb-12">
-          <WireCard wire={wire} />
+          <SoulgraphCard wire={wire} />
         </section>
       )}
 

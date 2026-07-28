@@ -12,7 +12,7 @@ export interface UseTranslationReturn {
    *
    * Supports `{placeholder}` interpolation:
    * ```ts
-   * t('wire.subtitle.hasWire', { filled: '2', total: '4' })
+   * t('soulgraph.subtitle.has', { filled: '2', total: '4' })
    * ```
    */
   t: (key: string, vars?: Record<string, string | number>) => string;

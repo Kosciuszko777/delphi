@@ -5,7 +5,7 @@ const en: TranslationDict = {
   'nav.home': 'Home',
   'nav.howItWorks': 'How it works',
   'nav.assess': 'Assess',
-  'nav.wire': 'My Wire',
+  'nav.soulgraph': 'Soulgraph',
   'nav.oracle': 'Oracle',
   'nav.explore': 'Explore',
   'nav.council': 'Council',
@@ -27,11 +27,11 @@ const en: TranslationDict = {
   'landing.temple.title': 'Enter the Temple',
   'landing.temple.subtitle': 'Four personality systems. One sovereign fingerprint. Your path to self-knowledge.',
   'landing.temple.step1.title': 'Discover',
-  'landing.temple.step1.desc': 'Complete four personality assessments — from Millman Life-Purpose to the Enneagram. Each fills a chamber in your Wire.',
+  'landing.temple.step1.desc': 'Complete four personality assessments — from Millman Life-Purpose to the Enneagram. Each fills a chamber in your Soulgraph.',
   'landing.temple.step2.title': 'Recognize',
   'landing.temple.step2.desc': 'The Mirror reads your four systems as one and reveals a full picture — strengths, shadows, and the frictions between them.',
   'landing.temple.step3.title': 'Share — or don\'t',
-  'landing.temple.step3.desc': 'Your Wire belongs to you. Publish it on Nostr, keep it private, or share only what you choose. Your keys, your call.',
+  'landing.temple.step3.desc': 'Your Soulgraph belongs to you. Publish it on Nostr, keep it private, or share only what you choose. Your keys, your call.',
   'landing.unique.title': 'Discover your uniqueness',
   'landing.unique.desc': 'The world knows you through data. Delphi helps you know yourself — through systems thousands of years old, on technology no one controls.',
 
@@ -39,17 +39,17 @@ const en: TranslationDict = {
   'home.inscription': 'γνῶθι σεαυτόν',
   'home.title': 'Know Thyself',
   'home.subtitle': 'Build your psychometric fingerprint across four ancient and modern typology systems. Your identity, your data, sovereign on Nostr.',
-  'home.viewWire': 'View My Wire',
+  'home.viewSoulgraph': 'View My Soulgraph',
   'home.continueAssessments': 'Continue Assessments',
   'home.beginAssessment': 'Begin Your Assessment',
   'home.principle.sovereign': 'Sovereign',
   'home.principle.sovereign.desc': 'Your data stays on your device until you choose to publish. Raw answers never leave unencrypted. You control what the world sees.',
   'home.principle.pseudonymous': 'Pseudonymous',
-  'home.principle.pseudonymous.desc': 'No names, no email, no accounts. Only your Nostr key. Your Wire is a psychometric fingerprint attached to a cryptographic identity.',
+  'home.principle.pseudonymous.desc': 'No names, no email, no accounts. Only your Nostr key. Your Soulgraph is a psychometric fingerprint attached to a cryptographic identity.',
   'home.principle.selfAttested': 'Self-Attested',
-  'home.principle.selfAttested.desc': 'You confirm, deny, or weight every trait in your profile. The Wire reflects how you see yourself — not how a test scores you.',
-  'home.systems.title': 'Four Systems, One Wire',
-  'home.systems.subtitle': 'Each assessment fills a chamber in your Wire — building a multi-dimensional map of who you are.',
+  'home.principle.selfAttested.desc': 'You confirm, deny, or weight every trait in your profile. The Soulgraph reflects how you see yourself — not how a test scores you.',
+  'home.systems.title': 'Four Systems, One Soulgraph',
+  'home.systems.subtitle': 'Each assessment fills a chamber in your Soulgraph — building a multi-dimensional map of who you are.',
   'home.systems.millman': 'Millman Life-Purpose',
   'home.systems.millman.desc': 'Your birth date reveals a life-purpose number — the core themes and lessons your path is oriented around.',
   'home.systems.jung': '16-Type Jungian',
@@ -62,7 +62,7 @@ const en: TranslationDict = {
 
   // ─── Assess Page ───
   'assess.title': 'Assessments',
-  'assess.subtitle': 'Each assessment fills a chamber in your Wire. Complete them in any order.',
+  'assess.subtitle': 'Each assessment fills a chamber in your Soulgraph. Complete them in any order.',
   'assess.millman.name': 'Millman Life-Purpose',
   'assess.millman.desc': 'Enter your birth date to discover your life-purpose number — the core themes and lessons encoded in your path.',
   'assess.millman.time': '1 minute',
@@ -99,7 +99,7 @@ const en: TranslationDict = {
   'jung.step2': 'Rate each one from "Strongly disagree" to "Strongly agree" — go with your first instinct.',
   'jung.step3': 'Your answers are scored across four dimensions: Energy (E–I), Perception (S–N), Decision-making (T–F), and Lifestyle (J–P).',
   'jung.step4': 'You\'ll receive your four-letter type with percentage breakdowns and an in-depth interpretation.',
-  'jung.privacy': 'Privacy: Your answers are stored locally on this device only. They are never sent to any server. Only the derived four-letter type code will be added to your Wire — raw answers remain private.',
+  'jung.privacy': 'Privacy: Your answers are stored locally on this device only. They are never sent to any server. Only the derived four-letter type code will be added to your Soulgraph — raw answers remain private.',
   'jung.beginAssessment': 'Begin Assessment',
   'jung.resume': 'Resume',
   'jung.answered': 'answered',
@@ -116,17 +116,17 @@ const en: TranslationDict = {
   'hd.title': 'Human Design',
   'hd.subtitle': 'Enter your Human Design type, profile, and decision-making authority.',
 
-  // ─── Wire Page ───
-  'wire.title': 'My Wire',
-  'wire.subtitle.hasWire': 'Your psychometric fingerprint — {filled} of {total} chambers filled.',
-  'wire.subtitle.empty': 'Complete assessments to build your Wire — your sovereign identity signature.',
-  'wire.noChambers': 'No chambers filled yet',
-  'wire.noChambers.desc': 'Complete your first assessment to begin building your Wire — your sovereign psychometric fingerprint.',
-  'wire.beginAssessment': 'Begin Assessment',
-  'wire.continueAssessments': 'Continue Assessments',
-  'wire.chambersRemaining': '{count} chamber(s) remaining',
-  'wire.publishWire': 'Publish Your Wire',
-  'wire.viewMyWire': 'View My Wire',
+  // ─── Soulgraph Page ───
+  'soulgraph.title': 'My Soulgraph',
+  'soulgraph.subtitle.has': 'Your psychometric fingerprint — {filled} of {total} chambers filled.',
+  'soulgraph.subtitle.empty': 'Complete assessments to build your Soulgraph — your sovereign identity signature.',
+  'soulgraph.noChambers': 'No chambers filled yet',
+  'soulgraph.noChambers.desc': 'Complete your first assessment to begin building your Soulgraph — your sovereign psychometric fingerprint.',
+  'soulgraph.beginAssessment': 'Begin Assessment',
+  'soulgraph.continueAssessments': 'Continue Assessments',
+  'soulgraph.chambersRemaining': '{count} chamber(s) remaining',
+  'soulgraph.publish': 'Publish Your Soulgraph',
+  'soulgraph.viewMy': 'View My Soulgraph',
 
   // ─── Mirror ───
   'mirror.title': 'The Mirror',
@@ -156,7 +156,7 @@ const en: TranslationDict = {
   // ─── Canon ───
   'canon.tab': 'Canon',
   'canon.aiTab': 'Oracle AI',
-  'canon.unwritten': 'The Canon reads your Wire — and yours is unwritten.',
+  'canon.unwritten': 'The Canon reads your Soulgraph — and yours is unwritten.',
   'canon.positioning': 'The Canon answers from Delphi\'s written teachings — instantly, on your device, from no datacenter. For open conversation, the Oracle\'s AI mode remains one tap away.',
   'canon.chambers': 'The Canon reads {filled} of {total} chambers',
   'canon.placeholder': 'Ask in your own words…',
@@ -165,15 +165,15 @@ const en: TranslationDict = {
 
   // ─── Oracle ───
   'oracle.title': 'The Oracle',
-  'oracle.subtitle': 'Counsel grounded in your Wire — teams, relationships, work, and the frictions between your systems.',
-  'oracle.unwritten': 'The Oracle reads your Wire — and yours is unwritten.',
+  'oracle.subtitle': 'Counsel grounded in your Soulgraph — teams, relationships, work, and the frictions between your systems.',
+  'oracle.unwritten': 'The Oracle reads your Soulgraph — and yours is unwritten.',
   'oracle.beginAssessment': 'Begin an assessment',
   'oracle.signIn': 'Sign in to consult the Oracle.',
   'oracle.signInNote': 'Your key is the credential — no account, no API key.',
   'oracle.disclaimer.title': 'Before you ask',
   'oracle.disclaimer.p1': 'The Oracle is a reflective instrument grounded in your typology results. It is not psychotherapy, not medical or legal advice, and not a diagnosis of anything. It reads your systems; only you read your life.',
   'oracle.disclaimer.p2': 'For mental-health crises or acute distress, the Oracle will step aside — those belong with professionals and people who know you.',
-  'oracle.disclaimer.p3': 'Your questions are processed by an AI inference service authenticated with your Nostr key. Your Wire profile is included as context; your raw questionnaire answers are not.',
+  'oracle.disclaimer.p3': 'Your questions are processed by an AI inference service authenticated with your Nostr key. Your Soulgraph profile is included as context; your raw questionnaire answers are not.',
   'oracle.disclaimer.accept': 'I understand — open the Oracle',
   'oracle.presets.team': 'How do I work best in a team?',
   'oracle.presets.conflict': 'How should I handle conflict in a relationship?',
@@ -268,8 +268,8 @@ const en: TranslationDict = {
 
   // ─── Explore ───
   'explore.title': 'Explore',
-  'explore.subtitle': 'Published Wires from the Nostr network. Click any Wire to view the full profile.',
-  'explore.empty': 'No published Wires found yet. Be the first — complete your assessments and publish your Wire to appear here.',
+  'explore.subtitle': 'Published Soulgraphs from the Nostr network. Click any profile to view the full Soulgraph.',
+  'explore.empty': 'No published Soulgraphs found yet. Be the first — complete your assessments and publish your Soulgraph to appear here.',
 
   // ─── 404 ───
   'notFound.title': '404',
@@ -278,15 +278,15 @@ const en: TranslationDict = {
 
   // ─── Common ───
   'common.backToAssessments': 'Back to Assessments',
-  'common.viewMyWire': 'View My Wire',
+  'common.viewMySoulgraph': 'View My Soulgraph',
   'common.copied': 'Copied',
   'common.lightningCopied': 'Lightning address copied',
   'common.bitcoinCopied': 'Bitcoin address copied',
   'common.onchainBitcoin': 'On-chain Bitcoin',
 
   // ─── Publish Flow ───
-  'publish.title': 'Publish Your Wire',
-  'publish.loginPrompt': 'Log in with your Nostr identity to publish your Wire.',
+  'publish.title': 'Publish Your Soulgraph',
+  'publish.loginPrompt': 'Log in with your Nostr identity to publish your Soulgraph.',
 
   // ─── Self-Attestation ───
   'attestation.title': 'Self-Attestation',

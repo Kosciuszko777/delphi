@@ -49,8 +49,8 @@ const Index = () => {
             {hasWire ? (
               <>
                 <Button asChild size="lg" className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-8 text-base">
-                  <Link to="/wire">
-                    {t('home.viewWire')}
+                  <Link to="/soulgraph">
+                    {t('home.viewSoulgraph')}
                     <ArrowRight className="size-4 ml-1" />
                   </Link>
                 </Button>

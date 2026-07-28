@@ -35,10 +35,10 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
         <CardContent className="py-8 px-6 text-center">
           <Globe className="size-8 text-muted-foreground mx-auto mb-3" />
           <p className="font-serif text-lg text-foreground mb-2">
-            Publish Your Wire
+            Publish Your Soulgraph
           </p>
           <p className="text-sm text-muted-foreground max-w-md mx-auto">
-            Log in with your Nostr identity to publish your Wire — making your 
+            Log in with your Nostr identity to publish your Soulgraph — making your 
             psychometric fingerprint visible on the Nostr network while keeping 
             raw assessment data private.
           </p>
@@ -59,7 +59,7 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
       });
       await queryClient.invalidateQueries({ queryKey: ['delphi', 'wire'] });
       setShowPreview(false);
-      toast({ title: 'Wire published', description: 'Your Wire is now visible on Nostr.' });
+      toast({ title: 'Soulgraph published', description: 'Your Soulgraph is now visible on Nostr.' });
     } catch (err) {
       toast({ title: 'Publishing failed', description: String(err), variant: 'destructive' });
     }
@@ -81,7 +81,7 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
       });
       await queryClient.invalidateQueries({ queryKey: ['delphi', 'wire'] });
       setShowUnpublish(false);
-      toast({ title: 'Wire unpublished', description: 'Deletion request sent to relays.' });
+      toast({ title: 'Soulgraph unpublished', description: 'Deletion request sent to relays.' });
     } catch (err) {
       toast({ title: 'Unpublish failed', description: String(err), variant: 'destructive' });
     }
@@ -94,10 +94,10 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
         <CardContent className="py-6 px-6">
           <div className="flex items-center gap-2 mb-3">
             <Check className="size-4 text-oracle" />
-            <p className="font-serif font-semibold text-foreground">Wire Published</p>
+            <p className="font-serif font-semibold text-foreground">Soulgraph Published</p>
           </div>
           <p className="text-sm text-muted-foreground mb-4">
-            Your Wire is live on Nostr. Anyone can view it via your npub.
+            Your Soulgraph is live on Nostr. Anyone can view it via your npub.
           </p>
           <div className="flex flex-wrap gap-2">
             <Button
@@ -105,7 +105,7 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
               className="bg-oracle text-oracle-foreground hover:bg-oracle/90 rounded-full px-5"
               size="sm"
             >
-              Update Wire
+              Update Soulgraph
             </Button>
             {showUnpublish ? (
               <div className="flex items-center gap-2">
@@ -152,7 +152,7 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
           <div className="flex items-center gap-2">
             <Globe className="size-5 text-oracle" />
             <h3 className="font-serif text-lg font-semibold text-foreground">
-              {isPublished ? 'Update' : 'Publish'} Your Wire
+              {isPublished ? 'Update' : 'Publish'} Your Soulgraph
             </h3>
           </div>
 
@@ -217,7 +217,7 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
               ) : (
                 <Globe className="size-4" />
               )}
-              {isPublished ? 'Update Wire' : 'Publish Wire'}
+              {isPublished ? 'Update Soulgraph' : 'Publish Soulgraph'}
             </Button>
             <Button
               variant="ghost"
@@ -238,7 +238,7 @@ export function PublishWireFlow({ wire }: PublishWireFlowProps) {
       <CardContent className="py-8 px-6 text-center">
         <Globe className="size-8 text-oracle mx-auto mb-3" />
         <p className="font-serif text-lg text-foreground mb-2">
-          Publish Your Wire
+          Publish Your Soulgraph
         </p>
         <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
           Make your psychometric fingerprint visible on Nostr. Only type codes are published — 

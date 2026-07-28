@@ -31,7 +31,7 @@ export function PublicWireCard({ parsed, className }: PublicWireCardProps) {
         <div className="flex items-center gap-2">
           <Sparkles className="size-4 text-oracle" />
           <h3 className="font-serif text-lg sm:text-xl font-semibold text-foreground tracking-wide">
-            Wire
+            Soulgraph
           </h3>
         </div>
         <div className="flex items-center gap-1">

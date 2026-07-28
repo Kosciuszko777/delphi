@@ -9,7 +9,7 @@ import MillmanPage from "./pages/MillmanPage";
 import JungPage from "./pages/JungPage";
 import EnneagramPage from "./pages/EnneagramPage";
 import HumanDesignPage from "./pages/HumanDesignPage";
-import WirePage from "./pages/WirePage";
+import SoulgraphPage from "./pages/SoulgraphPage";
 import ExplorePage from "./pages/ExplorePage";
 import CouncilPage from "./pages/CouncilPage";
 import OraclePage from "./pages/OraclePage";
@@ -30,7 +30,7 @@ export function AppRouter() {
         <Route path="/assess/jung" element={<JungPage />} />
         <Route path="/assess/enneagram" element={<EnneagramPage />} />
         <Route path="/assess/human-design" element={<HumanDesignPage />} />
-        <Route path="/wire" element={<WirePage />} />
+        <Route path="/soulgraph" element={<SoulgraphPage />} />
         <Route path="/explore" element={<ExplorePage />} />
         <Route path="/council" element={<CouncilPage />} />
         <Route path="/oracle" element={<OraclePage />} />

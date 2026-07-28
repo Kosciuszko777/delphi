@@ -1,9 +1,12 @@
 /**
- * Wire — the user's sovereign psychometric identity signature.
+ * Soulgraph — the user's sovereign psychometric identity signature.
  *
- * A Wire aggregates results from multiple typology systems into a single
- * compact fingerprint. Each "chamber" is optional — the Wire grows as the
+ * A Soulgraph aggregates results from multiple typology systems into a single
+ * compact fingerprint. Each "chamber" is optional — the Soulgraph grows as the
  * user completes assessments.
+ *
+ * NOTE: The Wire type alias is kept for backward compatibility with Nostr
+ * event tags and localStorage keys. New code should use Soulgraph.
  */
 
 /** Jungian 16-type result (Phase 2). */
@@ -37,16 +40,19 @@ export interface MillmanResult {
   birthDate: string; // ISO date string YYYY-MM-DD
 }
 
-/** The complete Wire — all chambers. */
-export interface Wire {
+/** The complete Soulgraph — all chambers. */
+export interface Soulgraph {
   millman?: MillmanResult;
   jung?: JungResult;
   enneagram?: EnneagramResult;
   humanDesign?: HumanDesignResult;
 }
 
-/** Format a Wire into the canonical one-line string. */
-export function formatWire(wire: Wire): string {
+/** @deprecated Use Soulgraph instead. */
+export type Wire = Soulgraph;
+
+/** Format a Soulgraph into the canonical one-line string. */
+export function formatSoulgraph(wire: Soulgraph): string {
   const parts: string[] = [];
 
   if (wire.jung) {
@@ -68,13 +74,19 @@ export function formatWire(wire: Wire): string {
   return parts.join(' · ');
 }
 
-/** Check if a Wire has at least one chamber filled. */
-export function isWirePopulated(wire: Wire): boolean {
+/** @deprecated Use formatSoulgraph instead. */
+export const formatWire = formatSoulgraph;
+
+/** Check if a Soulgraph has at least one chamber filled. */
+export function isSoulgraphPopulated(wire: Soulgraph): boolean {
   return !!(wire.millman || wire.jung || wire.enneagram || wire.humanDesign);
 }
 
+/** @deprecated Use isSoulgraphPopulated instead. */
+export const isWirePopulated = isSoulgraphPopulated;
+
 /** Count how many chambers are filled. */
-export function filledChamberCount(wire: Wire): number {
+export function filledChamberCount(wire: Soulgraph): number {
   let count = 0;
   if (wire.millman) count++;
   if (wire.jung) count++;
