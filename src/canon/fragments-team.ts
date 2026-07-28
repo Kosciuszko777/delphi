@@ -13,7 +13,7 @@ export const TEAM_FRAGMENTS: CanonFragment[] = [
   {
     id: 'jung:INTP:team', system: 'jung', key: 'INTP', domain: 'team',
     traitIds: ['jung:introversion', 'jung:intuition', 'jung:thinking', 'jung:perceiving'],
-    text: 'Your mind maps systems; the team needs the map but rarely the full derivation. You add the most value when you translate a complex problem into a framework the group can act on — then hand it over without attachment to whether they use every part. Your risk is silence: you refine internally until the window for input closes. Speak the rough draft early; a half-built map given on Monday is worth more than a perfect one delivered after the decision was made Friday.',
+    text: 'Your mind maps systems; the team needs the map but rarely the full derivation. You add the most value when you translate a complex problem into a framework the group can act on — then hand it over without attachment to whether they use every part. Your risk is silence: you refine internally until the window for input closes. The practice: speak at eighty percent certainty — share the rough draft on Monday rather than the perfect one after Friday\'s decision. The remaining twenty percent arrives in dialogue, not in solitude.',
   },
   {
     id: 'jung:ENTJ:team', system: 'jung', key: 'ENTJ', domain: 'team',

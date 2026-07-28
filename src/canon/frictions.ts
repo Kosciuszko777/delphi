@@ -583,7 +583,7 @@ export const FRICTION_RULES: FrictionRule[] = [
     when: { millmanFinal: [2], hdType: ['Manifestor'] },
     domains: ['relationships', 'team', 'purpose'],
     weight: 1,
-    text: 'Your 2 path learns cooperation; your Manifestor design operates alone and informs afterward. The tension: your purpose asks you to build with others, but your design acts first and asks later, which undermines the cooperation before it begins. The practice: inform one partner before each initiative — not for approval, but as the cooperative gesture your path is developing. Your Manifestor does not need permission; your 2 path needs the practice of including others in the journey.',
+    text: 'Your 2 path learns cooperation; your Manifestor design operates alone and informs afterward. The tension: your purpose asks you to build with others, but your design acts first and asks later, which undermines the cooperation before it begins. The practice: inform one partner before each initiative — not for approval, but as the cooperative gesture your path is developing. Your Manifestor does not need permission; your 2 path needs the practice of including others in the work.',
   },
   // final 5 × Projector (freedom path in a waiting design)
   {

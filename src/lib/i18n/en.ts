@@ -188,6 +188,27 @@ const en: TranslationDict = {
   'oracle.meter.council': 'council seat · the Oracle is yours for life',
   'oracle.meter.initiate': 'initiate · {remaining} of {limit} questions remain this month',
   'oracle.meter.free': '{remaining} of {limit} free questions remain this month',
+  'oracle.meter.trial': '{remaining} of {limit} introductory questions remain — then the Oracle asks for a seal',
+
+  // ─── Oracle Gate ───
+  'oracle.gate.eyebrow': 'THE ORACLE',
+  'oracle.gate.heading': 'The Canon answers from the written teachings. The Oracle thinks with you.',
+  'oracle.gate.body': 'Grounded in your Soulgraph — all four chambers, your self-verified traits — for the questions the Canon cannot foresee.',
+  'oracle.gate.price': 'Initiate — CHF {chf} / month · or CHF {yearly} / year in Lightning, two months free',
+  'oracle.gate.card': 'Pay by card',
+  'oracle.gate.lightning': 'Pay with Lightning',
+  'oracle.gate.lnNote': 'Send CHF {chf} or the equivalent in sats.',
+  'oracle.gate.lnNpubNote': 'Include your npub in the payment comment so your seal finds you:',
+  'oracle.gate.lnNpubNoteNoAuth': 'Include your npub in the payment comment — or sign in first and it appears here. No comment field? Send your npub via DM.',
+  'oracle.gate.lnPaid': 'I paid with Lightning',
+  'oracle.gate.opensShortly': 'The Oracle opens shortly.',
+  'oracle.gate.councilLink': 'A seat on the Council carries the Oracle for life →',
+  'oracle.gate.finePrint': 'After payment your Initiate seal is inscribed to your key — usually within 24 hours. The seal is a portable Nostr credential; no account is created.',
+
+  // ─── Oracle Pending ───
+  'oracle.pending.message': 'Payment received — your seal is being inscribed. The Canon answers meanwhile.',
+  'oracle.pending.canonNote': 'The Canon tab is unmetered and answers from the written corpus, on your device.',
+  'oracle.pending.check': 'Check again',
 
   // ─── Council ───
   'council.header': 'The Council of the Temple',

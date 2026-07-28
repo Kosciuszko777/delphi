@@ -28,6 +28,9 @@ export const PLAN_ENTERPRISE_CHF = 1900;
 /** Subscriber seal (NIP-58), same pattern as the council seal. */
 export const INITIATE_BADGE_D_TAG = 'delphi-initiate';
 
+/** Lifetime free AI taste before the gate. 0 = strict gate. */
+export const ORACLE_TRIAL_QUESTIONS = 3;
+
 /** Referral capture. */
 export const REFERRER_STORAGE_KEY = 'delphi:referrer';
 export const REFERRER_VALIDITY_DAYS = 90;

@@ -5,16 +5,19 @@ import { useCurrentUser } from '@/hooks/useCurrentUser';
 import { useWire } from '@/hooks/useWire';
 import { useAttestations } from '@/hooks/useAttestations';
 import { useOracleEntitlement } from '@/hooks/useOracleEntitlement';
+import { useOracleTrial } from '@/hooks/useOracleTrial';
 import { buildOracleSystem } from '@/lib/oracle/prompt';
 import {
   type MeterState,
   type Entitlement,
   normalize,
-  remaining,
+  remaining as meterRemaining,
   canSend as meterCanSend,
-  consume,
+  consume as meterConsume,
   limitFor,
+  INITIATE_MONTHLY_LIMIT,
 } from '@/lib/oracle/meter';
+import { FREE_TIER_MODEL } from '@/lib/ai/models';
 
 const METER_KEY = 'delphi:oracle-meter';
 const HISTORY_WINDOW = 12; // last N turns sent as context
@@ -23,8 +26,6 @@ export interface OracleTurn {
   role: 'user' | 'assistant';
   content: string;
 }
-
-import { FREE_TIER_MODEL } from '@/lib/ai/models';
 
 /** Pick a model based on entitlement: free users get the cheapest model, paid users get premium. */
 function pickModel(
@@ -49,24 +50,46 @@ export function useOracleChat() {
   const { wire } = useWire();
   const { attestations } = useAttestations();
   const { entitlement } = useOracleEntitlement();
+  const trial = useOracleTrial();
   const { sendStreamingMessage, getAvailableModels } = useShakespeare();
 
   const [turns, setTurns] = useState<OracleTurn[]>([]);
   const [isThinking, setIsThinking] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // The meter now applies only to initiates (100/month). Council is unlimited.
+  // Free tier uses the lifetime trial instead.
   const [meter, setMeter] = useLocalStorage<MeterState | null>(METER_KEY, null);
   const modelRef = useRef<string | null>(null);
 
   const isCouncillor = entitlement === 'council';
   const monthlyLimit = limitFor(entitlement);
-  const freeRemaining = remaining(normalize(meter), undefined, monthlyLimit);
-  const allowed = meterCanSend(meter, entitlement);
+
+  // Compute allowed + remaining per entitlement
+  const freeRemaining =
+    entitlement === 'free'
+      ? trial.remaining
+      : entitlement === 'initiate'
+        ? meterRemaining(normalize(meter), undefined, INITIATE_MONTHLY_LIMIT)
+        : Number.POSITIVE_INFINITY;
+
+  const allowed =
+    entitlement === 'council'
+      ? true
+      : entitlement === 'initiate'
+        ? meterCanSend(meter, 'initiate')
+        : trial.remaining > 0;
 
   const send = useCallback(async (text: string) => {
     const question = text.trim();
     if (!question || isThinking) return;
-    if (!meterCanSend(meter, entitlement)) {
-      setError('Your free messages for this month are used. A council seat carries the Oracle for life.');
+
+    // Gate check
+    if (entitlement === 'free' && trial.remaining <= 0) {
+      setError('Your introductory questions are spent. The Oracle asks for a seal.');
+      return;
+    }
+    if (entitlement === 'initiate' && !meterCanSend(meter, 'initiate')) {
+      setError('Your monthly questions are spent. They return with the new month.');
       return;
     }
 
@@ -107,7 +130,13 @@ export function useOracleChat() {
       );
 
       if (!assembled.trim()) throw new Error('The Oracle returned silence. Try again.');
-      if (!isCouncillor) setMeter(consume(meter));
+
+      // Consume: free → trial, initiate → meter, council → nothing
+      if (entitlement === 'free') {
+        trial.consume();
+      } else if (entitlement === 'initiate') {
+        setMeter(meterConsume(meter));
+      }
     } catch (err) {
       setError(err instanceof Error ? err.message : String(err));
       // Drop the empty assistant placeholder on failure
@@ -115,7 +144,7 @@ export function useOracleChat() {
     } finally {
       setIsThinking(false);
     }
-  }, [turns, isThinking, meter, entitlement, isCouncillor, wire, attestations, getAvailableModels, sendStreamingMessage, setMeter]);
+  }, [turns, isThinking, meter, entitlement, isCouncillor, wire, attestations, trial, getAvailableModels, sendStreamingMessage, setMeter]);
 
   return {
     turns,
@@ -127,6 +156,8 @@ export function useOracleChat() {
     monthlyLimit,
     freeRemaining,
     allowed,
+    trialRemaining: trial.remaining,
+    trialLimit: trial.limit,
     isAuthenticated: !!user,
   };
 }

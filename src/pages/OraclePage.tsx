@@ -1,15 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSeoMeta } from '@unhead/react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { Omphalos } from '@/components/wire/Omphalos';
 import { CanonTab } from '@/components/canon/CanonTab';
+import { OracleGate } from '@/components/oracle/OracleGate';
+import { ClaimPending } from '@/components/oracle/ClaimPending';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useWire } from '@/hooks/useWire';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useOracleChat } from '@/hooks/useOracleChat';
+import { useClaimPending } from '@/hooks/useClaimPending';
 import { ORACLE_PRESETS } from '@/lib/oracle/prompt';
 import { isWirePopulated } from '@/lib/wire';
 import { ArrowUp, Loader2, BookOpen, Sparkles } from 'lucide-react';
@@ -24,16 +27,36 @@ export default function OraclePage() {
   const [mode, setMode] = useState<OracleMode>('canon');
   const {
     turns, send, isThinking, error,
-    entitlement, isCouncillor, monthlyLimit, freeRemaining, allowed, isAuthenticated,
+    entitlement, isCouncillor, monthlyLimit, freeRemaining,
+    allowed, trialRemaining, trialLimit, isAuthenticated,
   } = useOracleChat();
+  const { isPending, setPending, clearPending } = useClaimPending();
   const [accepted, setAccepted] = useLocalStorage<boolean>(DISCLAIMER_KEY, false);
   const [input, setInput] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
   useSeoMeta({
     title: 'The Oracle — Delphi',
-    description: 'Ask the Oracle — deterministic answers from the Delphi canon, or open AI conversation grounded in your Wire.',
+    description: 'Ask the Oracle — deterministic answers from the Delphi canon, or open AI conversation grounded in your Soulgraph.',
   });
+
+  // Handle Stripe redirect: ?paid=1
+  useEffect(() => {
+    if (searchParams.get('paid') === '1') {
+      setPending();
+      // Strip the query param
+      searchParams.delete('paid');
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setPending, setSearchParams]);
+
+  // Clear pending when entitlement upgrades
+  useEffect(() => {
+    if (entitlement !== 'free' && isPending) {
+      clearPending();
+    }
+  }, [entitlement, isPending, clearPending]);
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -47,6 +70,10 @@ export default function OraclePage() {
     setInput('');
     void send(text);
   };
+
+  // Determine if the gate should show (free + trial exhausted + not pending)
+  const showGate = entitlement === 'free' && trialRemaining <= 0 && !isPending;
+  const showPending = entitlement === 'free' && isPending;
 
   return (
     <AppLayout>
@@ -98,7 +125,7 @@ export default function OraclePage() {
         {mode === 'canon' && <CanonTab />}
 
         {/* ═══════════════════════════════════════════ */}
-        {/* AI Oracle tab (existing, unchanged) */}
+        {/* AI Oracle tab */}
         {/* ═══════════════════════════════════════════ */}
         {mode === 'ai' && (
           <>
@@ -114,6 +141,12 @@ export default function OraclePage() {
                 <p className="font-serif text-foreground">{t('oracle.signIn')}</p>
                 <p className="text-xs text-muted-foreground mt-2">{t('oracle.signInNote')}</p>
               </div>
+            ) : showGate ? (
+              /* ─── The Gate ─── */
+              <OracleGate />
+            ) : showPending ? (
+              /* ─── Claim Pending ─── */
+              <ClaimPending />
             ) : !accepted ? (
               <div className="engraved grain rounded-[2px] bg-card p-6 sm:p-8 space-y-5">
                 <h2 className="font-mono text-[11px] uppercase tracking-[0.2em] text-umbra dark:text-ash">
@@ -240,7 +273,7 @@ export default function OraclePage() {
                     ? t('oracle.meter.council')
                     : entitlement === 'initiate'
                       ? t('oracle.meter.initiate', { remaining: String(freeRemaining), limit: String(monthlyLimit) })
-                      : t('oracle.meter.free', { remaining: String(freeRemaining), limit: String(monthlyLimit) })}
+                      : t('oracle.meter.trial', { remaining: String(trialRemaining), limit: String(trialLimit) })}
                 </p>
               </div>
             )}

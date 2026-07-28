@@ -188,6 +188,27 @@ const de: TranslationDict = {
   'oracle.meter.council': 'Ratssitz · das Orakel gehört dir für immer',
   'oracle.meter.initiate': 'Initiant · {remaining} von {limit} Fragen verbleiben diesen Monat',
   'oracle.meter.free': '{remaining} von {limit} freie Fragen verbleiben diesen Monat',
+  'oracle.meter.trial': '{remaining} von {limit} Einführungsfragen verbleiben — danach fragt das Orakel nach einem Siegel',
+
+  // ─── Orakel-Tor ───
+  'oracle.gate.eyebrow': 'DAS ORAKEL',
+  'oracle.gate.heading': 'Der Kanon antwortet aus den geschriebenen Lehren. Das Orakel denkt mit dir.',
+  'oracle.gate.body': 'Gegründet auf deinem Soulgraph — alle vier Kammern, deine selbst verifizierten Eigenschaften — für die Fragen, die der Kanon nicht vorhersehen kann.',
+  'oracle.gate.price': 'Initiant — CHF {chf} / Monat · oder CHF {yearly} / Jahr in Lightning, zwei Monate gratis',
+  'oracle.gate.card': 'Per Karte bezahlen',
+  'oracle.gate.lightning': 'Mit Lightning bezahlen',
+  'oracle.gate.lnNote': 'Sende CHF {chf} oder das Äquivalent in Sats.',
+  'oracle.gate.lnNpubNote': 'Füge deine npub dem Zahlungskommentar hinzu, damit dein Siegel dich findet:',
+  'oracle.gate.lnNpubNoteNoAuth': 'Füge deine npub dem Zahlungskommentar hinzu — oder melde dich zuerst an. Kein Kommentarfeld? Sende deine npub per DM.',
+  'oracle.gate.lnPaid': 'Ich habe mit Lightning bezahlt',
+  'oracle.gate.opensShortly': 'Das Orakel öffnet in Kürze.',
+  'oracle.gate.councilLink': 'Ein Ratssitz beinhaltet das Orakel für immer →',
+  'oracle.gate.finePrint': 'Nach der Zahlung wird dein Initianten-Siegel auf deinen Schlüssel eingeschrieben — in der Regel innerhalb von 24 Stunden. Das Siegel ist ein portabler Nostr-Berechtigungsnachweis; es wird kein Konto erstellt.',
+
+  // ─── Orakel-Wartezustand ───
+  'oracle.pending.message': 'Zahlung erhalten — dein Siegel wird eingeschrieben. Der Kanon antwortet in der Zwischenzeit.',
+  'oracle.pending.canonNote': 'Der Kanon-Tab ist unbegrenzt und antwortet aus dem geschriebenen Korpus, auf deinem Gerät.',
+  'oracle.pending.check': 'Erneut prüfen',
 
   // ─── Council ───
   'council.header': 'Der Rat des Tempels',
