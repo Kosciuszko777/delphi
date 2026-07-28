@@ -24,15 +24,14 @@ export interface OracleTurn {
   content: string;
 }
 
-/** The cheapest model on Shakespeare AI — used for free-tier to conserve credits. */
-const CHEAP_MODEL = 'glm-4.6';
+import { FREE_TIER_MODEL } from '@/lib/ai/models';
 
 /** Pick a model based on entitlement: free users get the cheapest model, paid users get premium. */
 function pickModel(
   models: { id: string; pricing: { prompt: string; completion: string } }[],
   entitlement: Entitlement,
 ): string {
-  if (entitlement === 'free') return CHEAP_MODEL;
+  if (entitlement === 'free') return FREE_TIER_MODEL;
   const preferred = models.find((m) => /sonnet/i.test(m.id))
     ?? models.find((m) => /claude/i.test(m.id));
   if (preferred) return preferred.id;
@@ -79,7 +78,7 @@ export function useOracleChat() {
     try {
       if (!modelRef.current) {
         if (entitlement === 'free') {
-          modelRef.current = CHEAP_MODEL;
+          modelRef.current = FREE_TIER_MODEL;
         } else {
           const models = await getAvailableModels();
           modelRef.current = pickModel(models.data, entitlement);

@@ -2,6 +2,7 @@ import type { Wire } from '@/lib/wire';
 import type { TraitAttestation } from '@/lib/publish/traits';
 import type { ChatMessage } from '@/hooks/useShakespeare';
 import { serializeWireContext } from '@/lib/ai/wireContext';
+import { REGISTER_REMINDER } from '@/lib/ai/models';
 
 /**
  * Build the Mirror prompt from the Wire and the user's own
@@ -33,7 +34,9 @@ Respond with ONLY a JSON object, no markdown fences, no preamble, matching exact
   "negativeTraits": ["three to five short trait phrases — real shadows, stated kindly but honestly"],
   "superpowers": ["exactly five short phrases — rare capabilities this specific combination produces"],
   "improvements": ["exactly five short phrases — the five most rewarding grounds for growth"]
-}`;
+}
+
+${REGISTER_REMINDER}`;
 
   return [
     { role: 'system', content: system },

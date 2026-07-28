@@ -2,8 +2,11 @@ import { describe, it, expect } from 'vitest';
 import { composeAnswer } from './compose';
 import { routeQuestion } from './routing';
 import { allFragments } from './corpus';
+import { FRICTION_RULES } from './frictions';
+import { WING_MODIFIERS, AUTHORITY_FRAGMENTS, PROFILE_FRAGMENTS } from './appendices';
 import type { Wire } from '@/lib/wire';
 import type { TraitAttestation } from '@/lib/publish/traits';
+import type { FrictionRule } from './types';
 
 // ────────────────────────────────────────────
 // Fixtures
@@ -232,6 +235,247 @@ describe('Provenance labels', () => {
     const result = composeAnswer(FULL_WIRE, EMPTY_ATTESTATIONS, 'team');
     for (const section of result.sections) {
       expect(['JUNG', 'ENNEA', 'HD', 'NUM', 'FRICTION']).toContain(section.source);
+    }
+  });
+});
+
+// ────────────────────────────────────────────
+// Friction canon — Phase C assertions
+// ────────────────────────────────────────────
+
+describe('Friction canon (Phase C)', () => {
+  it('has at least 60 rules', () => {
+    expect(FRICTION_RULES.length).toBeGreaterThanOrEqual(60);
+  });
+
+  it('has at least 10 rules at weight 3', () => {
+    const w3 = FRICTION_RULES.filter((r) => r.weight === 3);
+    expect(w3.length).toBeGreaterThanOrEqual(10);
+  });
+
+  it('no two rules share identical when + domains', () => {
+    const seen = new Set<string>();
+    for (const r of FRICTION_RULES) {
+      const key = JSON.stringify(r.when) + '|' + JSON.stringify([...r.domains].sort());
+      expect(seen.has(key), `Duplicate when+domains: ${r.id}`).toBe(false);
+      seen.add(key);
+    }
+  });
+
+  it('every rule has a unique id', () => {
+    const ids = FRICTION_RULES.map((r) => r.id);
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+
+  it('every rule matches at least one constructible Wire (no dead rules)', () => {
+    const JUNG_TYPES = ['INTJ','INTP','ENTJ','ENTP','INFJ','INFP','ENFJ','ENFP','ISTJ','ISFJ','ESTJ','ESFJ','ISTP','ISFP','ESTP','ESFP'];
+    const HD_TYPES = ['Generator', 'Manifesting Generator', 'Projector', 'Manifestor', 'Reflector'];
+    const HD_AUTHORITIES = ['Emotional', 'Sacral', 'Splenic', 'Ego', 'Self-Projected', 'Environment', 'Lunar'];
+    const ENNEA_CORES = [1, 2, 3, 4, 5, 6, 7, 8, 9];
+    const MILLMAN_FINALS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+    function canMatch(rule: FrictionRule): boolean {
+      // Check each condition — at least one valid value must exist for every condition
+      if (rule.when.jung) {
+        if (!rule.when.jung.some((j) => JUNG_TYPES.includes(j))) return false;
+      }
+      if (rule.when.enneaCore) {
+        if (!rule.when.enneaCore.some((c) => ENNEA_CORES.includes(c))) return false;
+      }
+      if (rule.when.enneaWing) {
+        if (!rule.when.enneaWing.some((w) => ENNEA_CORES.includes(w))) return false;
+      }
+      if (rule.when.hdType) {
+        if (!rule.when.hdType.some((t) => HD_TYPES.includes(t))) return false;
+      }
+      if (rule.when.hdAuthority) {
+        if (!rule.when.hdAuthority.some((a) => HD_AUTHORITIES.includes(a))) return false;
+      }
+      if (rule.when.millmanFinal) {
+        if (!rule.when.millmanFinal.some((f) => MILLMAN_FINALS.includes(f))) return false;
+      }
+      return true;
+    }
+
+    for (const rule of FRICTION_RULES) {
+      expect(canMatch(rule), `Dead rule: ${rule.id}`).toBe(true);
+    }
+  });
+
+  it('every rule text is 50–120 words', () => {
+    for (const rule of FRICTION_RULES) {
+      const words = rule.text.split(/\s+/).length;
+      expect(words, `${rule.id}: ${words} words`).toBeGreaterThanOrEqual(50);
+      expect(words, `${rule.id}: ${words} words`).toBeLessThanOrEqual(120);
+    }
+  });
+
+  it('weight is always 1, 2, or 3', () => {
+    for (const rule of FRICTION_RULES) {
+      expect([1, 2, 3], `${rule.id}: invalid weight ${rule.weight}`).toContain(rule.weight);
+    }
+  });
+});
+
+// ────────────────────────────────────────────
+// Appendices — completeness
+// ────────────────────────────────────────────
+
+describe('Appendices', () => {
+  it('has 18 wing modifiers', () => {
+    expect(WING_MODIFIERS.length).toBe(18);
+  });
+
+  it('has 7 authority fragments', () => {
+    expect(AUTHORITY_FRAGMENTS.length).toBe(7);
+  });
+
+  it('has 12 profile fragments', () => {
+    expect(PROFILE_FRAGMENTS.length).toBe(12);
+  });
+
+  it('wing modifiers are 30–60 words', () => {
+    for (const wm of WING_MODIFIERS) {
+      const words = wm.text.split(/\s+/).length;
+      expect(words, `${wm.id}: ${words} words`).toBeGreaterThanOrEqual(30);
+      expect(words, `${wm.id}: ${words} words`).toBeLessThanOrEqual(60);
+    }
+  });
+
+  it('authority fragments are 30–60 words', () => {
+    for (const af of AUTHORITY_FRAGMENTS) {
+      const words = af.text.split(/\s+/).length;
+      expect(words, `${af.id}: ${words} words`).toBeGreaterThanOrEqual(30);
+      expect(words, `${af.id}: ${words} words`).toBeLessThanOrEqual(60);
+    }
+  });
+
+  it('profile fragments are 30–60 words', () => {
+    for (const pf of PROFILE_FRAGMENTS) {
+      const words = pf.text.split(/\s+/).length;
+      expect(words, `${pf.id}: ${words} words`).toBeGreaterThanOrEqual(30);
+      expect(words, `${pf.id}: ${words} words`).toBeLessThanOrEqual(60);
+    }
+  });
+
+  it('all appendix ids are unique', () => {
+    const ids = [
+      ...WING_MODIFIERS.map((w) => w.id),
+      ...AUTHORITY_FRAGMENTS.map((a) => a.id),
+      ...PROFILE_FRAGMENTS.map((p) => p.id),
+    ];
+    expect(new Set(ids).size).toBe(ids.length);
+  });
+});
+
+// ────────────────────────────────────────────
+// HD key normalization
+// ────────────────────────────────────────────
+
+describe('HD key normalization', () => {
+  it('composes with trimmed HD type " Generator "', () => {
+    const wire: Wire = {
+      ...FULL_WIRE,
+      humanDesign: { type: ' Generator ', profile: '3/5', authority: 'Emotional' },
+    };
+    const result = composeAnswer(wire, EMPTY_ATTESTATIONS, 'team');
+    const hdSection = result.sections.find((s) => s.source === 'HD');
+    expect(hdSection).toBeDefined();
+  });
+
+  it('composes with lowercase HD type "generator"', () => {
+    const wire: Wire = {
+      ...FULL_WIRE,
+      humanDesign: { type: 'generator', profile: '3/5', authority: 'Emotional' },
+    };
+    const result = composeAnswer(wire, EMPTY_ATTESTATIONS, 'team');
+    const hdSection = result.sections.find((s) => s.source === 'HD');
+    expect(hdSection).toBeDefined();
+  });
+});
+
+// ────────────────────────────────────────────
+// Canon-lint — corpus-wide register guards
+// ────────────────────────────────────────────
+
+describe('Canon-lint', () => {
+  const fragments = allFragments();
+  const BANNED = ['amazing', 'journey', 'unlock', 'embrace', 'empower', 'vibrant', 'delve', 'tapestry', 'unleash'];
+
+  it('no fragment text contains "!"', () => {
+    for (const f of fragments) {
+      expect(f.text.includes('!'), `${f.id} contains "!"`).toBe(false);
+    }
+  });
+
+  it('no friction text contains "!"', () => {
+    for (const r of FRICTION_RULES) {
+      expect(r.text.includes('!'), `${r.id} contains "!"`).toBe(false);
+    }
+  });
+
+  it('no appendix text contains "!"', () => {
+    for (const w of WING_MODIFIERS) expect(w.text.includes('!'), `${w.id} contains "!"`).toBe(false);
+    for (const a of AUTHORITY_FRAGMENTS) expect(a.text.includes('!'), `${a.id} contains "!"`).toBe(false);
+    for (const p of PROFILE_FRAGMENTS) expect(p.text.includes('!'), `${p.id} contains "!"`).toBe(false);
+  });
+
+  it('no fragment uses banned words', () => {
+    for (const f of fragments) {
+      const lower = f.text.toLowerCase();
+      for (const word of BANNED) {
+        expect(lower.includes(word), `${f.id} contains banned word "${word}"`).toBe(false);
+      }
+    }
+  });
+
+  it('no friction uses banned words', () => {
+    for (const r of FRICTION_RULES) {
+      const lower = r.text.toLowerCase();
+      for (const word of BANNED) {
+        expect(lower.includes(word), `${r.id} contains banned word "${word}"`).toBe(false);
+      }
+    }
+  });
+
+  it('every fragment text contains "you" or "your" (second person)', () => {
+    for (const f of fragments) {
+      const lower = f.text.toLowerCase();
+      expect(
+        lower.includes('you') || lower.includes('your'),
+        `${f.id} missing second-person address`,
+      ).toBe(true);
+    }
+  });
+
+  it('every friction text contains "you" or "your" (second person)', () => {
+    for (const r of FRICTION_RULES) {
+      const lower = r.text.toLowerCase();
+      expect(
+        lower.includes('you') || lower.includes('your'),
+        `${r.id} missing second-person address`,
+      ).toBe(true);
+    }
+  });
+
+  it('fragment word counts are 50–135', () => {
+    for (const f of fragments) {
+      const words = f.text.split(/\s+/).length;
+      expect(words, `${f.id}: ${words} words`).toBeGreaterThanOrEqual(50);
+      expect(words, `${f.id}: ${words} words`).toBeLessThanOrEqual(135);
+    }
+  });
+
+  it('final two sentences of each fragment contain an imperative or practice marker', () => {
+    const markers = /\b(practice|watch for|notice|ask|name|check|identify|share|complete|choose|find|build|write|start|give|say|take|set|spend|cancel|read|do|express|make|let|hold|sit|state|stop|create|break|schedule|track|present|expose|apply|define|stay|follow|act|join|voice|use|keep|form|engage|maintain|lower|replace|inform|separate|rename|budget|frame|trust|pair|impose|log|honor|honour|reframe|narrate|document|rank|treat|correct|live|accept|deepen|talk|change|underpromise|motion|show|turn|bring|commit|sustain|rest|pursue|tend|discover|move|resist|work|count)\b/i;
+    for (const f of fragments) {
+      const sentences = f.text.split(/\.\s+|\.$/);
+      const nonEmpty = sentences.filter((s) => s.trim().length > 0);
+      const lastTwo = nonEmpty.slice(-2).join('. ');
+      expect(
+        markers.test(lastTwo),
+        `${f.id}: final sentences lack imperative/practice marker: "${lastTwo.slice(0, 80)}…"`,
+      ).toBe(true);
     }
   });
 });

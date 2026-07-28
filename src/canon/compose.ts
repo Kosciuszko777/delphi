@@ -99,8 +99,16 @@ function matchesFriction(rule: FrictionRule, wire: Wire): boolean {
   if (rule.when.enneaCore) {
     if (!wire.enneagram || !rule.when.enneaCore.includes(wire.enneagram.core)) return false;
   }
+  if (rule.when.enneaWing) {
+    if (!wire.enneagram || !rule.when.enneaWing.includes(wire.enneagram.wing)) return false;
+  }
   if (rule.when.hdType) {
-    if (!wire.humanDesign || !rule.when.hdType.includes(wire.humanDesign.type)) return false;
+    if (!wire.humanDesign) return false;
+    const normalized = normalizeHDType(wire.humanDesign.type);
+    if (!normalized || !rule.when.hdType.includes(normalized)) return false;
+  }
+  if (rule.when.hdAuthority) {
+    if (!wire.humanDesign || !rule.when.hdAuthority.includes(wire.humanDesign.authority)) return false;
   }
   if (rule.when.millmanFinal) {
     if (!wire.millman) return false;
@@ -114,6 +122,27 @@ function getMatchingFrictions(wire: Wire, domain: Domain): FrictionRule[] {
   return FRICTION_RULES
     .filter((r) => r.domains.includes(domain) && matchesFriction(r, wire))
     .sort((a, b) => b.weight - a.weight); // highest weight first
+}
+
+// ────────────────────────────────────────────
+// HD key normalization
+// ────────────────────────────────────────────
+
+const HD_CANONICAL_TYPES = [
+  'Generator', 'Manifesting Generator', 'Projector', 'Manifestor', 'Reflector',
+] as const;
+
+/**
+ * Normalize an HD type string: exact-match first, then trim + case-insensitive fallback.
+ * Returns the canonical form or undefined if no match.
+ */
+export function normalizeHDType(raw: string): string | undefined {
+  // Exact match
+  if (HD_CANONICAL_TYPES.includes(raw as typeof HD_CANONICAL_TYPES[number])) return raw;
+  // Trim + case-insensitive fallback
+  const trimmed = raw.trim();
+  const lower = trimmed.toLowerCase();
+  return HD_CANONICAL_TYPES.find((t) => t.toLowerCase() === lower);
 }
 
 // ────────────────────────────────────────────
@@ -131,7 +160,7 @@ function extractKeys(wire: Wire): WireKeys {
   const keys: WireKeys = {};
   if (wire.jung) keys.jung = wire.jung.type;
   if (wire.enneagram) keys.ennea = String(wire.enneagram.core);
-  if (wire.humanDesign) keys.hd = wire.humanDesign.type;
+  if (wire.humanDesign) keys.hd = normalizeHDType(wire.humanDesign.type);
   if (wire.millman) keys.millman = String(getFinalDigit(wire.millman.number));
   return keys;
 }

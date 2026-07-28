@@ -40,7 +40,9 @@ export interface FrictionRule {
   when: Partial<{
     jung: string[];
     enneaCore: number[];
+    enneaWing: number[];
     hdType: string[];
+    hdAuthority: string[];
     millmanFinal: number[];
   }>;
   /** Domains where this friction is worth surfacing. */

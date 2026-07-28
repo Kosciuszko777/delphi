@@ -127,7 +127,7 @@ export const PURPOSE_FRAGMENTS: CanonFragment[] = [
   {
     id: 'ennea:8:purpose', system: 'ennea', key: '8', domain: 'purpose',
     traitIds: ['enneagram:challenger-directness', 'enneagram:challenger-protection'],
-    text: 'Your core purpose is to protect and to empower. You are built for situations where someone needs to stand up, speak directly, and absorb the consequences. Meaning comes from knowing that your strength served someone who did not have enough of their own. The risk: you define purpose through opposition and need an enemy to feel alive. The practice: build something this month that has nothing to do with fighting. A garden, a meal, a quiet conversation. Your purpose includes creation, not only confrontation.',
+    text: 'Your core purpose is to protect, and to hand strength onward. You are built for situations where someone needs to stand up, speak directly, and absorb the consequences. Meaning comes from knowing that your strength served someone who did not have enough of their own. The risk: you define purpose through opposition and need an enemy to feel alive. The practice: build something this month that has nothing to do with fighting. A garden, a meal, a quiet conversation. Your purpose includes creation, not only confrontation.',
   },
   {
     id: 'ennea:9:purpose', system: 'ennea', key: '9', domain: 'purpose',

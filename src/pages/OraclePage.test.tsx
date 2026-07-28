@@ -10,10 +10,12 @@ describe('OraclePage', () => {
         <OraclePage />
       </TestApp>,
     );
-    expect(await screen.findByText('The Oracle')).toBeInTheDocument();
+    // Title (German default)
+    expect(await screen.findByText('Das Orakel')).toBeInTheDocument();
+    // The Canon tab is shown by default, which gates on unwritten Wire
     expect(
-      await screen.findByText(/yours is unwritten/i),
+      await screen.findByText(/deiner ist noch ungeschrieben/i),
     ).toBeInTheDocument();
-    expect(await screen.findByText(/Begin an assessment/i)).toBeInTheDocument();
+    expect(await screen.findByText(/Test starten/i)).toBeInTheDocument();
   });
 });
