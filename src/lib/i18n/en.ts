@@ -153,6 +153,16 @@ const en: TranslationDict = {
   'mirror.superpowers': 'Your five superpowers',
   'mirror.improvements': 'Five grounds for growth',
 
+  // ─── Canon ───
+  'canon.tab': 'Canon',
+  'canon.aiTab': 'Oracle AI',
+  'canon.unwritten': 'The Canon reads your Wire — and yours is unwritten.',
+  'canon.positioning': 'The Canon answers from Delphi\'s written teachings — instantly, on your device, from no datacenter. For open conversation, the Oracle\'s AI mode remains one tap away.',
+  'canon.chambers': 'The Canon reads {filled} of {total} chambers',
+  'canon.placeholder': 'Ask in your own words…',
+  'canon.footer': 'Composed from the Delphi canon on your device. No question left your phone.',
+  'canon.crossLink': 'The Canon answers without limit',
+
   // ─── Oracle ───
   'oracle.title': 'The Oracle',
   'oracle.subtitle': 'Counsel grounded in your Wire — teams, relationships, work, and the frictions between your systems.',

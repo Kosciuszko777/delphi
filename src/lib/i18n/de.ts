@@ -153,6 +153,16 @@ const de: TranslationDict = {
   'mirror.superpowers': 'Deine fünf Superkräfte',
   'mirror.improvements': 'Fünf Wachstumsfelder',
 
+  // ─── Canon ───
+  'canon.tab': 'Kanon',
+  'canon.aiTab': 'Orakel AI',
+  'canon.unwritten': 'Der Kanon liest deinen Wire — und deiner ist noch ungeschrieben.',
+  'canon.positioning': 'Der Kanon antwortet aus Delphis geschriebenen Lehren — sofort, auf deinem Gerät, ohne Rechenzentrum. Für offene Gespräche bleibt der AI-Modus des Orakels einen Tipp entfernt.',
+  'canon.chambers': 'Der Kanon liest {filled} von {total} Kammern',
+  'canon.placeholder': 'Frage in deinen eigenen Worten…',
+  'canon.footer': 'Zusammengestellt aus dem Delphi-Kanon auf deinem Gerät. Keine Frage hat dein Gerät verlassen.',
+  'canon.crossLink': 'Der Kanon antwortet ohne Limit',
+
   // ─── Oracle ───
   'oracle.title': 'Das Orakel',
   'oracle.subtitle': 'Beratung, die auf deinem Wire gründet — Teams, Beziehungen, Arbeit und die Reibungen zwischen deinen Systemen.',
