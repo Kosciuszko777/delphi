@@ -6,12 +6,13 @@ import { useTranslation } from '@/hooks/useTranslation';
 import { useOracleEntitlement } from '@/hooks/useOracleEntitlement';
 import {
   RESIDENT_MODEL_SIZE_GB,
+  RESIDENT_CPU_MODEL_SIZE_GB,
   loadResidentModel,
   isResidentInstalled,
   detectResidentSupport,
   type LoadProgress,
 } from '@/lib/resident';
-import { Download, RefreshCw } from 'lucide-react';
+import { Download, RefreshCw, Cpu } from 'lucide-react';
 
 interface ResidentConsentProps {
   /** Called when download completes — parent should flip to resident mode. */
@@ -22,7 +23,8 @@ interface ResidentConsentProps {
 
 /**
  * The Resident Oracle consent flow — shown on the AI tab for entitled
- * users whose device supports WebGPU and who haven't installed the model.
+ * users whose device supports on-device inference (WebGPU or CPU) and
+ * who haven't installed the model.
  */
 export function ResidentConsent({ onInstalled, onDecline }: ResidentConsentProps) {
   const { t } = useTranslation();
@@ -32,6 +34,8 @@ export function ResidentConsent({ onInstalled, onDecline }: ResidentConsentProps
   const [error, setError] = useState<string | null>(null);
 
   const runtime = detectResidentSupport();
+  const isCpu = runtime === 'wllama';
+  const modelSizeGb = isCpu ? RESIDENT_CPU_MODEL_SIZE_GB : RESIDENT_MODEL_SIZE_GB;
 
   const startDownload = useCallback(async () => {
     setError(null);
@@ -39,7 +43,7 @@ export function ResidentConsent({ onInstalled, onDecline }: ResidentConsentProps
     setProgress({ text: '', progress: 0 });
 
     try {
-      await loadResidentModel(entitlement, (p) => {
+      await loadResidentModel(entitlement, runtime, (p) => {
         setProgress(p);
       });
       onInstalled();
@@ -47,7 +51,7 @@ export function ResidentConsent({ onInstalled, onDecline }: ResidentConsentProps
       setError(err instanceof Error ? err.message : String(err));
       setDownloading(false);
     }
-  }, [entitlement, onInstalled]);
+  }, [entitlement, runtime, onInstalled]);
 
   // Unsupported device — calm one-liner
   if (runtime === 'none') {
@@ -80,10 +84,20 @@ export function ResidentConsent({ onInstalled, onDecline }: ResidentConsentProps
         {t('resident.heading')}
       </h2>
 
-      {/* Body */}
+      {/* Body — CPU path gets an honest slower-model line */}
       <p className="text-sm text-muted-foreground leading-relaxed text-center max-w-md mx-auto">
-        {t('resident.body')}
+        {isCpu
+          ? t('resident.bodyCpu', { size: String(modelSizeGb) })
+          : t('resident.body')}
       </p>
+
+      {/* CPU honesty note */}
+      {isCpu && (
+        <div className="flex items-start gap-2 max-w-md mx-auto text-xs text-muted-foreground bg-background/40 engraved rounded-[2px] p-3">
+          <Cpu className="size-3.5 shrink-0 mt-0.5 text-verdigris" />
+          <span>{t('resident.cpuNote')}</span>
+        </div>
+      )}
 
       {/* Download progress */}
       {downloading && progress && (
@@ -96,8 +110,8 @@ export function ResidentConsent({ onInstalled, onDecline }: ResidentConsentProps
             <span>{t('resident.downloading')}</span>
             <span>
               {Math.round(progress.progress * 100)}% ·{' '}
-              {(progress.progress * RESIDENT_MODEL_SIZE_GB * 1024).toFixed(0)} /{' '}
-              {(RESIDENT_MODEL_SIZE_GB * 1024).toFixed(0)} MB
+              {(progress.progress * modelSizeGb * 1024).toFixed(0)} /{' '}
+              {(modelSizeGb * 1024).toFixed(0)} MB
             </span>
           </div>
         </div>

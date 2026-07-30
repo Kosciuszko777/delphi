@@ -22,9 +22,9 @@ import {
   RESIDENT_ENABLED,
   RESIDENT_INSTALLED_KEY,
   RESIDENT_MODE_PREF_KEY,
-  isResidentInstalled,
   removeResidentModel,
   detectResidentSupport,
+  installedRuntime,
 } from '@/lib/resident';
 import { ArrowUp, Loader2, BookOpen, Sparkles, Trash2, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
@@ -51,8 +51,10 @@ export default function OraclePage() {
   const [installed, setInstalled] = useLocalStorage<boolean>(RESIDENT_INSTALLED_KEY, false);
   const [modePref, setModePref] = useLocalStorage<AiMode>(RESIDENT_MODE_PREF_KEY, 'hosted');
 
-  // Determine actual AI mode: resident if installed + pref is resident, otherwise hosted
-  const capable = detectResidentSupport() === 'webgpu';
+  // Determine actual AI mode: resident if installed + pref is resident, otherwise hosted.
+  // Both the WebGPU and CPU (Wllama) runtimes count as capable.
+  const residentRuntime = detectResidentSupport();
+  const capable = residentRuntime !== 'none';
   const isEntitled = entitlement !== 'free';
   const showResidentOffer = RESIDENT_ENABLED && isEntitled && capable && !installed;
 
@@ -128,7 +130,11 @@ export default function OraclePage() {
 
   // Mode line text
   const modeLineText = (() => {
-    if (aiMode === 'resident') return t('resident.modeLine.resident');
+    if (aiMode === 'resident') {
+      return installedRuntime() === 'wllama'
+        ? t('resident.modeLine.residentCpu')
+        : t('resident.modeLine.resident');
+    }
     if (aiMode === 'high-oracle') return t('resident.highOracle.modeLine');
     return t('resident.modeLine.hosted');
   })();

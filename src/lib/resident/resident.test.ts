@@ -1,18 +1,20 @@
 /**
- * Resident Oracle tests — Phases 2 & 3.
+ * Resident Oracle tests — Phases 2, 3 (WebGPU) & WP-9 (CPU fallback).
  *
  * Coverage:
  * - Loader hard-throws for free entitlement (defense in depth)
- * - Capability detection (mocked navigator)
+ * - Loader throws for 'none' runtime
+ * - Capability detection: webgpu / wllama / none (mocked navigator + WASM)
  * - Grounding contract: denied traits excluded, determinism
- * - Zero-network proof (Phase 3 flagship): context pipeline has no fetch
+ * - Zero-network proof (flagship): context pipeline has no fetch
+ * - Install-flag + runtime tracking lifecycle
  */
 
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
-import { detectResidentSupport } from './capability';
+import { detectResidentSupport, hasWasmSimd } from './capability';
 import { buildResidentContext, RESIDENT_SYSTEM_PROMPT } from './grounding';
 import { loadResidentModel } from './loader';
-import { RESIDENT_INSTALLED_KEY } from './config';
+import { RESIDENT_INSTALLED_KEY, RESIDENT_RUNTIME_KEY } from './config';
 import type { Wire } from '@/lib/wire';
 import type { TraitAttestation } from '@/lib/publish/traits';
 
@@ -37,18 +39,27 @@ const HOSTILE_ATTESTATIONS: Record<string, TraitAttestation> = {
 };
 
 // ────────────────────────────────────────────
-// Loader entitlement guard
+// Loader entitlement + runtime guards
 // ────────────────────────────────────────────
 
-describe('Loader entitlement guard', () => {
-  it('throws for free entitlement (defense in depth)', async () => {
-    await expect(loadResidentModel('free')).rejects.toThrow(
+describe('Loader guards', () => {
+  it('throws for free entitlement, regardless of runtime (defense in depth)', async () => {
+    await expect(loadResidentModel('free', 'webgpu')).rejects.toThrow(
+      /Resident Oracle requires an Initiate or Council entitlement/,
+    );
+    await expect(loadResidentModel('free', 'wllama')).rejects.toThrow(
       /Resident Oracle requires an Initiate or Council entitlement/,
     );
   });
 
-  // Note: we cannot test actual model loading in jsdom (no WebGPU),
-  // but the entitlement guard fires before any WebLLM code runs.
+  it('throws for the "none" runtime even when entitled', async () => {
+    await expect(loadResidentModel('initiate', 'none')).rejects.toThrow(
+      /no on-device runtime/i,
+    );
+  });
+
+  // Note: we cannot test actual model loading in jsdom (no WebGPU / no
+  // real WASM model), but the guards fire before any engine code runs.
 });
 
 // ────────────────────────────────────────────
@@ -58,50 +69,71 @@ describe('Loader entitlement guard', () => {
 describe('detectResidentSupport', () => {
   const originalNavigator = globalThis.navigator;
 
+  function setNavigator(props: Record<string, unknown>) {
+    Object.defineProperty(globalThis, 'navigator', {
+      value: { ...originalNavigator, ...props },
+      writable: true,
+      configurable: true,
+    });
+  }
+
   afterEach(() => {
-    // Restore
     Object.defineProperty(globalThis, 'navigator', {
       value: originalNavigator,
       writable: true,
       configurable: true,
     });
-  });
-
-  it('returns "none" when navigator.gpu is absent', () => {
-    // jsdom has no gpu by default
-    expect(detectResidentSupport()).toBe('none');
+    vi.restoreAllMocks();
   });
 
   it('returns "webgpu" when navigator.gpu exists and deviceMemory >= 4', () => {
-    Object.defineProperty(globalThis, 'navigator', {
-      value: { ...originalNavigator, gpu: {}, deviceMemory: 8 },
-      writable: true,
-      configurable: true,
-    });
+    setNavigator({ gpu: {}, deviceMemory: 8 });
     expect(detectResidentSupport()).toBe('webgpu');
   });
 
   it('returns "webgpu" when deviceMemory is undefined (Safari heuristic)', () => {
-    Object.defineProperty(globalThis, 'navigator', {
-      value: { ...originalNavigator, gpu: {}, deviceMemory: undefined },
-      writable: true,
-      configurable: true,
-    });
+    setNavigator({ gpu: {}, deviceMemory: undefined });
     expect(detectResidentSupport()).toBe('webgpu');
   });
 
-  it('returns "none" when deviceMemory < 4', () => {
-    Object.defineProperty(globalThis, 'navigator', {
-      value: { ...originalNavigator, gpu: {}, deviceMemory: 2 },
-      writable: true,
-      configurable: true,
-    });
+  it('returns "wllama" when no WebGPU but WASM SIMD is available and memory >= 2', () => {
+    // No gpu; force SIMD available
+    setNavigator({ deviceMemory: 4 });
+    delete (globalThis.navigator as Navigator & { gpu?: unknown }).gpu;
+    vi.spyOn(WebAssembly, 'validate').mockReturnValue(true);
+    expect(detectResidentSupport()).toBe('wllama');
+  });
+
+  it('falls back to "wllama" when WebGPU present but memory too low, if CPU viable', () => {
+    // gpu present but only 2 GB → WebGPU rejected; CPU (>=2) still viable
+    setNavigator({ gpu: {}, deviceMemory: 2 });
+    vi.spyOn(WebAssembly, 'validate').mockReturnValue(true);
+    expect(detectResidentSupport()).toBe('wllama');
+  });
+
+  it('returns "none" when no WebGPU and no WASM SIMD', () => {
+    setNavigator({ deviceMemory: 8 });
+    delete (globalThis.navigator as Navigator & { gpu?: unknown }).gpu;
+    vi.spyOn(WebAssembly, 'validate').mockReturnValue(false);
+    expect(detectResidentSupport()).toBe('none');
+  });
+
+  it('returns "none" when device memory is below even the CPU floor', () => {
+    setNavigator({ deviceMemory: 1 });
+    delete (globalThis.navigator as Navigator & { gpu?: unknown }).gpu;
+    vi.spyOn(WebAssembly, 'validate').mockReturnValue(true);
     expect(detectResidentSupport()).toBe('none');
   });
 });
 
+describe('hasWasmSimd', () => {
+  it('returns a boolean without throwing', () => {
+    expect(typeof hasWasmSimd()).toBe('boolean');
+  });
+});
+
 // ────────────────────────────────────────────
-// Grounding contract
+// Grounding contract (runtime-agnostic — same for CPU & GPU)
 // ────────────────────────────────────────────
 
 describe('Grounding bridge', () => {
@@ -127,7 +159,6 @@ describe('Grounding bridge', () => {
 
   it('labels sections with provenance', () => {
     const ctx = buildResidentContext(FULL_WIRE, EMPTY_ATTESTATIONS, 'How should I work?');
-    // Should contain at least one labeled section
     expect(ctx.canonContext).toMatch(/\[(JUNG|ENNEA|HD|NUM)\]/);
   });
 
@@ -135,9 +166,7 @@ describe('Grounding bridge', () => {
 
   it('excludes denied-trait fragments from canonContext (hostile attestations)', () => {
     const ctx = buildResidentContext(FULL_WIRE, HOSTILE_ATTESTATIONS, 'How do I work best in a team?');
-    // With all jung traits denied, JUNG section should not appear
     expect(ctx.canonContext).not.toMatch(/\[JUNG\]/);
-    // But ENNEA, HD, NUM should remain
     expect(ctx.canonContext).toMatch(/\[ENNEA\]/);
     expect(ctx.canonContext).toMatch(/\[HD\]/);
     expect(ctx.canonContext).toMatch(/\[NUM\]/);
@@ -145,7 +174,6 @@ describe('Grounding bridge', () => {
 
   it('denied-trait fragment text never appears in the system prompt', () => {
     const ctx = buildResidentContext(FULL_WIRE, HOSTILE_ATTESTATIONS, 'How do I work best in a team?');
-    // The INTJ team fragment starts with "You contribute to a team the way an architect"
     expect(ctx.system).not.toContain('the way an architect');
   });
 
@@ -168,7 +196,7 @@ describe('Grounding bridge', () => {
 });
 
 // ────────────────────────────────────────────
-// Zero-network proof (Phase 3 flagship)
+// Zero-network proof (flagship — applies to both runtimes)
 // ────────────────────────────────────────────
 
 describe('Zero-network proof', () => {
@@ -184,14 +212,10 @@ describe('Zero-network proof', () => {
   });
 
   it('buildResidentContext succeeds with fetch stubbed to throw', () => {
-    // This is the flagship: the entire context-building pipeline
-    // must complete with zero network calls.
     const ctx = buildResidentContext(FULL_WIRE, EMPTY_ATTESTATIONS, 'How do I work best in a team?');
     expect(ctx.canonContext.length).toBeGreaterThan(0);
     expect(ctx.system.length).toBeGreaterThan(0);
     expect(ctx.composed.sections.length).toBeGreaterThan(0);
-
-    // Assert that fetch was never called
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 
@@ -214,18 +238,18 @@ describe('Zero-network proof', () => {
       expect(ctx.canonContext.length).toBeGreaterThan(0);
     }
 
-    // fetch was never called across all domain queries
     expect(fetchSpy).not.toHaveBeenCalled();
   });
 });
 
 // ────────────────────────────────────────────
-// Install flag
+// Install flag + runtime tracking
 // ────────────────────────────────────────────
 
-describe('Install flag', () => {
+describe('Install flag + runtime tracking', () => {
   beforeEach(() => {
     localStorage.removeItem(RESIDENT_INSTALLED_KEY);
+    localStorage.removeItem(RESIDENT_RUNTIME_KEY);
   });
 
   it('isResidentInstalled returns false when flag is not set', async () => {
@@ -239,10 +263,31 @@ describe('Install flag', () => {
     expect(isResidentInstalled()).toBe(true);
   });
 
-  it('removeResidentModel clears the install flag', async () => {
+  it('installedRuntime reflects the recorded runtime', async () => {
+    const { installedRuntime } = await import('./loader');
+    expect(installedRuntime()).toBeNull();
+
     localStorage.setItem(RESIDENT_INSTALLED_KEY, 'true');
-    const { removeResidentModel, isResidentInstalled } = await import('./loader');
+    localStorage.setItem(RESIDENT_RUNTIME_KEY, 'wllama');
+    expect(installedRuntime()).toBe('wllama');
+
+    localStorage.setItem(RESIDENT_RUNTIME_KEY, 'webgpu');
+    expect(installedRuntime()).toBe('webgpu');
+  });
+
+  it('installedRuntime treats a legacy install (no runtime key) as webgpu', async () => {
+    const { installedRuntime } = await import('./loader');
+    localStorage.setItem(RESIDENT_INSTALLED_KEY, 'true');
+    // no RESIDENT_RUNTIME_KEY set
+    expect(installedRuntime()).toBe('webgpu');
+  });
+
+  it('removeResidentModel clears both the install flag and the runtime key', async () => {
+    localStorage.setItem(RESIDENT_INSTALLED_KEY, 'true');
+    localStorage.setItem(RESIDENT_RUNTIME_KEY, 'wllama');
+    const { removeResidentModel, isResidentInstalled, installedRuntime } = await import('./loader');
     await removeResidentModel();
     expect(isResidentInstalled()).toBe(false);
+    expect(installedRuntime()).toBeNull();
   });
 });

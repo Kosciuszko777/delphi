@@ -6,9 +6,11 @@ import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useOracleEntitlement } from '@/hooks/useOracleEntitlement';
 import {
   RESIDENT_MODEL_SIZE_GB,
+  RESIDENT_CPU_MODEL_SIZE_GB,
   RESIDENT_INSTALLED_KEY,
   RESIDENT_MODE_PREF_KEY,
   isResidentInstalled,
+  installedRuntime,
   removeResidentModel,
 } from '@/lib/resident';
 import { Trash2, Check, X } from 'lucide-react';
@@ -22,6 +24,8 @@ export default function SettingsPage() {
   const [modePref, setModePref] = useLocalStorage<string>(RESIDENT_MODE_PREF_KEY, 'hosted');
 
   const installed = isResidentInstalled();
+  const runtime = installedRuntime();
+  const modelSizeGb = runtime === 'wllama' ? RESIDENT_CPU_MODEL_SIZE_GB : RESIDENT_MODEL_SIZE_GB;
 
   useSeoMeta({
     title: 'Settings — Delphi',
@@ -56,7 +60,8 @@ export default function SettingsPage() {
                 </p>
                 <p className="text-xs text-muted-foreground mt-0.5">
                   {installed
-                    ? t('settings.oracle.modelSize', { size: String(RESIDENT_MODEL_SIZE_GB) })
+                    ? t('settings.oracle.modelSize', { size: String(modelSizeGb) })
+                      + (runtime === 'wllama' ? ' · CPU' : '')
                     : t('settings.oracle.modelNotInstalled')}
                 </p>
               </div>

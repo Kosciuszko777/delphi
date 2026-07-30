@@ -1,16 +1,43 @@
 # The Resident Oracle — Technical Reference
 
 The Resident Oracle runs a quantized language model directly on the
-user's device via WebGPU. Once downloaded, no question ever leaves the
-device — not to us, not to anyone.
+user's device. Once downloaded, no question ever leaves the device —
+not to us, not to anyone.
+
+There are two runtimes, chosen automatically by device capability:
+
+- **WebGPU (WebLLM)** — the fast path, for devices with a WebGPU
+  accelerator.
+- **CPU (Wllama / WebAssembly SIMD)** — the honest fallback (WP-9), for
+  devices without WebGPU. Slower and a smaller model, but everything
+  still runs on-device.
 
 ## Model provenance
+
+### WebGPU path
 
 - **Model:** `Qwen2.5-1.5B-Instruct-q4f16_1-MLC`
 - **Quantization:** q4f16_1 (4-bit weights, fp16 activations)
 - **Size:** ~0.9 GB download, cached by the browser
 - **Runtime:** [MLC AI / WebLLM](https://github.com/mlc-ai/web-llm)
 - **Inference:** WebGPU compute shaders, runs entirely in the browser
+
+### CPU path (WP-9)
+
+- **Model:** `qwen2.5-0.5b-instruct-q4_k_m.gguf`
+  (repo `ggml-org/Qwen2.5-0.5B-Instruct-GGUF`)
+- **Quantization:** Q4_K_M (4-bit, k-quant)
+- **Size:** ~0.4 GB download
+- **Runtime:** [Wllama](https://github.com/ngxson/wllama) — llama.cpp
+  compiled to WebAssembly SIMD
+- **Inference:** runs inside a Web Worker on the CPU; does not block the
+  UI. Auto-switches between single-thread and multi-thread builds. The
+  WASM binaries are loaded from jsDelivr (pinned to the installed
+  version), so nothing but the binaries + model shards is fetched, and
+  only at install time.
+- **Why smaller:** CPU inference of a 1.5B model is impractically slow
+  in a browser; 0.5B in Q4 is the honest CPU choice — plainer answers,
+  but responsive and fully on-device.
 
 ### Hash pinning (TODO)
 
@@ -44,38 +71,54 @@ Users can remove the resident model in two ways:
    model" button.
 
 Both paths call `removeResidentModel()` which:
-1. Clears `localStorage['delphi:resident-installed']`
-2. Enumerates `caches.keys()` and deletes entries matching `webllm`
-   or `mlc`
-3. The UI returns to the ResidentConsent state on the next Oracle visit
+1. Clears `localStorage['delphi:resident-installed']` and
+   `localStorage['delphi:resident-runtime']`
+2. Tears down the live Wllama WASM instance (`exit()`), if the CPU path
+   was in use
+3. Enumerates `caches.keys()` and deletes entries matching `webllm`,
+   `mlc`, or `wllama`
+4. The UI returns to the ResidentConsent state on the next Oracle visit
 
 ## Entitlement requirements
 
 - **Free users:** never offered the resident model (defense in depth:
   the loader throws if `entitlement === 'free'`, and the UI never
   shows the consent flow).
-- **Initiates:** offered the resident model on WebGPU-capable devices.
-  Resident inference is **unmetered** — it costs nothing. The
-  Initiate's 100/month limit applies only to the hosted Oracle path.
+- **Initiates:** offered the resident model on any capable device —
+  WebGPU (fast path) or CPU (Wllama fallback). Resident inference is
+  **unmetered** — it costs nothing, on either runtime. The Initiate's
+  100/month limit applies only to the hosted Oracle path.
 - **Council:** everything above, plus the High Oracle toggle (hosted
   path with the strongest available model).
 
 ## Device capability detection
 
-`detectResidentSupport()` returns `'webgpu'` or `'none'`:
+`detectResidentSupport()` returns `'webgpu'`, `'wllama'`, or `'none'`,
+in that order of preference:
 
-- WebGPU must be present (`navigator.gpu`)
-- `navigator.deviceMemory >= 4` if the API exists (Chrome-only)
-- `undefined` deviceMemory counts as capable (Safari does not expose it)
-- Non-WebGPU devices see: "This device holds at the Canon — the hosted
-  Oracle remains available."
+1. **`'webgpu'`** — `navigator.gpu` present AND
+   `navigator.deviceMemory >= 4` (undefined memory counts as capable —
+   Safari does not expose it).
+2. **`'wllama'`** — no viable WebGPU, but WebAssembly SIMD is available
+   (`hasWasmSimd()`) AND `navigator.deviceMemory >= 2`. A device with a
+   GPU but too little memory for the 1.5B model falls through to the CPU
+   path here.
+3. **`'none'`** — neither viable. These devices hold at the Canon; the
+   hosted Oracle remains available. They see: "This device holds at the
+   Canon — the hosted Oracle remains available."
 
-### Wllama CPU fallback (WP-9)
+The runtime that was actually installed is recorded in
+`localStorage['delphi:resident-runtime']` and read back by
+`installedRuntime()`; the chat hook dispatches to the correct engine
+based on it. A legacy install with no runtime key is assumed to be
+`'webgpu'`.
 
-A CPU-based fallback via Wllama for non-WebGPU devices is explicitly
-deferred. The `// WP-9` marker in `capability.ts` marks the expansion
-point. When implemented, `detectResidentSupport()` would return
-`'wllama'` as a third variant.
+### WASM SIMD probe
+
+`hasWasmSimd()` validates a minimal WebAssembly module that uses a
+`v128` (SIMD) local. Engines without SIMD reject it, so the probe is an
+honest gate: Wllama's build requires SIMD, and we do not offer the CPU
+path to engines that cannot run it.
 
 ## Grounding architecture
 
