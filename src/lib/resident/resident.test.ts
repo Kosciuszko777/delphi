@@ -99,7 +99,7 @@ describe('detectResidentSupport', () => {
   it('returns "wllama" when no WebGPU but WASM SIMD is available and memory >= 2', () => {
     // No gpu; force SIMD available
     setNavigator({ deviceMemory: 4 });
-    delete (globalThis.navigator as Navigator & { gpu?: unknown }).gpu;
+    delete (globalThis.navigator as unknown as { gpu?: unknown }).gpu;
     vi.spyOn(WebAssembly, 'validate').mockReturnValue(true);
     expect(detectResidentSupport()).toBe('wllama');
   });
@@ -113,14 +113,14 @@ describe('detectResidentSupport', () => {
 
   it('returns "none" when no WebGPU and no WASM SIMD', () => {
     setNavigator({ deviceMemory: 8 });
-    delete (globalThis.navigator as Navigator & { gpu?: unknown }).gpu;
+    delete (globalThis.navigator as unknown as { gpu?: unknown }).gpu;
     vi.spyOn(WebAssembly, 'validate').mockReturnValue(false);
     expect(detectResidentSupport()).toBe('none');
   });
 
   it('returns "none" when device memory is below even the CPU floor', () => {
     setNavigator({ deviceMemory: 1 });
-    delete (globalThis.navigator as Navigator & { gpu?: unknown }).gpu;
+    delete (globalThis.navigator as unknown as { gpu?: unknown }).gpu;
     vi.spyOn(WebAssembly, 'validate').mockReturnValue(true);
     expect(detectResidentSupport()).toBe('none');
   });

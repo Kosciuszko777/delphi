@@ -97,7 +97,7 @@ export const WORK_FRAGMENTS: CanonFragment[] = [
   {
     id: 'ennea:2:work', system: 'ennea', key: '2', domain: 'work',
     traitIds: ['enneagram:helper-attunement', 'enneagram:helper-giving'],
-    text: 'You are drawn to roles where being needed is the currency: client service, caregiving, teaching, consulting. You read what people want and deliver it, often before they ask. The professional risk: you become the one who always helps and never leads. Your competence is real but invisible behind a service persona. The practice: take credit for one deliverable this week. Not loudly, not competitively — just factually. "I built that" is a statement of truth, not a display of ego. Your career advances when your contributions are attributed, not assumed.',
+    text: 'You are drawn to roles where being needed is the currency: client service, caregiving, teaching, consulting. You read what people want and deliver it, often before they ask. The professional risk: you become the one who always helps and never leads. Your competence is real but invisible behind a service persona. The practice: take credit for one deliverable this week. Not loudly, not competitively — just factually. "I built that" is a statement of truth, not a display of ego. Say what you built, plainly, once — your career advances when your contributions are attributed, not assumed.',
   },
   {
     id: 'ennea:3:work', system: 'ennea', key: '3', domain: 'work',

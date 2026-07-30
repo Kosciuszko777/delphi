@@ -23,7 +23,7 @@ export const TEAM_FRAGMENTS: CanonFragment[] = [
   {
     id: 'jung:ENTP:team', system: 'jung', key: 'ENTP', domain: 'team',
     traitIds: ['jung:extraversion', 'jung:intuition', 'jung:thinking', 'jung:perceiving'],
-    text: 'You are the team\'s idea engine and its most distracting member. You connect dots nobody asked to connect, and half of those connections are gold. The problem: you move on before the team has absorbed the first insight. Slow the feed. When you surface an idea, state it, let silence land, then ask one person by name what they heard. This forces the idea through the group\'s filter instead of past it. Your best contribution arrives when you debate to clarify, not to win.',
+    text: 'You are the team\'s idea engine and its most distracting member. You connect dots nobody asked to connect, and half of those connections are gold. The problem: you move on before the team has absorbed the first insight. Slow the feed. When you surface an idea, state it, let silence land, then ask one person by name what they heard. This forces the idea through the group\'s filter instead of past it. The practice: debate to clarify, not to win — and watch for the moment an argument becomes a performance; that is where your credibility leaks.',
   },
   {
     id: 'jung:INFJ:team', system: 'jung', key: 'INFJ', domain: 'team',
@@ -53,7 +53,7 @@ export const TEAM_FRAGMENTS: CanonFragment[] = [
   {
     id: 'jung:ISFJ:team', system: 'jung', key: 'ISFJ', domain: 'team',
     traitIds: ['jung:introversion', 'jung:sensing', 'jung:feeling', 'jung:judging'],
-    text: 'You maintain the team in ways that are invisible until you stop. You remember birthdays, cover gaps, notice when someone is struggling. This service is real and routinely under-acknowledged. The danger is resentment: you give without asking and then feel unseen. The practice: name one need per week out loud. Not as a complaint, but as information. "I\'m behind on X because I covered Y" is not a grievance — it is logistics. Teams that see you clearly protect you. Help them see you.',
+    text: 'You maintain the team in ways that are invisible until you stop. You remember birthdays, cover gaps, notice when someone is struggling. This service is real and routinely under-acknowledged. The danger is resentment: you give without asking and then feel unseen. The practice: name one need per week out loud. Not as a complaint, but as information. "I\'m behind on X because I covered Y" is not a grievance — it is logistics. Teams that see you clearly protect you. The practice: name one thing you carried this week, out loud, in the meeting — and watch how the room recalibrates around what it finally sees.',
   },
   {
     id: 'jung:ESTJ:team', system: 'jung', key: 'ESTJ', domain: 'team',
