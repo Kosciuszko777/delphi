@@ -37,7 +37,7 @@ const CONNECTIVES: string[] = [
   'Looking at the same question through your core pattern:',
   'A complementary read from another system:',
   'This is also shaped by:',
-  'Another chamber of your Wire speaks to this:',
+  'Another chamber of your Soulgraph speaks to this:',
   'Your type configuration adds:',
   'The next layer of the reading:',
   'There is more to this picture:',

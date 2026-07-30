@@ -188,3 +188,26 @@ ledger; never from a private list.
 Fulfillment addition for on-chain: verify txid on any block explorer
 (amount ≥ seat price at time of payment, ≥ 1 confirmation), then award
 the seal and inscribe the stele exactly as with Lightning.
+
+---
+
+# The Oracle Gate — Fulfillment implications (2026-07-28)
+
+With the Resident Oracle (WP-8), Initiate seals gain material weight:
+the seal is now the key that unlocks on-device inference. A user who
+holds an Initiate seal can download the resident model and run unlimited
+Oracle queries with zero network, zero API cost, zero data leaving the
+device. This makes the daily fulfillment ritual (Section 4) more
+consequential:
+
+- **Cadence matters more.** A delayed seal means a delayed download.
+  The UI promises the seal within 24 hours; honor it. Check pending
+  payments morning and evening during launch week.
+- **The 24h promise is in the UI** (oracle.gate.finePrint). If
+  fulfillment takes longer, the user sees ClaimPending with "Payment
+  received — your seal is being inscribed" and the Canon tab remains
+  available meanwhile.
+- **Resident inference is unmetered.** Once installed, the on-device
+  model costs nothing — the Initiate's 100/month limit applies only
+  to the hosted Oracle path. The code enforces this: `useResidentChat`
+  has no meter, by design.

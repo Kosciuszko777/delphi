@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState, useCallback } from 'react';
 import { useSeoMeta } from '@unhead/react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -6,35 +6,70 @@ import { Omphalos } from '@/components/wire/Omphalos';
 import { CanonTab } from '@/components/canon/CanonTab';
 import { OracleGate } from '@/components/oracle/OracleGate';
 import { ClaimPending } from '@/components/oracle/ClaimPending';
+import { ResidentConsent } from '@/components/oracle/ResidentConsent';
 import { Button } from '@/components/ui/button';
 import { Textarea } from '@/components/ui/textarea';
 import { useLocalStorage } from '@/hooks/useLocalStorage';
 import { useWire } from '@/hooks/useWire';
 import { useTranslation } from '@/hooks/useTranslation';
 import { useOracleChat } from '@/hooks/useOracleChat';
+import { useResidentChat } from '@/hooks/useResidentChat';
 import { useClaimPending } from '@/hooks/useClaimPending';
+import { useOracleEntitlement } from '@/hooks/useOracleEntitlement';
 import { ORACLE_PRESETS } from '@/lib/oracle/prompt';
 import { isWirePopulated } from '@/lib/wire';
-import { ArrowUp, Loader2, BookOpen, Sparkles } from 'lucide-react';
+import {
+  RESIDENT_ENABLED,
+  RESIDENT_INSTALLED_KEY,
+  RESIDENT_MODE_PREF_KEY,
+  isResidentInstalled,
+  removeResidentModel,
+  detectResidentSupport,
+} from '@/lib/resident';
+import { ArrowUp, Loader2, BookOpen, Sparkles, Trash2, Monitor, Smartphone } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { toast } from '@/hooks/useToast';
 
 type OracleMode = 'canon' | 'ai';
+type AiMode = 'resident' | 'hosted' | 'high-oracle';
 const DISCLAIMER_KEY = 'delphi:oracle-disclaimer-accepted';
 
 export default function OraclePage() {
   const { wire } = useWire();
   const { t } = useTranslation();
   const [mode, setMode] = useState<OracleMode>('canon');
-  const {
-    turns, send, isThinking, error,
-    entitlement, isCouncillor, monthlyLimit, freeRemaining,
-    allowed, trialRemaining, trialLimit, isAuthenticated,
-  } = useOracleChat();
+  const { entitlement } = useOracleEntitlement();
+  const hostedChat = useOracleChat();
+  const residentChat = useResidentChat();
   const { isPending, setPending, clearPending } = useClaimPending();
   const [accepted, setAccepted] = useLocalStorage<boolean>(DISCLAIMER_KEY, false);
   const [input, setInput] = useState('');
   const bottomRef = useRef<HTMLDivElement>(null);
   const [searchParams, setSearchParams] = useSearchParams();
+
+  // Resident state
+  const [installed, setInstalled] = useLocalStorage<boolean>(RESIDENT_INSTALLED_KEY, false);
+  const [modePref, setModePref] = useLocalStorage<AiMode>(RESIDENT_MODE_PREF_KEY, 'hosted');
+
+  // Determine actual AI mode: resident if installed + pref is resident, otherwise hosted
+  const capable = detectResidentSupport() === 'webgpu';
+  const isEntitled = entitlement !== 'free';
+  const showResidentOffer = RESIDENT_ENABLED && isEntitled && capable && !installed;
+
+  // The active AI mode
+  const aiMode: AiMode = (() => {
+    if (modePref === 'high-oracle' && entitlement === 'council') return 'high-oracle';
+    if (installed && modePref === 'resident') return 'resident';
+    return 'hosted';
+  })();
+
+  // Pick the active chat based on mode
+  const isResident = aiMode === 'resident';
+  const activeTurns = isResident ? residentChat.turns : hostedChat.turns;
+  const activeSend = isResident ? residentChat.send : hostedChat.send;
+  const activeThinking = isResident ? residentChat.isThinking : hostedChat.isThinking;
+  const activeError = isResident ? residentChat.error : hostedChat.error;
+  const activeAllowed = isResident ? true : hostedChat.allowed; // Resident is always allowed (unmetered)
 
   useSeoMeta({
     title: 'The Oracle — Delphi',
@@ -45,7 +80,6 @@ export default function OraclePage() {
   useEffect(() => {
     if (searchParams.get('paid') === '1') {
       setPending();
-      // Strip the query param
       searchParams.delete('paid');
       setSearchParams(searchParams, { replace: true });
     }
@@ -60,7 +94,7 @@ export default function OraclePage() {
 
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
-  }, [turns, isThinking]);
+  }, [activeTurns, activeThinking]);
 
   const populated = isWirePopulated(wire);
 
@@ -68,12 +102,38 @@ export default function OraclePage() {
     const text = input.trim();
     if (!text) return;
     setInput('');
-    void send(text);
+    void activeSend(text);
   };
 
+  const handleRemoveModel = useCallback(async () => {
+    await removeResidentModel();
+    residentChat.resetEngine();
+    setInstalled(false);
+    setModePref('hosted');
+    toast({ title: t('resident.removeConfirm') });
+  }, [residentChat, setInstalled, setModePref, t]);
+
+  const handleResidentInstalled = useCallback(() => {
+    setInstalled(true);
+    setModePref('resident');
+  }, [setInstalled, setModePref]);
+
+  const handleResidentDecline = useCallback(() => {
+    setModePref('hosted');
+  }, [setModePref]);
+
   // Determine if the gate should show (free + trial exhausted + not pending)
-  const showGate = entitlement === 'free' && trialRemaining <= 0 && !isPending;
+  const showGate = entitlement === 'free' && hostedChat.trialRemaining <= 0 && !isPending;
   const showPending = entitlement === 'free' && isPending;
+
+  // Mode line text
+  const modeLineText = (() => {
+    if (aiMode === 'resident') return t('resident.modeLine.resident');
+    if (aiMode === 'high-oracle') return t('resident.highOracle.modeLine');
+    return t('resident.modeLine.hosted');
+  })();
+
+  const modeLineColor = aiMode === 'resident' ? 'text-verdigris' : 'text-ash';
 
   return (
     <AppLayout>
@@ -136,16 +196,14 @@ export default function OraclePage() {
                   <Link to="/assess">{t('oracle.beginAssessment')}</Link>
                 </Button>
               </div>
-            ) : !isAuthenticated ? (
+            ) : !hostedChat.isAuthenticated ? (
               <div className="engraved grain rounded-[2px] bg-card p-8 text-center">
                 <p className="font-serif text-foreground">{t('oracle.signIn')}</p>
                 <p className="text-xs text-muted-foreground mt-2">{t('oracle.signInNote')}</p>
               </div>
             ) : showGate ? (
-              /* ─── The Gate ─── */
               <OracleGate />
             ) : showPending ? (
-              /* ─── Claim Pending ─── */
               <ClaimPending />
             ) : !accepted ? (
               <div className="engraved grain rounded-[2px] bg-card p-6 sm:p-8 space-y-5">
@@ -164,10 +222,48 @@ export default function OraclePage() {
                   {t('oracle.disclaimer.accept')}
                 </Button>
               </div>
+            ) : showResidentOffer && modePref !== 'hosted' ? (
+              /* ─── Resident Consent ─── */
+              <ResidentConsent
+                onInstalled={handleResidentInstalled}
+                onDecline={handleResidentDecline}
+              />
             ) : (
               <div className="space-y-4">
+                {/* Council mode toggle: Resident / High Oracle */}
+                {entitlement === 'council' && installed && (
+                  <div className="flex justify-center">
+                    <div className="inline-flex rounded-full bg-card border border-border/50 p-0.5">
+                      <button
+                        onClick={() => setModePref('resident')}
+                        className={cn(
+                          'flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors',
+                          aiMode === 'resident'
+                            ? 'bg-verdigris/10 text-verdigris'
+                            : 'text-muted-foreground hover:text-foreground',
+                        )}
+                      >
+                        <Smartphone className="size-3" />
+                        {t('resident.modeToggle.resident')}
+                      </button>
+                      <button
+                        onClick={() => setModePref('high-oracle')}
+                        className={cn(
+                          'flex items-center gap-1 px-3 py-1 rounded-full text-xs font-medium transition-colors',
+                          aiMode === 'high-oracle'
+                            ? 'bg-oracle/10 text-oracle'
+                            : 'text-muted-foreground hover:text-foreground',
+                        )}
+                      >
+                        <Monitor className="size-3" />
+                        {t('resident.modeToggle.highOracle')}
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {/* Turns */}
-                {turns.length === 0 ? (
+                {activeTurns.length === 0 ? (
                   <div className="engraved grain rounded-[2px] bg-card p-6 space-y-4">
                     <p className="text-sm text-muted-foreground text-center">
                       {t('oracle.askPrompt')}
@@ -176,8 +272,8 @@ export default function OraclePage() {
                       {ORACLE_PRESETS.map((preset) => (
                         <button
                           key={preset}
-                          onClick={() => void send(preset)}
-                          disabled={isThinking || !allowed}
+                          onClick={() => void activeSend(preset)}
+                          disabled={activeThinking || !activeAllowed}
                           className="engraved rounded-full px-4 py-2 text-xs text-foreground hover:bg-oracle/5 transition-colors disabled:opacity-50"
                         >
                           {preset}
@@ -187,7 +283,7 @@ export default function OraclePage() {
                   </div>
                 ) : (
                   <div className="space-y-4">
-                    {turns.map((turn, i) => (
+                    {activeTurns.map((turn, i) => (
                       <div key={i} className={turn.role === 'user' ? 'flex justify-end' : 'flex justify-start'}>
                         {turn.role === 'user' ? (
                           <div className="max-w-[85%] rounded-[2px] bg-secondary px-4 py-3 text-sm text-foreground leading-relaxed">
@@ -209,10 +305,10 @@ export default function OraclePage() {
                   </div>
                 )}
 
-                {error && <p className="text-xs text-destructive text-center">{error}</p>}
+                {activeError && <p className="text-xs text-destructive text-center">{activeError}</p>}
 
                 {/* Composer or exhausted state */}
-                {allowed ? (
+                {activeAllowed ? (
                   <div className="engraved rounded-[2px] bg-card p-3 flex items-end gap-2">
                     <Textarea
                       value={input}
@@ -226,27 +322,26 @@ export default function OraclePage() {
                       placeholder={t('oracle.placeholder')}
                       rows={2}
                       className="resize-none border-0 bg-transparent focus-visible:ring-0 text-sm"
-                      disabled={isThinking}
+                      disabled={activeThinking}
                     />
                     <Button
                       size="icon"
                       onClick={submit}
-                      disabled={isThinking || !input.trim()}
+                      disabled={activeThinking || !input.trim()}
                       className="rounded-full bg-oracle text-oracle-foreground hover:bg-oracle/90 shrink-0"
                       aria-label="Send"
                     >
-                      {isThinking ? <Loader2 className="size-4 animate-spin" /> : <ArrowUp className="size-4" />}
+                      {activeThinking ? <Loader2 className="size-4 animate-spin" /> : <ArrowUp className="size-4" />}
                     </Button>
                   </div>
                 ) : (
                   <div className="engraved rounded-[2px] bg-oracle/5 p-5 text-center space-y-3">
                     <p className="font-serif text-foreground">
-                      {t('oracle.exhausted', { limit: String(monthlyLimit) })}
+                      {t('oracle.exhausted', { limit: String(hostedChat.monthlyLimit) })}
                     </p>
                     <p className="text-xs text-muted-foreground">
                       {t('oracle.exhausted.note')}
                     </p>
-                    {/* Cross-link to Canon */}
                     <Button
                       variant="outline"
                       className="rounded-full"
@@ -267,14 +362,44 @@ export default function OraclePage() {
                   </div>
                 )}
 
-                {/* Meter line */}
-                <p className="text-center font-mono text-[11px] text-ash">
-                  {isCouncillor
-                    ? t('oracle.meter.council')
-                    : entitlement === 'initiate'
-                      ? t('oracle.meter.initiate', { remaining: String(freeRemaining), limit: String(monthlyLimit) })
-                      : t('oracle.meter.trial', { remaining: String(trialRemaining), limit: String(trialLimit) })}
-                </p>
+                {/* Mode line + remove model action */}
+                <div className="flex items-center justify-center gap-3">
+                  <p className={cn('text-center font-mono text-[11px]', modeLineColor)}>
+                    {modeLineText}
+                  </p>
+                  {installed && !isResident && (
+                    <button
+                      onClick={handleRemoveModel}
+                      className="text-[11px] text-muted-foreground hover:text-destructive transition-colors inline-flex items-center gap-1"
+                      title={t('resident.remove')}
+                    >
+                      <Trash2 className="size-3" />
+                    </button>
+                  )}
+                </div>
+
+                {/* Hosted meter line (only in hosted/high-oracle mode) */}
+                {!isResident && (
+                  <p className="text-center font-mono text-[11px] text-ash">
+                    {hostedChat.isCouncillor
+                      ? t('oracle.meter.council')
+                      : entitlement === 'initiate'
+                        ? t('oracle.meter.initiate', { remaining: String(hostedChat.freeRemaining), limit: String(hostedChat.monthlyLimit) })
+                        : t('oracle.meter.trial', { remaining: String(hostedChat.trialRemaining), limit: String(hostedChat.trialLimit) })}
+                  </p>
+                )}
+
+                {/* Offer resident install for entitled users who haven't installed */}
+                {showResidentOffer && modePref === 'hosted' && activeTurns.length === 0 && (
+                  <div className="text-center pt-2">
+                    <button
+                      onClick={() => setModePref('resident')}
+                      className="text-xs text-muted-foreground hover:text-foreground transition-colors underline underline-offset-2 decoration-dotted"
+                    >
+                      {t('resident.install')}
+                    </button>
+                  </div>
+                )}
               </div>
             )}
           </>

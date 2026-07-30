@@ -2,14 +2,27 @@
  * AI model configuration — centralized model IDs and register constraints.
  *
  * Quality / cost trade-off per tier:
- * - FREE_TIER_MODEL (glm-4.6): lowest-cost inference on Shakespeare AI,
+ * - MODEL_FREE_TIER (glm-4.6): lowest-cost inference on Shakespeare AI,
  *   sufficient for structured output (Mirror JSON, Oracle guidance).
  *   Requires explicit register constraints to prevent stylistic drift.
+ * - MODEL_HIGH_ORACLE: the strongest available hosted model, reserved
+ *   for council entitlement. Selected at runtime from available models.
  * - Paid tiers select the best available Sonnet/Claude model at runtime.
  */
 
 /** The model used for free-tier Oracle and Mirror inference. */
-export const FREE_TIER_MODEL = 'glm-4.6';
+export const MODEL_FREE_TIER = 'glm-4.6';
+
+/** @deprecated Use MODEL_FREE_TIER. */
+export const FREE_TIER_MODEL = MODEL_FREE_TIER;
+
+/**
+ * High Oracle model ID — the strongest hosted model, reserved for
+ * council entitlement. This is a preference; the actual model is
+ * selected at runtime from available Shakespeare AI models, preferring
+ * Sonnet/Claude. This constant is used as documentation / label only.
+ */
+export const MODEL_HIGH_ORACLE = 'high-oracle';
 
 /**
  * Register reminder block — appended to free-tier prompts to prevent

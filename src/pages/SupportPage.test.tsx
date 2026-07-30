@@ -57,7 +57,7 @@ describe('SupportPage — the Hearth', () => {
     ).toBeInTheDocument();
     // The enterprise sovereignty line (German)
     expect(
-      await screen.findByText(/Mitarbeiter-Wires bleiben Eigentum der Mitarbeiter/i),
+      await screen.findByText(/Mitarbeiter-Soulgraphs bleiben Eigentum der Mitarbeiter/i),
     ).toBeInTheDocument();
   });
 });
